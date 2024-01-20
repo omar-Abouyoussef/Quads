@@ -98,7 +98,7 @@ fa = FactorAnalysis(n_components = 3, rotation = "varimax", random_state=0)
 factors = fa.fit_transform(performance_scaled)
 factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Short-term', 'Medium-term', 'Long-term'])
 
-model = KMeans(n_clusters = 4)
+model = KMeans(n_clusters = 4, random_state=0)
 labels = model.fit_predict(factors)
 
 factors['performance']=labels
