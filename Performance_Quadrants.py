@@ -106,14 +106,14 @@ factors['performance'] = factors['performance'].map({0:'Improving', 1:'Falling',
 
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
-                     hover_data = [factors.index], color=labels)
+                     hover_data = [factors.index], color="performance")
 
 elif plot == 'Medium-term|Long-term':
     fig = px.scatter(factors, x='Long-term', y='Medium-term',
-                     hover_data = [factors.index], color=labels)
+                     hover_data = [factors.index], color="performance")
 else: 
    fig = px.scatter(factors, x='Long-term', y='Short-term',
-                    hover_data = [factors.index], color=labels)
+                    hover_data = [factors.index], color="performance")
 
 fig.add_hline(y=0)
 fig.add_vline(x=0)
