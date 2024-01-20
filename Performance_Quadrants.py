@@ -96,7 +96,7 @@ scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
 fa = FactorAnalysis(n_components = 3, rotation = "varimax", random_state=0)
 factors = fa.fit_transform(performance_scaled)
-factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Medium-term', 'Short-term', 'Long-term'])
+factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Short-term', 'Medium-term', 'Long-term'])
 
 model = KMeans(n_clusters = 4, random_state=0)
 labels = model.fit_predict(factors)
