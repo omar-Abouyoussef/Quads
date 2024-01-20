@@ -102,18 +102,18 @@ model = KMeans(n_clusters = 4, random_state=0)
 labels = model.fit_predict(factors)
 
 factors['performance']=labels
-factors['performance'] = factors['performance'].map({0:'Improving', 1:'Weakening', 2:'Momentum', 3:'Falling'})
+factors['performance'] = factors['performance'].map({0:'Improving', 1:'Falling', 2:'Weakening', 3:'Momentum')
 
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
-                     hover_data = [factors.index], color='performance')
+                     hover_data = [factors.index], color=labels)
 
 elif plot == 'Medium-term|Long-term':
     fig = px.scatter(factors, x='Long-term', y='Medium-term',
-                     hover_data = [factors.index], color='performance')
+                     hover_data = [factors.index], color=labels)
 else: 
    fig = px.scatter(factors, x='Long-term', y='Short-term',
-                    hover_data = [factors.index], color='performance')
+                    hover_data = [factors.index], color=labels)
 
 fig.add_hline(y=0)
 fig.add_vline(x=0)
