@@ -70,12 +70,9 @@ end = st.session_state.end
 
 codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
 
-#api keys
-#key="65872eb15621c0.14940907" #Omar
-key="658b4cc1a98054.21989964" #Adham
 
 close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
-                        start=start, end=end, key=key)
+                        start=start, end=end, key=st.secrets['eod_api_key'])
 
 if close_prices is not None:
   st.dataframe(close_prices)
