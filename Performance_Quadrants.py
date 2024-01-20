@@ -96,13 +96,13 @@ scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
 fa = FactorAnalysis(n_components = 3, rotation = "varimax", random_state=0)
 factors = fa.fit_transform(performance_scaled)
-factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Short-term', 'Medium-term', 'Long-term'])
+factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Medium-term', 'Short-term', 'Long-term'])
 
 model = KMeans(n_clusters = 4, random_state=0)
 labels = model.fit_predict(factors)
 
 factors['performance']=labels
-factors['performance'] = factors['performance'].map({0:'Falling', 1:'Momentum', 2:'Weakening', 3:'Improving'})
+factors['performance'] = factors['performance'].map({0:'Improving', 1:'Falling', 2:'Weakening', 3:'Momentum'})
 
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
