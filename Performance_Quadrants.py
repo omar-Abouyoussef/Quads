@@ -39,9 +39,7 @@ st.set_page_config(page_title="Performance Quadrant", layout="wide")
 st.title('Performance Quadrant')
 st.sidebar.header('Home')
 
-#api keys
-#key="65872eb15621c0.14940907" #Omar
-key="658b4cc1a98054.21989964" #Adham
+
 
 #####
 today = dt.date.today()
@@ -63,7 +61,7 @@ stock_list = investpy.stocks.get_stocks_list(country = country)
 codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
 
 close_prices = get_data(market = codes[country], stock_list=stock_list,
-                        start=start, end=today, key=key)
+                        start=start, end=today, key=st.secrets["eod_api_key"])
     
 
 close_prices.dropna(axis = 1, inplace = True)    
@@ -126,11 +124,4 @@ with cols[0]:
 with cols[1]:
     st.dataframe(factors,column_order=('','performance'))
     
-
-   
-###################
-###################
-
-
-
 
