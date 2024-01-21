@@ -8,12 +8,12 @@ from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
 
-@st.cache_data(ttl=86400)
+@st.cache_data
 def change(data, freq):
     return data.iloc[-1]/data.iloc[-(freq+1)] - 1
 
    
-@st.cache_data   
+@st.cache_data(ttl=86400)  
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
 
