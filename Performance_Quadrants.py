@@ -8,7 +8,7 @@ from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
 
-@st.cache_data
+@st.cache_data(ttl=86400)
 def change(data, freq):
     return data.iloc[-1]/data.iloc[-(freq+1)] - 1
 
