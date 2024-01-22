@@ -46,8 +46,8 @@ today = dt.date.today()
 start = today - dt.timedelta(365)
 
 #inputs
-country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia'],
+country = st.selectbox(label='Market:',
+                       options = ['Egypt', 'United States', 'Saudi Arabia', 'Forex'],
                        key='country')
 country = st.session_state.country
 
@@ -58,7 +58,7 @@ plot = st.session_state.plot
 
 
 stock_list = investpy.stocks.get_stocks_list(country = country)
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
+codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'Forex'}
 
 close_prices = get_data(market = codes[country], stock_list=stock_list,
                         start=start, end=today, key=st.secrets["eod_api_key"])
