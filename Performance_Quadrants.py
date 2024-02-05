@@ -58,7 +58,7 @@ plot = st.session_state.plot
 
 
 stock_list = investpy.stocks.get_stocks_list(country = country)
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'Forex'}
+codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
 
 close_prices = get_data(market = codes[country], stock_list=stock_list,
                         start=start, end=today, key=st.secrets["eod_api_key"])
@@ -102,16 +102,14 @@ factors=pd.DataFrame(data={"Short-term":short_term,
                              "Long-term":long_term},
                      index=performance.index)
 
+model = KMeans(n_clusters = 4, random_state=0).fit(factors)
 
-model = KMeans(n_clusters = 4, random_state=0).fit(factors)
-labels = model.labels_
+factors['Cluster']=model.labels_
+factors['Cluster'] = factors['Cluster'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
 
-factors['Cluster']=labels
-factors['Cluster'] = factors['Cluster'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
- 
 if plot == 'Short-term|Medium-term':
-    fig = px.scatter(factors, x='Medium-term', y='Short-term',
-                     hover_data = [factors.index], color="Cluster")
+    fig = px.scatter(factors, x='Medium-term', y='Short-term', hover_data = [factors.index], color="Cluster")
+    fig = px.scatter(factors, x='Medium-term', y='Short-term', hover_data = [factors.index], color="Cluster")
 
 elif plot == 'Medium-term|Long-term':
     fig = px.scatter(factors, x='Long-term', y='Medium-term',
