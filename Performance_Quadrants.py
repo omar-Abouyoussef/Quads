@@ -91,12 +91,17 @@ list(
         index = close_prices.columns
         )
 
-
 scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
-fa = FactorAnalysis(n_components = 3, rotation = "varimax", random_state=0)
-factors = fa.fit_transform(performance_scaled)
-factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Short-term', 'Medium-term', 'Long-term'])
+pca = PCA(1)
+short_term= pca.fit_transform(performance_scaled[:,0:3]).reshape(-1)
+medium_term = pca.fit_transform(performance_scaled[:,3:6]).reshape(-1)
+long_term = pca.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
+factors = pd.DataFrame(data = {"Short-term":short_term,
+                               "Medium-term":medium_term,
+                               "Long-term":long_term},
+                       index = performance.index)
+
 
 model = KMeans(n_clusters = 4, random_state=0)
 labels = model.fit_predict(factors)
