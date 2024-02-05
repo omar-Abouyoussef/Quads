@@ -108,7 +108,7 @@ labels = model.fit_predict(factors)
 
 factors['performance']=labels
 factors['performance'] = factors['performance'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
-
+factors["labels"] = labels 
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
                      hover_data = [factors.index], color="performance")
