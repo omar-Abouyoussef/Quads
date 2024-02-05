@@ -108,9 +108,8 @@ factors['Cluster']=model.labels_
 factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
 
 if plot == 'Short-term|Medium-term':
-    fig = px.scatter(factors, x='Medium-term', y='Short-term', hover_data = [factors.index], color="Cluster")
-    fig = px.scatter(factors, x='Medium-term', y='Short-term', hover_data = [factors.index], color="Cluster")
-
+    fig=px.scatter(factors,x='Medium-term',y='Short-term',hover_data=[factors.index],color="Cluster")
+    
 elif plot == 'Medium-term|Long-term':
     fig = px.scatter(factors, x='Long-term', y='Medium-term',
                      hover_data = [factors.index], color="Cluster")
