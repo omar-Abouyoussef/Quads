@@ -102,7 +102,7 @@ factors=pd.DataFrame(data={"Short-term":short_term,
                              "Long-term":long_term},
                      index=performance.index)
 
-model=KMeans(n_clusters=4, random_state=0).fit(factors)
+model=KMeans(n_clusters=4,random_state=0).fit(factors)
 
 factors['Cluster']=model.labels_
 factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
