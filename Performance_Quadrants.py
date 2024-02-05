@@ -102,10 +102,11 @@ factors=pd.DataFrame(data = {"Short-term":short_term,
                                "Medium-term":medium_term,
                                "Long-term":long_term},
                        index = performance.index)
+
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
-factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
-
+st.dataframe(factors.Cluster)
+#factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
 if plot == 'Short-term|Medium-term':
     fig=px.scatter(factors,x='Medium-term',y='Short-term',hover_data=[factors.index],color="Cluster")
     
