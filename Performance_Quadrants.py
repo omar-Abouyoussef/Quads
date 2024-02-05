@@ -97,10 +97,10 @@ pca=PCA(1)
 short_term=pca.fit_transform(performance_scaled[:,0:3]).reshape(-1)
 medium_term=pca.fit_transform(performance_scaled[:,3:6]).reshape(-1)
 long_term=pca.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
-factors=pd.DataFrame(data = {"Short-term":short_term,
+factors=pd.DataFrame(data={"Short-term":short_term,
                              "Medium-term":medium_term,
                              "Long-term":long_term},
-                     index = performance.index)
+                     index=performance.index)
 
 
 model = KMeans(n_clusters = 4, random_state=0)
