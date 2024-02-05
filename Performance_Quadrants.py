@@ -93,7 +93,7 @@ list(
 
 scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
-pca = PCA(1)
+pca=PCA(1)
 short_term= pca.fit_transform(performance_scaled[:,0:3]).reshape(-1)
 medium_term = pca.fit_transform(performance_scaled[:,3:6]).reshape(-1)
 long_term = pca.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
