@@ -111,14 +111,14 @@ factors['Cluster'] = factors['Cluster'].map({0:'Weakening', 1:'Falling', 2:'Impr
  
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
-                     hover_data = [factors.index], color="performance")
+                     hover_data = [factors.index], color="Cluster")
 
 elif plot == 'Medium-term|Long-term':
     fig = px.scatter(factors, x='Long-term', y='Medium-term',
-                     hover_data = [factors.index], color="performance")
+                     hover_data = [factors.index], color="Cluster")
 else: 
    fig = px.scatter(factors, x='Long-term', y='Short-term',
-                    hover_data = [factors.index], color="performance")
+                    hover_data = [factors.index], color="Cluster")
 
 fig.add_hline(y=0)
 fig.add_vline(x=0)
