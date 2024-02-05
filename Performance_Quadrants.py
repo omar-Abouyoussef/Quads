@@ -109,14 +109,14 @@ factors['Cluster']=model.labels_
 
 if plot == 'Short-term|Medium-term':
     fig=px.scatter(factors,x='Medium-term',y='Short-term',
-                   hover_data=[factors.index],color=factors.Cluster.astype(str))
+                   hover_data=[factors.index],color=factors["Cluster"].astype(str))
     
 elif plot == 'Medium-term|Long-term':
     fig = px.scatter(factors, x='Long-term', y='Medium-term',
-                     hover_data = [factors.index],color=factors.Cluster.astype(str))
+                     hover_data = [factors.index],color=factors["Cluster"].astype(str))
 else: 
    fig = px.scatter(factors, x='Long-term', y='Short-term',
-                    hover_data = [factors.index],color=factors.Cluster.astype(str))
+                    hover_data = [factors.index],color=factors["Cluster"].astype(str))
 
 fig.add_hline(y=0)
 fig.add_vline(x=0)
