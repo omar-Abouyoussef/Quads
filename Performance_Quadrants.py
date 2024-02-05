@@ -103,12 +103,12 @@ factors=pd.DataFrame(data={"Short-term":short_term,
                      index=performance.index)
 
 
-model = KMeans(n_clusters = 4, random_state=0)
-labels = model.fit_predict(factors)
+model = KMeans(n_clusters = 4, random_state=0).fit(factors)
+labels = model.labels_
 
-factors['performance']=labels
-factors['performance'] = factors['performance'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
-factors["labels"] = labels 
+factors['Cluster']=labels
+factors['Cluster'] = factors['performance'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
+ 
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
                      hover_data = [factors.index], color="performance")
@@ -127,6 +127,6 @@ cols = st.columns([0.7,0.3])
 with cols[0]:
     st.plotly_chart(fig)
 with cols[1]:
-    st.dataframe(factors)
+    st.dataframe(factors, column_order=("","Cluster")
     
 
