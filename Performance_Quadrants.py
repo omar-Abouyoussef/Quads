@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import plotly.express as px
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import FactorAnalysis
+from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
