@@ -105,7 +105,9 @@ factors=pd.DataFrame(data={"Short-term":short_term,
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 
 factors['Cluster']=model.labels_
+st.write(factors[factors["Cluster"]==3])
 factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
+st.write(factors[factors["Cluster"]=="Momentum"])
 
 if plot == 'Short-term|Medium-term':
     fig=px.scatter(factors,x='Medium-term',y='Short-term',hover_data=[factors.index],color="Cluster")
