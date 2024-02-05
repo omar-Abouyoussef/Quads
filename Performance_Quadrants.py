@@ -107,7 +107,7 @@ model = KMeans(n_clusters = 4, random_state=0).fit(factors)
 labels = model.labels_
 
 factors['Cluster']=labels
-factors['Cluster'] = factors['performance'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
+factors['Cluster'] = factors['Cluster'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
  
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
