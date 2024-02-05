@@ -102,7 +102,7 @@ factors=pd.DataFrame(data = {"Short-term":short_term,
                                "Medium-term":medium_term,
                                "Long-term":long_term},
                        index = performance.index)
-
+st.dataframe(factors)
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
 st.dataframe(factors.Cluster)
