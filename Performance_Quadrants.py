@@ -91,18 +91,28 @@ list(
         index = close_prices.columns
         )
 
+scaler = StandardScaler()
+performance_scaled = scaler.fit_transform(performance)
+pca = PCA(1)
+short_term= pca.fit_transform(performance_scaled[:,0:3]).reshape(-1)
+medium_term = pca.fit_transform(performance_scaled[:,3:6]).reshape(-1)
+long_term = pca.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
+factors = pd.DataFrame(data = {"Short-term":short_term,
+                               "Medium-term":medium_term,
+                               "Long-term":long_term},
+                       index = performance.index)
 
-scaler = StandardScaler()
-performance_scaled = scaler.fit_transform(performance)
-fa = FactorAnalysis(n_components = 3, rotation = "varimax", random_state=0)
-factors = fa.fit_transform(performance_scaled)
-factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Short-term', 'Medium-term', 'Long-term'])
+#scaler = StandardScaler()
+#performance_scaled = scaler.fit_transform(performance)
+#fa = FactorAnalysis(n_components = 3, rotation = "varimax", random_state=0)
+#factors = fa.fit_transform(performance_scaled)
+#factors = pd.DataFrame(data = factors, index = performance.index, columns = ['Short-term', 'Medium-term', 'Long-term'])
 
 model = KMeans(n_clusters = 4, random_state=0)
 labels = model.fit_predict(factors)
 
 factors['performance']=labels
-factors['performance'] = factors['performance'].map({0:'Improving', 1:'Momentum', 2:'Weakening', 3:'Falling'})
+factors['performance'] = factors['performance'].map({0:'Weakening', 1:'Falling', 2:'Improving', 3:'Momentum'})
 
 if plot == 'Short-term|Medium-term':
     fig = px.scatter(factors, x='Medium-term', y='Short-term',
