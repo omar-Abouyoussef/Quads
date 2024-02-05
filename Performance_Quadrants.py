@@ -127,6 +127,6 @@ cols = st.columns([0.7,0.3])
 with cols[0]:
     st.plotly_chart(fig)
 with cols[1]:
-    st.dataframe(factors, column_order=("", "performance")
+    st.dataframe(factors)
     
 
