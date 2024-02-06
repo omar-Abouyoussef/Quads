@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 import streamlit as st
 import io
+import mitosheet
 from mitosheet.streamlit.v1 import spreadsheet
 
 
