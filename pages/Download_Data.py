@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 import streamlit as st
 import io
-from mito.streamlit.v1 import spreadsheet
+from mitosheet.streamlit.v1 import spreadsheet
 
 
 @st.cache_data
