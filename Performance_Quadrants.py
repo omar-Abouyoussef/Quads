@@ -1,6 +1,8 @@
 import datetime as dt
 import pandas as pd
 import requests
+import pandas_datareader.data as pdr
+import yfinance as yf
 import plotly.express as px
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
@@ -16,20 +18,25 @@ def change(data, freq):
 @st.cache_data
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
+     if market == "US":
+          yf.pdr_override()
+          stock_list.sort()
+          return pdr.get_data_yahoo(stock_list, start, end)["Close"]
 
-    close_prices = pd.DataFrame(columns=stock_list)
-    for idx, ticker in enumerate(stock_list):
-      try:
-        url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-        close = requests.get(url).json()
-        close_prices[ticker] = close
-      except:
-        pass
-    url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-    date = requests.get(url).json()
-    close_prices['date'] = date
-    close_prices.set_index('date', inplace=True)
-    return close_prices
+     else:
+         close_prices = pd.DataFrame(columns=stock_list)
+         for idx, ticker in enumerate(stock_list):
+           try:
+            url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
+            close = requests.get(url).json()
+            close_prices[ticker] = close
+           except:
+             pass
+         url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
+         date = requests.get(url).json()
+         close_prices['date'] = date
+         close_prices.set_index('date', inplace=True)
+         return close_prices
 
 
 ######################
