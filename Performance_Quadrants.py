@@ -47,7 +47,7 @@ start = today - dt.timedelta(365)
 
 #inputs
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia'],
+                       options = ['Egypt', 'United States'],
                        key='country')
 country = st.session_state.country
 
@@ -57,9 +57,20 @@ plot = st.selectbox(label='Plot type:',
 plot = st.session_state.plot
 
 
-stock_list = investpy.stocks.get_stocks_list(country = country)
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
+codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'FOREX', 'Crypto':'CC'}
+#if country == 'Forex':
+#fx_list = investpy.currency_crosses.get_available_currencies()
+#close_prices = get_data(market = codes[country], stock_list=fx_list,
+#                        start=start, end=today, key=st.secrets["eod_api_key"])
 
+#elif country == "Crypto":
+#crypto_list = investpy.crypto.get_cryptos()
+#close_prices = get_data(market = codes[country], stock_list=fx_list,
+#                        start=start, end=today, key=st.secrets["eod_api_key"])
+
+
+#else:
+stock_list = investpy.stocks.get_stocks_list(country = country)
 close_prices = get_data(market = codes[country], stock_list=stock_list,
                         start=start, end=today, key=st.secrets["eod_api_key"])
     
