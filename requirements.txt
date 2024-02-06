@@ -19,7 +19,6 @@ lxml==5.1.0
 markdown-it-py==3.0.0
 MarkupSafe==2.1.4
 mdurl==0.1.2
-mitosheet==0.1.549
 numpy==1.26.3
 packaging==23.2
 pandas==2.2.0
