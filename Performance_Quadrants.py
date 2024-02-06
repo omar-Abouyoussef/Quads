@@ -18,7 +18,7 @@ def change(data, freq):
 @st.cache_data
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
-     if market == "US":
+     if market=="US":
           yf.pdr_override()
           stock_list.sort()
           return pdr.get_data_yahoo(stock_list, start, end)["Close"]
