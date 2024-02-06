@@ -5,7 +5,7 @@ import pandas_datareader.data as pdr
 import yfinance as yf
 import plotly.express as px
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+from sklearn.decomposition import FactorAnalysis
 from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
@@ -112,10 +112,10 @@ list(
 performance.dropna(inplace=True)
 scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
-pca = PCA(1)
-short_term= pca.fit_transform(performance_scaled[:,0:3]).reshape(-1)
-medium_term=pca.fit_transform(performance_scaled[:,3:6]).reshape(-1)
-long_term=pca.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
+faa = FactorAnalysis(1)
+short_term= fa.fit_transform(performance_scaled[:,0:3]).reshape(-1)
+medium_term=fa.fit_transform(performance_scaled[:,3:6]).reshape(-1)
+long_term=fa.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
 factors=pd.DataFrame(data = {"Short-term":short_term,
                                "Medium-term":medium_term,
                                "Long-term":long_term},
