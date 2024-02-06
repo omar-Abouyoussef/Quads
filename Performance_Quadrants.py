@@ -113,7 +113,7 @@ list(
 performance.dropna(inplace=True)
 scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
-faa = FactorAnalysis(1)
+fa = FactorAnalysis(1)
 short_term= fa.fit_transform(performance_scaled[:,0:3]).reshape(-1)
 medium_term=fa.fit_transform(performance_scaled[:,3:6]).reshape(-1)
 long_term=fa.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
