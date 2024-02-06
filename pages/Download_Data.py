@@ -4,6 +4,7 @@ import pandas as pd
 import requests
 import streamlit as st
 import io
+from mito.streamlit.v1 import spreadsheet
 
 
 @st.cache_data
@@ -75,7 +76,8 @@ close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
                         start=start, end=end, key=st.secrets['eod_api_key'])
 
 if close_prices is not None:
-  st.dataframe(close_prices)
+  close_prices, code = spreadsheet(close_prices)
+  st.write(close_prices)
 
   st.download_button(
       label="Download",
