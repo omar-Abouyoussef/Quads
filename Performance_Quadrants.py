@@ -102,7 +102,7 @@ list(
         index = close_prices.columns
         )
 
-
+performance.dropna(inplace=True)
 scaler = StandardScaler()
 performance_scaled = scaler.fit_transform(performance)
 pca = PCA(1)
