@@ -37,12 +37,15 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
          close_prices['date'] = date
          close_prices.set_index('date', inplace=True)
          return close_prices
-    else:
-         SR_list = []
-         for stock in stock_list:
-          SR_list.append(stock+f'.{market}')
-         return pdr.get_data_yahoo(SR_list, start, end)["Close"]
 
+    elif market == 'FOREX':
+         return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+    
+    else:
+         ticker_list = []
+         for stock in stock_list:
+          ticker_list.append(stock+f'.{market}')
+         return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
 ######################
 ####################
 
@@ -53,12 +56,31 @@ st.sidebar.header('Home')
 
 
 #####
+#Global Vars
+#####
 today = dt.date.today()
 start = today - dt.timedelta(365)
 
+
+codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'FOREX', 'Crypto':'CC'}
+
+fx_list = ['EURUSD=X','JPY=X',
+           'GBPUSD=X', 'AUDUSD=X',
+           'NZDUSD=X', 'EURJPY=X',
+           'GBPJPY=X', 'EURGBP=X',
+           'EURCAD=X', 'EURSEK=X',
+           'EURCHF=X', 'EURHUF=X',
+           'EURJPY=X', 'CNY=X',
+           'HKD=X', 'SGD=X',
+           'INR=X', 'MXN=X',
+           'PHP=X', 'IDR=X',
+           'THB=X', 'MYR=X',
+           'ZAR=X', 'RUB=X']
+
+###############################
 #inputs
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia'],
+                       options = ['Egypt', 'United States', 'Saudi Arabia', 'Forex'],
                        key='country')
 country = st.session_state.country
 
@@ -66,24 +88,17 @@ plot = st.selectbox(label='Plot type:',
                     options=['Short-term|Medium-term', 'Short-term|Long-term', 'Medium-term|Long-term'],
                     key='plot')
 plot = st.session_state.plot
+##################################
 
+if country == 'Forex':
+    close_prices = get_data(market = codes[country], stock_list=fx_list,
+                            start=start, end=today, key=st.secrets["eod_api_key"])
+else:
+    stock_list = investpy.stocks.get_stocks_list(country = country)
+    close_prices = get_data(market = codes[country], stock_list=stock_list,
+                            start=start, end=today, key=st.secrets["eod_api_key"])
+    
 
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'FOREX', 'Crypto':'CC'}
-#if country == 'Forex':
-#fx_list = investpy.currency_crosses.get_available_currencies()
-#close_prices = get_data(market = codes[country], stock_list=fx_list,
-#                        start=start, end=today, key=st.secrets["eod_api_key"])
-
-#elif country == "Crypto":
-#crypto_list = investpy.crypto.get_cryptos()
-#close_prices = get_data(market = codes[country], stock_list=fx_list,
-#                        start=start, end=today, key=st.secrets["eod_api_key"])
-
-
-#else:
-stock_list = investpy.stocks.get_stocks_list(country = country)
-close_prices = get_data(market = codes[country], stock_list=stock_list,
-                        start=start, end=today, key=st.secrets["eod_api_key"])
     
 
 close_prices.dropna(axis = 1, inplace = True)    
