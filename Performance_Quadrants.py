@@ -17,11 +17,9 @@ def change(data, freq):
    
 @st.cache_data
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
-
-    stock_list.sort()
+    
     close_prices = pd.DataFrame(columns=stock_list)
     if market == "US":
-         yf.pdr_override()
          return pdr.get_data_yahoo(stock_list, start, end)["Close"]
 
     elif market == "EGX":
@@ -39,13 +37,13 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
          return close_prices
 
     elif market == 'FOREX':
-         return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
     
     else:
-         ticker_list = []
-         for stock in stock_list:
-          ticker_list.append(stock+f'.{market}')
-         return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
+        ticker_list = []
+        for stock in stock_list:
+            ticker_list.append(stock+f'.{market}')
+        return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
 ######################
 ####################
 
@@ -79,6 +77,7 @@ fx_list = ['EURUSD=X','JPY=X',
 
 ###############################
 #inputs
+############3
 country = st.selectbox(label='Country:',
                        options = ['Egypt', 'United States', 'Saudi Arabia', 'Forex'],
                        key='country')
@@ -88,8 +87,14 @@ plot = st.selectbox(label='Plot type:',
                     options=['Short-term|Medium-term', 'Short-term|Long-term', 'Medium-term|Long-term'],
                     key='plot')
 plot = st.session_state.plot
-##################################
+###########################
 
+
+##################################
+#download data
+###########################
+
+yf.pdr_override()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
                             start=start, end=today, key=st.secrets["eod_api_key"])
@@ -98,7 +103,7 @@ else:
     close_prices = get_data(market = codes[country], stock_list=stock_list,
                             start=start, end=today, key=st.secrets["eod_api_key"])
     
-
+##################################
     
 
 close_prices.dropna(axis = 1, inplace = True)    
