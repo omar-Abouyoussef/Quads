@@ -1,6 +1,6 @@
 import datetime as dt
 import pandas as pd
-import pandas_datareader as pdr
+import pandas_datareader.data as pdr
 import yfinance as yf
 import requests
 import streamlit as st
