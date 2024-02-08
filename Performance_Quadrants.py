@@ -58,7 +58,7 @@ start = today - dt.timedelta(365)
 
 #inputs
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States'],
+                       options = ['Egypt', 'United States', 'Saudi Arabia'],
                        key='country')
 country = st.session_state.country
 
