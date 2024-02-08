@@ -32,7 +32,7 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
              close_prices[ticker] = close
            except:
              pass
-         url = f'https://eodhd.com/api/eod/{stock_list[-1]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
+         url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
          date = requests.get(url).json()
          close_prices['date'] = date
          close_prices.set_index('date', inplace=True)
