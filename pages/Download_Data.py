@@ -28,7 +28,10 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
          return close_prices
 
     elif market == 'FOREX':
-        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+        fx_list = []
+        for stock in stock_list:
+            fx_list.append("=X")
+        return pdr.get_data_yahoo(fx_list, start, end)["Close"]
     
     else:
         ticker_list = []
