@@ -1,5 +1,7 @@
 import datetime as dt
 import pandas as pd
+import pandas_datareader as pdr
+import yfinance as yf
 import requests
 import streamlit as st
 import io
@@ -76,7 +78,7 @@ end = st.session_state.end
 
 codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'FOREX'}
 
-
+yf.pdr_override()
 close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
                         start=start, end=end, key=st.secrets['eod_api_key'])
 
