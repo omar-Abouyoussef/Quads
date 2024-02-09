@@ -78,7 +78,7 @@ fx_list = ['EURUSD=X','JPY=X',
 #inputs
 ############3
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States'],
+                       options = ['Egypt', 'United States', 'Saudi Arabia', 'Forex'],
                        key='country')
 country = st.session_state.country
 
