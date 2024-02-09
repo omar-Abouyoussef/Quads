@@ -137,7 +137,7 @@ model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
 "Medium-term": ["1-Week", "3-Week", "1-Month"],
 "Long-term": ["3-Month", "6-Month"]}
 
-model_spec = ModelSpecificationParser.parse_model_specification_from_dict(X, model_dict)
+model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
 cfa = ConfirmatoryFactorAnalyzer(model_spec).fit(performance.values)
 
 factors = pd.DataFrame(cfa.transform(performance.values),
