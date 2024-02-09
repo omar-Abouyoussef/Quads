@@ -4,8 +4,7 @@ import requests
 import pandas_datareader.data as pdr
 import yfinance as yf
 import plotly.express as px
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import FactorAnalysis
+from factor_analyzer import ConfirmatoryFactorAnalyzer, ModelSpecificationParser
 from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
@@ -134,16 +133,16 @@ list(
         )
 
 performance.dropna(inplace=True)
-scaler = StandardScaler()
-performance_scaled = scaler.fit_transform(performance)
-fa = FactorAnalysis(1)
-short_term= fa.fit_transform(performance_scaled[:,0:3]).reshape(-1)
-medium_term=fa.fit_transform(performance_scaled[:,3:6]).reshape(-1)
-long_term=fa.fit_transform(performance_scaled[:,-3:-1]).reshape(-1)
-factors=pd.DataFrame(data = {"Short-term":short_term,
-                               "Medium-term":medium_term,
-                               "Long-term":long_term},
-                       index = performance.index)
+model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
+"Medium-term": ["1-Week", "3-Week", "1-Month"],
+"Long-term": ["3-Month", "6-Month"]}
+
+model_spec = ModelSpecificationParser.parse_model_specification_from_dict(X, model_dict)
+cfa = ConfirmatoryFactorAnalyzer(model_spec).fit(performance.values)
+
+factors = pd.DataFrame(cfa.transform(performance.values),
+                       index = performance.index,
+                       columns = ['Short-term', 'Medium-term', 'Long-term'])
 
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
