@@ -139,7 +139,7 @@ model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
 "Long-term": ["3-Month", "6-Month"]}
 
 model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
-cfa = ConfirmatoryFactorAnalyzer(model_spec).fit(performance.values)
+cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
@@ -154,10 +154,11 @@ factors['Cluster']=model.labels_
 ######
 tickers = st.text_input(label='Ticker(s)',
                         value=" ".join(factors.index.to_list()),
-                        key='tickers')
+                        key='tickers',
+                        placeholder="All")
 tickers = st.session_state.tickers.split(" ")
 #######              
-fig.show()
+
 if plot == 'Short-term|Medium-term':
     fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
                    hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
