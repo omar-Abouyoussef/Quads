@@ -155,8 +155,10 @@ factors['Cluster']=model.labels_
 tickers = st.text_input(label='Ticker(s)',
                         value=" ".join(factors.index.to_list()),
                         key='tickers',
-                        placeholder="All")
-if tickers.isupper():
+                        help="Enter all uppercase!")
+if tickers is None:
+    tickers = " ".join(factors.index.to_list())
+elif tickers.isupper():
     tickers = st.session_state.tickers.split(" ")
 else:
     st.error("Enter ticker(s) in Uppercase!")
