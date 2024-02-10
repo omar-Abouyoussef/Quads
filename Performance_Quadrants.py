@@ -157,6 +157,7 @@ tickers = st.text_input(label='Ticker(s)',
                         key='tickers',
                         help="Enter all uppercase!",
                         placeholder='All')
+tickers = st.session_state.tickers
 st.write("-"+tickers+".")
 if tickers == "All":
     tickers = " ".join(factors.index.to_list())
