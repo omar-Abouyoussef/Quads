@@ -158,13 +158,14 @@ tickers = st.text_input(label='Ticker(s)',
                         help="Enter all uppercase!",
                         placeholder='Choose ticker(s)')
 
-if tickers is not None:
+if tickers == "":
+    st.write("Reload page to get all tickers")
+else:
     if tickers.isupper():
         tickers = st.session_state.tickers.split(" ")
     else:
         st.error("Enter ticker(s) in Uppercase!")
-else:
-    st.write("Reload page to get all tickers")
+
 #######              
 try:
     if plot == 'Short-term|Medium-term':
