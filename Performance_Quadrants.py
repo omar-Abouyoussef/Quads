@@ -159,10 +159,11 @@ tickers = st.text_input(label='Ticker(s)',
 if tickers == "":
     tickers = " ".join(factors.index.to_list())
     tickers = st.session_state.tickers
-elif tickers.isupper():
-    tickers = st.session_state.tickers.split(" ")
 else:
-    st.error("Enter ticker(s) in Uppercase!")
+    if tickers.isupper():
+        tickers = st.session_state.tickers.split(" ")
+    else:
+        st.error("Enter ticker(s) in Uppercase!")
 #######              
 try:
     if plot == 'Short-term|Medium-term':
