@@ -156,7 +156,7 @@ tickers = st.text_input(label='Ticker(s)',
                         value=" ".join(factors.index.to_list()),
                         key='tickers',
                         help="Enter all uppercase!")
-if tickers is None:
+if tickers == "":
     tickers = " ".join(factors.index.to_list())
 elif tickers.isupper():
     tickers = st.session_state.tickers.split(" ")
