@@ -166,8 +166,9 @@ if tickers is not None:
 elif tickers is None:
     tickers = " ".join(factors.index.to_list())
     tickers = st.session_state.tickers
+    st.write("case 2")
 else:
-print("inv")
+    st.write("inv")
 #######              
 try:
     if plot == 'Short-term|Medium-term':
