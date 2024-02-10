@@ -163,7 +163,7 @@ if tickers is not None:
         tickers = st.session_state.tickers.split(" ")
     else:
         st.error("Enter ticker(s) in Uppercase!")
-elif tickers is None:
+elif tickers == "":
     tickers = " ".join(factors.index.to_list())
     tickers = st.session_state.tickers
     st.write("case 2")
