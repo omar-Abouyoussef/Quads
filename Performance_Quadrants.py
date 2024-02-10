@@ -158,10 +158,8 @@ tickers = st.text_input(label='Ticker(s)',
                         help="Enter all uppercase!",
                         placeholder='All')
 tickers = st.session_state.tickers
-st.write("-"+tickers+".")
 if tickers == "All":
-    tickers = " ".join(factors.index.to_list())
-    tickers = st.session_state.tickers
+    st.session_state.tickers = " ".join(factors.index.to_list())
 else:
     if tickers.isupper():
         tickers = st.session_state.tickers.split(" ")
