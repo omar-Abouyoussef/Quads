@@ -86,6 +86,12 @@ plot = st.selectbox(label='Plot type:',
                     options=['Short-term|Medium-term', 'Short-term|Long-term', 'Medium-term|Long-term'],
                     key='plot')
 plot = st.session_state.plot
+
+tickers = st.text_input(label='Ticker(s)',
+                        value=" ".join(factors.index.to_list()),
+                        key='tickers')
+tickers = st.session_state.tickers.split(" ")
+                
 ###########################
 
 
@@ -148,16 +154,19 @@ model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
 #factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
 
+
+
+fig.show()
 if plot == 'Short-term|Medium-term':
-    fig=px.scatter(factors,x='Medium-term',y='Short-term',
-                   hover_data=[factors.index],color=factors["Cluster"].astype(str))
+    fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
+                   hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     
 elif plot == 'Medium-term|Long-term':
-    fig = px.scatter(factors, x='Long-term', y='Medium-term',
-                     hover_data = [factors.index],color=factors["Cluster"].astype(str))
-else: 
-   fig = px.scatter(factors, x='Long-term', y='Short-term',
-                    hover_data = [factors.index],color=factors["Cluster"].astype(str))
+    fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
+                   hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+else:
+    fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
+                   hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
 
 fig.add_hline(y=0)
 fig.add_vline(x=0)
