@@ -153,9 +153,11 @@ factors['Cluster']=model.labels_
 #input
 ######
 tickers = st.text_input(label='Ticker(s)',
+                        value=" ".join(factors.index.to_list()),
                         key='tickers',
-                        help="Enter all uppercase!")
-if tickers is None:
+                        help="Enter all uppercase!",
+                        placeholder='All')
+if tickers == "All":
     tickers = " ".join(factors.index.to_list())
     tickers = st.session_state.tickers
 else:
