@@ -161,22 +161,24 @@ if tickers.isupper():
 else:
     st.error("Enter ticker(s) in Uppercase!")
 #######              
-
-if plot == 'Short-term|Medium-term':
-    fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
-                   hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+try:
+    if plot == 'Short-term|Medium-term':
+        fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     
-elif plot == 'Medium-term|Long-term':
-    fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
-                   hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
-else:
-    fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
-                   hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+    elif plot == 'Medium-term|Long-term':
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+    else:
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
 
-fig.add_hline(y=0)
-fig.add_vline(x=0)
+    fig.add_hline(y=0)
+    fig.add_vline(x=0)
 
-st.plotly_chart(fig)
+    st.plotly_chart(fig)
+except:
+    pass
 
 st.write('''Top-right Quadrant: Siginfies extremely bullish and violent movement in price- suited for momentum plays. \n  \n  Bottom-right: After a bullish move equties weakened and price started to drop. \n  \n  Bottom-Left Quadrant: Falling equties. \n \n  Top-left: Falling stocks started to improve their preformance attracting more buyers. \n\n\n  Note:   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case)''')
 
