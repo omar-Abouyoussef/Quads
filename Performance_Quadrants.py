@@ -163,11 +163,11 @@ if tickers is not None:
         tickers = st.session_state.tickers.split(" ")
     else:
         st.error("Enter ticker(s) in Uppercase!")
-elif tickers == "":
+elif tickers is None:
     tickers = " ".join(factors.index.to_list())
     tickers = st.session_state.tickers
 else:
-    print('inv')
+print("inv")
 #######              
 try:
     if plot == 'Short-term|Medium-term':
