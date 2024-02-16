@@ -7,6 +7,6 @@ def goodness_of_fit(X):
     return np.sum(np.sum(X**2, axis=1))/X.shape[0]
 
 
-loadings = pd.DataFrame(cfa.loadings_, index=performance.columns, columns=["Short-term","Medium-term", "Long-term"])
+loadings=pd.DataFrame(cfa.loadings_,index=performance.columns,columns=["Short-term","Medium-term","Long-term"])
 st.table(loadings.round(3))
 st.write(goodness_of_fit(loadings).round(3))
