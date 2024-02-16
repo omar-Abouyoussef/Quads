@@ -10,4 +10,4 @@ def goodness_of_fit(X):
 loadings=pd.DataFrame(cfa.loadings_,index=performance.columns,columns=["Short-term","Medium-term","Long-term"])
 st.header("Factor Loadings")
 st.table(loadings.round(3))
-st.write(f"Goodness of fit: {goodness_of_fit(loadings).round(3)*100}%")
+st.write(f"Goodness of fit: {(goodness_of_fit(loadings)*100).round(3)}%")
