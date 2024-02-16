@@ -112,6 +112,7 @@ one_day_return = change(close_prices, 1)
 two_day_return = change(close_prices, 2)
 three_day_return = change(close_prices, 3)
 weekly_return = change(close_prices, 5)
+two_week_return = change(close_prices, 10)
 three_week_return = change(close_prices, 15)
 one_month_return = change(close_prices, 22)
 three_month_return = change(close_prices, 66)
@@ -124,19 +125,20 @@ list(
         two_day_return,
         three_day_return,
         weekly_return,
+        two_week_return,
         three_week_return,
         one_month_return,
         three_month_return,
         six_month_return)
         ),
-        columns = ['1-Day', '2-Day', '3-Day', '1-Week', '3-Week', '1-Month', '3-Month', '6-Month'],
+        columns = ['1-Day', '2-Day', '3-Day', '1-Week', '2-Week', '3-Week', '1-Month', '3-Month', '6-Month'],
         index = close_prices.columns
         )
 
 performance.dropna(inplace=True)
 model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
-"Medium-term": ["1-Week", "3-Week", "1-Month"],
-"Long-term": ["3-Month", "6-Month"]}
+"Medium-term": ["1-Week", "2-Week", "3-Week"],
+"Long-term": ["1-Month", "3-Month", "6-Month"]}
 
 model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
 cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
