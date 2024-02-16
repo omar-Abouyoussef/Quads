@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-from factor_analyzer import ConfirmatoryFactorAnalyzer, ModelSpecificationParser
 from Performance_Quadrants import performance, cfa
 
 def goodness_of_fit(X):
