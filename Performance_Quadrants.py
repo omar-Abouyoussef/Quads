@@ -193,8 +193,7 @@ try:
         with df:
             st.dataframe(factors)            
 #caption = st.markdown(f"* {close_prices.index[-1]}*")
-
-caption = f'<p style="font-family:Courier; font-size: 20px;"> Last available data point as of{close_prices.index[-1]}</p>'
+caption = '<p style="font-family:Courier; font-size: 20px;"> Last available data point as of{close_prices.index[-1]}</p>'
 st.markdown(caption, unsafe_allow_html=True)
 st.image(image, channels="BGR")
 
