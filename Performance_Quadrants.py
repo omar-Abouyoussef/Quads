@@ -185,7 +185,7 @@ try:
     fig.add_vline(x=0)
 
     st.plotly_chart(fig)
-    st.markdown(f"*Last available data point as of {close_prices.index[-1}*")
+    st.markdown(f"*Last available data point as of {close_prices.index[-1]}*")
 except:
     st.warning("Invalid ticker(s)")
 
