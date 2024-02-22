@@ -187,10 +187,11 @@ try:
     container = st.container()
     with container:
         df, plot = st.columns([0.7, 0.3])
-        with df:
-            st.dataframe(factors)
+        
         with plot:
             st.plotly_chart(fig)
+        with df:
+            st.dataframe(factors)            
     st.markdown(f"*Last available data point as of {close_prices.index[-1]}*")
 except:
     st.warning("Invalid ticker(s)")
