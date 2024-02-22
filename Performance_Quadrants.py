@@ -190,17 +190,13 @@ try:
         
         with plot:
             st.plotly_chart(fig)
+            st.markdown(f"*Last available data point as of {close_prices.index[-1]}*")
         with df:
             st.dataframe(factors)            
-#caption = st.markdown(f"* {close_prices.index[-1]}*")
-caption = '<p style="font-family:Courier; font-size: 20px;"> Last available data point as of{close_prices.index[-1]}</p>'
-st.markdown(caption, unsafe_allow_html=True)
-st.image(image, channels="BGR")
-
 
 
 except:
     st.warning("Invalid ticker(s)")
 
-st.write('''Top-right Quadrant: Siginfies extremely bullish and violent movement in price- suited for momentum plays. \n  \n  Bottom-right: After a bullish move equties weakened and price started to drop. \n  \n  Bottom-Left Quadrant: Falling equties. \n \n  Top-left: Falling stocks started to improve their preformance attracting more buyers. \n\n\n  Note:   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case) \n\n\n''')
+st.write('''\n\n\n  Top-right Quadrant: Siginfies extremely bullish and violent movement in price- suited for momentum plays. \n  \n  Bottom-right: After a bullish move equties weakened and price started to drop. \n  \n  Bottom-Left Quadrant: Falling equties. \n \n  Top-left: Falling stocks started to improve their preformance attracting more buyers. \n\n\n  Note:   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case) \n\n\n''')
 st.write("Check Model diagnostics before using")
