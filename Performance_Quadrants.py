@@ -184,7 +184,13 @@ try:
     fig.add_hline(y=0)
     fig.add_vline(x=0)
 
-    st.plotly_chart(fig)
+    container = st.container()
+    with container:
+        df, plot = st.columns([0.7, 0.3])
+        with df:
+            st.dataframe(factors)
+        with plot:
+            st.plotly_chart(fig)
     st.markdown(f"*Last available data point as of {close_prices.index[-1]}*")
 except:
     st.warning("Invalid ticker(s)")
