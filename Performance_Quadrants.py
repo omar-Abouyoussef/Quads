@@ -192,7 +192,14 @@ try:
             st.plotly_chart(fig)
         with df:
             st.dataframe(factors)            
-    st.markdown(f"*Last available data point as of {close_prices.index[-1]}*")
+caption = st.markdown(f"*Last available data point as of {close_prices.index[-1]}*")
+
+caption = '<p style="font-family:Courier; font-size: 20px;">f"{caption}"</p>'
+st.markdown(caption, unsafe_allow_html=True)
+st.image(image, channels="BGR")
+
+
+
 except:
     st.warning("Invalid ticker(s)")
 
