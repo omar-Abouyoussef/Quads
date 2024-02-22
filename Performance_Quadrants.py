@@ -186,7 +186,7 @@ try:
 
     container = st.container()
     with container:
-        df, plot = st.columns([0.7, 0.3])
+        plot, df = st.columns([0.7, 0.3])
         
         with plot:
             st.plotly_chart(fig)
