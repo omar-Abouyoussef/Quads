@@ -141,6 +141,8 @@ list(
         )
 
 performance.dropna(inplace=True)
+st.session_state.performance = performance   
+
 model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
 "Medium-term": ["1-Week", "2-Week", "3-Week"],
 "Long-term": ["1-Month", "3-Month", "6-Month"]}
@@ -151,6 +153,7 @@ cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = ['Short-term', 'Medium-term', 'Long-term'])
+st.session_state.cfa = cfa
 
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
