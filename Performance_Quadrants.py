@@ -18,7 +18,7 @@ def change(data, freq):
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
     close_prices = pd.DataFrame(columns=stock_list)
-    if market == "US":
+    if market in ["US", 'FOREX']:
          return pdr.get_data_yahoo(stock_list, start, end)["Close"]
 
     elif market == "EGX":
@@ -34,9 +34,6 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
          close_prices['date'] = date
          close_prices.set_index('date', inplace=True)
          return close_prices
-
-    elif market == 'FOREX':
-        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
     
     else:
         ticker_list = []
@@ -104,7 +101,15 @@ else:
                             start=start, end=today, key=st.secrets["eod_api_key"])
     
 ##################################
-    
+
+if country == "United States":
+    price = st.number_input(label='Minimum price: ',
+                              key='fltr')
+    price = st.session_state.fltr
+
+    if price:
+        cols = close_prices.columns[close_prices.iloc[-1,:] > price]
+        close_prices = close_prices[cols]
 
 close_prices.dropna(axis = 1, inplace = True)    
 
