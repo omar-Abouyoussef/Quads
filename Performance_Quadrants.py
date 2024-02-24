@@ -8,32 +8,79 @@ from factor_analyzer import ConfirmatoryFactorAnalyzer, ModelSpecificationParser
 from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 
 
 def change(data, freq):
     return data.iloc[-1]/data.iloc[-(freq+1)] - 1
 
-   
+
+def download(ticker, market, start, end, key):
+    close = None
+    try:
+      url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
+      res = requests.get(url)
+      if res.status_code == 200:
+        close = requests.get(url).json()
+    except:
+      pass
+    return ticker, close
+
+def get_us_forex_data(stock, start, end):
+    return pdr.get_data_yahoo([stock], start, end)["Close"]
+    
+
 @st.cache_data
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
-    close_prices = pd.DataFrame(columns=stock_list)
+    
     if market in ["US", 'FOREX']:
-         return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
 
     elif market == "EGX":
-         for idx, ticker in enumerate(stock_list):
-           try:
-             url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-             close = requests.get(url).json()
-             close_prices[ticker] = close
-           except:
-             pass
-         url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-         date = requests.get(url).json()
-         close_prices['date'] = date
-         close_prices.set_index('date', inplace=True)
-         return close_prices
+        close_prices = pd.DataFrame(columns=stock_list)
+         
+        markets = [market]*len(stock_list)
+        starts = [start]*len(stock_list)
+        ends = [end]*len(stock_list)
+        keys = [key]*len(stock_list)
+
+        s = time.perf_counter()
+        with ThreadPoolExecutor(max_workers=12) as executor:
+            for ticker, close in executor.map(download,stock_list, markets, starts, ends, keys):
+                try:
+                    close_prices[ticker] = close
+                except:
+                    pass
+        url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
+        res = requests.get(url)
+        if res.status_code == 200:
+            date = res.json()
+            close_prices['date'] = date
+            close_prices.set_index('date', inplace=True)
+            e = time.perf_counter()
+            st.write(f"Finished in {e-s:.4} s")
+            return close_prices
+
+    #     #####################################################
+    #     # s = time.perf_counter()
+    #     # for idx, ticker in enumerate(stock_list):
+    #     #     try:
+    #     #         url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
+    #     #         close = requests.get(url).json()
+    #     #         close_prices[ticker] = close
+    #     #     except:
+    #     #         pass
+    #     # url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
+    #     # date = requests.get(url).json()
+    #     # close_prices['date'] = date
+    #     # close_prices.set_index('date', inplace=True)
+    #     # e = time.perf_counter()
+    #     # st.write(f"Finished in {e-s:.4} s")
+    #     # return close_prices
+    #     #####################################################
     
     else:
         ticker_list = []
