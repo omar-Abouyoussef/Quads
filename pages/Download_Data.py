@@ -1,43 +1,72 @@
+
+from concurrent.futures import ThreadPoolExecutor
 import datetime as dt
+import time
 import pandas as pd
-import pandas_datareader.data as pdr
-import yfinance as yf
 import requests
 import streamlit as st
 import io
 
 @st.cache_data
-def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
+def download(ticker, market, start, end, key):
+    try:
+      url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
+      res = requests.get(url)
+      if res.status_code == 200:
+        close = requests.get(url).json()
+    except:
+      pass
+    return ticker, close
+
+@st.cache_data
+def get_data(market:str, stock_list, start:dt.date, end:dt.date, key:str):
     
+    markets = [market]*len(stock_list)
+    starts = [start]*len(stock_list)
+    ends = [end]*len(stock_list)
+    keys = [key]*len(stock_list)
+
     close_prices = pd.DataFrame(columns=stock_list)
-    if market == "US":
-         return pdr.get_data_yahoo(stock_list, start, end)["Close"]
 
-    elif market == "EGX":
-         for idx, ticker in enumerate(stock_list):
-           try:
-             url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-             close = requests.get(url).json()
-             close_prices[ticker] = close
-           except:
-             pass
-         url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-         date = requests.get(url).json()
-         close_prices['date'] = date
-         close_prices.set_index('date', inplace=True)
-         return close_prices
+    s = time.perf_counter()
+    with ThreadPoolExecutor(max_workers=16) as executor:
+        for ticker, close in executor.map(download,stock_list, markets, starts, ends, keys):
+            close_prices[ticker] = close
 
-    elif market == 'FOREX':
-        fx_list = []
-        for stock in stock_list:
-            fx_list.append(stock+"=X")
-        return pdr.get_data_yahoo(fx_list, start, end)["Close"]
+    url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
+    res = requests.get(url)
+    if res.status_code == 200:
+      date = res.json()
+      close_prices['date'] = date
+      close_prices.set_index('date', inplace=True)
+      e = time.perf_counter()
+      st.write(f"Finished in {e-s:.4} s")
+      return close_prices
+
+
+
+
+# @st.cache_data
+# def get_data(market:str, stock_list, start:dt.date, end:dt.date, key:str):
     
-    else:
-        ticker_list = []
-        for stock in stock_list:
-            ticker_list.append(stock+f'.{market}')
-        return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
+  
+#     close_prices = pd.DataFrame(columns=stock_list)
+#     for idx, ticker in enumerate(stock_list):
+#       try:
+#         url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
+#         res = requests.get(url)
+#         if res.status_code == 200:
+#           close = requests.get(url).json()
+#           close_prices[ticker] = close
+#       except:
+#         pass
+#     url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
+#     res = requests.get(url)
+#     if res.status_code == 200:
+#       date = res.json()
+#       close_prices['date'] = date
+#       close_prices.set_index('date', inplace=True)
+#       return close_prices
 
 
 
@@ -55,7 +84,7 @@ st.title('Download data')
 
 #inputs
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia', 'Forex'],
+                       options = ['Egypt', 'United States', 'Saudi Arabia'],
                        key='country')
 country = st.session_state.country
 
@@ -79,9 +108,9 @@ end = st.session_state.end
 
 
 
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'Forex':'FOREX'}
+codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
 
-yf.pdr_override()
+
 close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
                         start=start, end=end, key=st.secrets['eod_api_key'])
 
