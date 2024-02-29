@@ -127,7 +127,7 @@ country = st.selectbox(label='Country:',
 country = st.session_state.country
 
 plot = st.selectbox(label='Plot type:',
-                    options=['Short-term|Medium-term', 'Short-term|Long-term', 'Medium-term|Long-term'],
+                    options=['Factor 2|Factor 3', 'Factor 1|Factor 3', 'Factor 2|Factor 3'],
                     key='plot')
 plot = st.session_state.plot
 
