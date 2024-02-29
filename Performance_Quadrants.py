@@ -4,7 +4,7 @@ import requests
 import pandas_datareader.data as pdr
 import yfinance as yf
 import plotly.express as px
-from factor_analyzer import ConfirmatoryFactorAnalyzer, ModelSpecificationParser
+from factor_analyzer import FactorAnalyzer, ConfirmatoryFactorAnalyzer, ModelSpecificationParser
 from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
@@ -190,16 +190,18 @@ list(
 performance.dropna(inplace=True)
 st.session_state.performance = performance   
 
-model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
-"Medium-term": ["1-Week", "2-Week", "3-Week"],
-"Long-term": ["1-Month", "3-Month", "6-Month"]}
 
-model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
-cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
+cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
+# model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
+# "Medium-term": ["1-Week", "2-Week", "3-Week"],
+# "Long-term": ["1-Month", "3-Month", "6-Month"]}
+
+# model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
+# cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
-                       columns = ['Short-term', 'Medium-term', 'Long-term'])
+                       columns = ['Factor 1', 'Factor 2', 'Factor 3'])
 st.session_state.cfa = cfa
 
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
