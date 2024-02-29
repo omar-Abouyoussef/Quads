@@ -191,7 +191,7 @@ performance.dropna(inplace=True)
 st.session_state.performance = performance   
 
 
-cfa = FactorAnalyzer(3, rotation = 'varimax').fit(performance.values)
+cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
 # model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
 # "Medium-term": ["1-Week", "2-Week", "3-Week"],
 # "Long-term": ["1-Month", "3-Month", "6-Month"]}
@@ -228,14 +228,14 @@ else:
 #######              
 try:
     if plot == 'Short-term|Medium-term':
-        fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
+        fig=px.scatter(factors.loc[tickers,:],x='Factor 2',y='Factor 1',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     
     elif plot == 'Medium-term|Long-term':
-        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
+        fig=px.scatter(factors.loc[tickers,:],x='Factor 3',y='Factor 2',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     else:
-        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
+        fig=px.scatter(factors.loc[tickers,:],x='Factor 3',y='Factor 1',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
 
     fig.add_hline(y=0)
