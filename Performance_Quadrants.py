@@ -227,11 +227,11 @@ else:
 
 #######              
 try:
-    if plot == 'Short-term|Medium-term':
+    if plot == 'Factor 2|Factor 1':
         fig=px.scatter(factors.loc[tickers,:],x='Factor 2',y='Factor 1',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     
-    elif plot == 'Medium-term|Long-term':
+    elif plot == 'Factor 3|Factor 2':
         fig=px.scatter(factors.loc[tickers,:],x='Factor 3',y='Factor 2',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     else:
