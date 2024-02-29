@@ -127,7 +127,7 @@ country = st.selectbox(label='Country:',
 country = st.session_state.country
 
 plot = st.selectbox(label='Plot type:',
-                    options=['Factor 2|Factor 3', 'Factor 1|Factor 3', 'Factor 2|Factor 3'],
+                    options=['Factor 1|Factor 2', 'Factor 2|Factor 3', 'Factor 1|Factor 3'],
                     key='plot')
 plot = st.session_state.plot
 
@@ -225,13 +225,14 @@ else:
     else:
         st.error("Enter ticker(s) in Uppercase!")
 
+
 #######              
 try:
-    if plot == 'Factor 2|Factor 1':
-        fig=px.scatter(factors.loc[tickers,:],x='Factor 2',y='Factor 1',
+    if plot == 'Factor 1|Factor 2':
+        fig=px.scatter(factors.loc[tickers,:], x='Factor 2',y='Factor 1',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     
-    elif plot == 'Factor 3|Factor 2':
+    elif plot == 'Factor 2|Factor 3':
         fig=px.scatter(factors.loc[tickers,:],x='Factor 3',y='Factor 2',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     else:
