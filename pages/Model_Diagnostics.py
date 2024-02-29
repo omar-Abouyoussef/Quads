@@ -6,7 +6,7 @@ def goodness_of_fit(X):
     return np.sum(X)/X.shape[0]
 
 
-loadings=pd.DataFrame(st.session_state.cfa.loadings_,index=st.session_state.performance.columns,columns=["Factor 1","Fctor 2","Factor 3"])
+loadings=pd.DataFrame(st.session_state.cfa.loadings_,index=st.session_state.performance.columns,columns=["Factor 1","Factor 2","Factor 3"])
 loadings['Communalities'] = st.session_state.cfa.get_communalities()
 st.header("Factor Loadings")
 st.table(loadings.round(3))
