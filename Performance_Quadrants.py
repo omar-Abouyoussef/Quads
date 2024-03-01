@@ -200,20 +200,21 @@ cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
 # cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
 loadings=pd.DataFrame(cfa.loadings_, index=performance.columns, columns=["0","1","2"])
-st.dataframe(loadings)
+
 for idx, col in enumerate(loadings.columns):
     vars = loadings[loadings[col]>0.5].index
     if vars.any() in ["1-Day", "2-Day", "3-Day"]:
-       loadings.rename(columns={ loadings.columns[idx]: "Short-term" }, inplace = True)
+        loadings.rename(columns={ loadings.columns[idx]: "Short-term" }, inplace = True)
     elif vars.any() in ["1-Week", "2-Week", "3-Week"]:
-       loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
+        loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
     elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
-       loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
+        loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
-st.session_state.cfa = cfa
 st.dataframe(factors)
+st.dataframe(loadings)
+st.session_state.cfa = cfa
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
 #factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
