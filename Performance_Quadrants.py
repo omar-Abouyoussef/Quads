@@ -1,5 +1,6 @@
 import datetime as dt
 import pandas as pd
+import numpy as np
 import requests
 import pandas_datareader.data as pdr
 import yfinance as yf
@@ -127,7 +128,7 @@ country = st.selectbox(label='Country:',
 country = st.session_state.country
 
 plot = st.selectbox(label='Plot type:',
-                    options=['Short-term|Medium-term', 'Medium-term|Long-term', 'Short-term|Long-term'],
+                    options=['Short-term|Medium-term', 'Short-term|Long-term', 'Medium-term|Long-term'],
                     key='plot')
 plot = st.session_state.plot
 
@@ -199,24 +200,24 @@ cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
 # model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
 # cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
-loadings=pd.DataFrame(cfa.loadings_, index=performance.columns, columns=["0","1","2"])
+loadings = pd.DataFrame(cfa.loadings_, index = performance.columns)
+st.session_state.loadings = loadings
 
 for idx, col in enumerate(loadings.columns):
     vars = loadings[loadings[col]>0.5].index
     if vars.any() in ["1-Day", "2-Day", "3-Day"]:
-        loadings.rename(columns={loadings.columns[idx]: "Short-term" }, inplace = True)
+       loadings.rename(columns={ loadings.columns[idx]: "Short-term" }, inplace = True)
     elif vars.any() in ["1-Week", "2-Week", "3-Week"]:
-        loadings.rename(columns={loadings.columns[idx]: "Medium-term" }, inplace = True)
+       loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
     elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
-        loadings.rename(columns={loadings.columns[idx]: "Long-term" }, inplace = True)
-    else:
-        st.write("invalid")
-st.dataframe(loadings)
+       loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True) 
+
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
-st.dataframe(factors)
 st.session_state.cfa = cfa
+
+
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
 #factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
@@ -239,16 +240,18 @@ else:
         st.error("Enter ticker(s) in Uppercase!")
 
 
-#######
-
+#######              
 try:
-    
     if plot == 'Short-term|Medium-term':
-        fig=px.scatter(factors.loc[tickers,:], x='Medium-term',y='Short-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+        fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+    
     elif plot == 'Medium-term|Long-term':
-        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     else:
-        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
 
     fig.add_hline(y=0)
     fig.add_vline(x=0)
@@ -256,6 +259,7 @@ try:
     container = st.container()
     with container:
         plot, df = st.columns([0.7, 0.3])
+        
         with plot:
             st.plotly_chart(fig)
             st.markdown(f"*Last available data point as of {close_prices.index[-1]}*\n  \n")
@@ -265,7 +269,6 @@ try:
 
 except:
     st.warning("Invalid ticker(s)")
-    
 
-st.markdown('''**Note:**   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case) \n\n\n''')
+st.markdown('''\n  \n  **Top-right Quadrant:** Siginfies extremely bullish and violent movement in price- suited for momentum plays. \n  \n  **Bottom-right:** After a bullish move equties weakened and price started to drop. \n  \n  **Bottom-Left Quadrant:** Falling equties. \n \n  **Top-left:** Falling stocks started to improve their preformance attracting more buyers. \n\n\n  **Note:**   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case) \n\n\n''')
 st.write("Check Model diagnostics before using")
