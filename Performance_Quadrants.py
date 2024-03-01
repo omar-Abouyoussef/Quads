@@ -192,7 +192,7 @@ performance.dropna(inplace=True)
 st.session_state.performance = performance   
 
 
-cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
+cfa = FactorAnalyzer(3, rotation = 'varimax').fit(performance.values)
 # model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
 # "Medium-term": ["1-Week", "2-Week", "3-Week"],
 # "Long-term": ["1-Month", "3-Month", "6-Month"]}
