@@ -208,13 +208,12 @@ for idx, col in enumerate(loadings.columns):
        loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
     elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
        loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
-
-st.session_state.loadings = loadings
+st.write(loadings)
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
 st.session_state.cfa = cfa
-
+st.write(factors)
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
 #factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
