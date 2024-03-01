@@ -214,7 +214,7 @@ for idx, col in enumerate(loadings.columns):
 
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
-                       columns = loadings.columns)
+                       columns = st.session_state.loadings.columns)
 st.session_state.cfa = cfa
 
 
