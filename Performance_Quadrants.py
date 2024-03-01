@@ -204,18 +204,18 @@ loadings=pd.DataFrame(cfa.loadings_, index=performance.columns, columns=["0","1"
 for idx, col in enumerate(loadings.columns):
     vars = loadings[loadings[col]>0.5].index
     if vars.any() in ["1-Day", "2-Day", "3-Day"]:
-        loadings.rename(columns={ loadings.columns[idx]: "Short-term" }, inplace = True)
+        loadings.rename(columns={loadings.columns[idx]: "Short-term" }, inplace = True)
     elif vars.any() in ["1-Week", "2-Week", "3-Week"]:
-        loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
+        loadings.rename(columns={loadings.columns[idx]: "Medium-term" }, inplace = True)
     elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
-        loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
+        loadings.rename(columns={loadings.columns[idx]: "Long-term" }, inplace = True)
     else:
         st.write("invalid")
+st.dataframe(loadings)
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
 st.dataframe(factors)
-st.dataframe(loadings)
 st.session_state.cfa = cfa
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
