@@ -209,12 +209,11 @@ for idx, col in enumerate(loadings.columns):
         loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
     elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
         loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
-
-st.dataframe(loadings)
+    else:
+        st.write("invalid")
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
-st.dataframe(factors)
 
 st.session_state.cfa = cfa
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
@@ -240,31 +239,30 @@ else:
 
 
 #######              
-#try:
-if plot == 'Short-term|Medium-term':
-    fig=px.scatter(factors.loc[tickers,:], x='Medium-term',y='Short-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+try:
     
-elif plot == 'Medium-term|Long-term':
-    fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
-else:
-    fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+    if plot == 'Short-term|Medium-term':
+        fig=px.scatter(factors.loc[tickers,:], x='Medium-term',y='Short-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+    elif plot == 'Medium-term|Long-term':
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+    else:
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
 
-fig.add_hline(y=0)
-fig.add_vline(x=0)
+    fig.add_hline(y=0)
+    fig.add_vline(x=0)
 
-container = st.container()
-with container:
-    plot, df = st.columns([0.7, 0.3])
-        
-    with plot:
-        st.plotly_chart(fig)
-        st.markdown(f"*Last available data point as of {close_prices.index[-1]}*\n  \n")
-    with df:
-        st.dataframe(factors)            
+    container = st.container()
+    with container:
+        plot, df = st.columns([0.7, 0.3])
+        with plot:
+            st.plotly_chart(fig)
+            st.markdown(f"*Last available data point as of {close_prices.index[-1]}*\n  \n")
+        with df:
+            st.dataframe(factors)            
 
 
-#except:
-st.warning("Invalid ticker(s)")
+except:
+    st.warning("Invalid ticker(s)")
     
 
 st.markdown('''**Note:**   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case) \n\n\n''')
