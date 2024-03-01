@@ -199,7 +199,7 @@ cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
 # model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
 # cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
-loadings=pd.DataFrame(cfa.loadings_, index=performance.columns)
+loadings=pd.DataFrame(cfa.loadings_, index=performance.columns, columns=["0","1","2"])
 for idx, col in enumerate(loadings.columns):
     vars = loadings[loadings[col]>0.5].index
     if vars.any() in ["1-Day", "2-Day", "3-Day"]:
