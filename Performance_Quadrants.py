@@ -127,7 +127,7 @@ country = st.selectbox(label='Country:',
 country = st.session_state.country
 
 plot = st.selectbox(label='Plot type:',
-                    options=['Factor 1|Factor 2', 'Factor 2|Factor 3', 'Factor 1|Factor 3'],
+                    options=['Short-term|Medium-term', 'Medium-term|Long-term', 'Short-term|Long-term'],
                     key='plot')
 plot = st.session_state.plot
 
@@ -199,9 +199,20 @@ cfa = FactorAnalyzer(3, rotation = 'promax').fit(performance.values)
 # model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
 # cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
+loadings=pd.DataFrame(cfa.loadings, index=performance.columns)
+for idx, col in enumerate(loadings.columns):
+    vars = loadings[loadings[col]>0.5].index
+    if vars.any() in ["1-Day", "2-Day", "3-Day"]:
+       loadings.rename(columns={ loadings.columns[idx]: "Short-term" }, inplace = True)
+    elif vars.any() in ["1-Week", "2-Week", "3-Week"]:
+       loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
+    elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
+       loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
+
+st.session_state.loadings = cfa.loadings
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
-                       columns = ['Factor 1', 'Factor 2', 'Factor 3'])
+                       columns = loadings.columns)
 st.session_state.cfa = cfa
 
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
@@ -228,15 +239,15 @@ else:
 
 #######              
 try:
-    if plot == 'Factor 1|Factor 2':
-        fig=px.scatter(factors.loc[tickers,:], x='Factor 2',y='Factor 1',
+    if plot == 'Short-term|Medium-term:
+        fig=px.scatter(factors.loc[tickers,:], x='Medium-term',y='Short-term',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     
-    elif plot == 'Factor 2|Factor 3':
-        fig=px.scatter(factors.loc[tickers,:],x='Factor 3',y='Factor 2',
+    elif plot == 'Medium-term|Long-term:
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
     else:
-        fig=px.scatter(factors.loc[tickers,:],x='Factor 3',y='Factor 1',
+        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
 
     fig.add_hline(y=0)
