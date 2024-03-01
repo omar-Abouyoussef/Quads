@@ -8,5 +8,5 @@ def goodness_of_fit(X):
 
 st.session_state.loadings['Communalities'] = st.session_state.cfa.get_communalities()
 st.header("Factor Loadings")
-st.table(loadings.round(3))
+st.table(st.session_state.loadings.round(3))
 st.write(f"Goodness of fit: {(goodness_of_fit(loadings['Communalities'])*100).round(3)}%")
