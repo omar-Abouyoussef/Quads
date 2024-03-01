@@ -214,7 +214,8 @@ for idx, col in enumerate(loadings.columns):
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
-
+st.dataframe(factors)
+st.dataframe(loadings)
 st.session_state.cfa = cfa
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
@@ -238,7 +239,8 @@ else:
         st.error("Enter ticker(s) in Uppercase!")
 
 
-#######              
+#######
+
 try:
     
     if plot == 'Short-term|Medium-term':
