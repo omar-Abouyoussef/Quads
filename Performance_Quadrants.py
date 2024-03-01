@@ -209,11 +209,13 @@ for idx, col in enumerate(loadings.columns):
         loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
     elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
         loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True)
+
+st.dataframe(loadings)
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = loadings.columns)
 st.dataframe(factors)
-st.dataframe(loadings)
+
 st.session_state.cfa = cfa
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
