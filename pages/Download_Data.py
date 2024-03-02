@@ -121,7 +121,7 @@ if close_prices is not None:
 
   st.download_button(
       label="Download",
-      data=close_prices.to_csv(),
+      data=close_prices.dropna(axis=1).to_csv(),
       file_name='data.csv',
   )
 else:
