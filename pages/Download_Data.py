@@ -1,4 +1,3 @@
-
 from concurrent.futures import ThreadPoolExecutor
 import datetime as dt
 import time
@@ -31,7 +30,10 @@ def get_data(market:str, stock_list, start:dt.date, end:dt.date, key:str):
     s = time.perf_counter()
     with ThreadPoolExecutor(max_workers=16) as executor:
         for ticker, close in executor.map(download,stock_list, markets, starts, ends, keys):
+          try:
             close_prices[ticker] = close
+          except:
+            pass
 
     url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
     res = requests.get(url)
