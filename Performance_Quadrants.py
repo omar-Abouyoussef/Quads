@@ -143,6 +143,17 @@ yf.pdr_override()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
                             start=start, end=today, key=st.secrets["eod_api_key"])
+    
+
+    
+elif country == 'United States':
+    us_companies_info = pd.read_csv('companies.csv')
+    etfs = us_companies_info[us_companies_info['ETF']=='Yes']['Ticker'].to_list()
+    stock_list = investpy.stocks.get_stocks_list(country = country)
+    close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
+                            start=start, end=today, key=st.secrets["eod_api_key"])
+    
+
 else:
     stock_list = investpy.stocks.get_stocks_list(country = country)
     close_prices = get_data(market = codes[country], stock_list=stock_list,
@@ -193,12 +204,7 @@ st.session_state.performance = performance
 
 
 cfa = FactorAnalyzer(3, rotation = 'varimax').fit(performance.values)
-# model_dict = {"Short-term": ["1-Day", "2-Day", "3-Day"],
-# "Medium-term": ["1-Week", "2-Week", "3-Week"],
-# "Long-term": ["1-Month", "3-Month", "6-Month"]}
 
-# model_spec = ModelSpecificationParser.parse_model_specification_from_dict(performance, model_dict)
-# cfa = ConfirmatoryFactorAnalyzer(model_spec, disp=False).fit(performance.values)
 
 loadings = pd.DataFrame(cfa.loadings_, index = performance.columns)
 st.session_state.loadings = loadings
@@ -220,7 +226,7 @@ st.session_state.cfa = cfa
 
 model=KMeans(n_clusters=4,random_state=0).fit(factors)
 factors['Cluster']=model.labels_
-#factors['Cluster']=factors['Cluster'].map({0:'Weakening',1:'Falling',2:'Improving',3:'Momentum'})
+
 
 #####
 #input
@@ -240,18 +246,27 @@ else:
         st.error("Enter ticker(s) in Uppercase!")
 
 
-#######              
+#######   
+if country == 'United States':
+
+    factors = us_companies_info[['Ticker', 'Name', 'Sector', 'Industry']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
+
+if country == 'Egypt':
+    egx_companies_info = pd.read_csv('egx_companies.csv')
+    factors = egx_companies_info[['Ticker', 'Name', 'Sector']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
+
+
 try:
     if plot == 'Short-term|Medium-term':
         fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
-                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
     
     elif plot == 'Medium-term|Long-term':
         fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
-                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
     else:
         fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
-                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Cluster"].astype(str))
+                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
 
     fig.add_hline(y=0)
     fig.add_vline(x=0)
