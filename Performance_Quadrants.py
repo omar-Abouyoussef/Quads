@@ -5,13 +5,14 @@ import requests
 import pandas_datareader.data as pdr
 import yfinance as yf
 import plotly.express as px
+import plotly.graph_objects as go
 from factor_analyzer import FactorAnalyzer, ConfirmatoryFactorAnalyzer, ModelSpecificationParser
 from sklearn.cluster import KMeans
 import investpy
 import streamlit as st
 import time
 from concurrent.futures import ThreadPoolExecutor
-
+from streamlit_gsheets import GSheetsConnection
 
 
 def change(data, freq):
@@ -32,6 +33,24 @@ def download(ticker, market, start, end, key):
 def get_us_forex_data(stock, start, end):
     return pdr.get_data_yahoo([stock], start, end)["Close"]
     
+
+def save_to_sheet(date:dt.date,factors,country):
+    conn = st.connection("gsheets", type=GSheetsConnection,max_entries=1)
+    gsheets_factors = factors.assign(Date=date).reset_index(names=["Ticker"])[["Date","Ticker","Short-term","Medium-term","Long-term"]]
+    sheet_df = conn.read(worksheet=country, ttl=0).dropna()
+    
+    print(f"read sheet {date}")
+    print(sheet_df)
+    print(sheet_df.shape)
+    if sheet_df.shape[0] == 0:
+        conn.update(worksheet=country, data=gsheets_factors)
+        print("sheet was empty")
+    elif sheet_df.iloc[-1,0] != date:
+        conn.update(worksheet=country, data=pd.concat([sheet_df,gsheets_factors],axis=0))
+        print("sheet updated")
+    else:
+        print("no updates")
+
 
 @st.cache_data
 def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
@@ -132,6 +151,11 @@ plot = st.selectbox(label='Plot type:',
                     key='plot')
 plot = st.session_state.plot
 
+
+historical = st.selectbox(label='Historical:',
+                    options=['No', 'Yes'],
+                    key='historical')
+historical = st.session_state.historical
 ###########################
 
 
@@ -223,28 +247,9 @@ factors = pd.DataFrame(cfa.transform(performance.values),
                        columns = st.session_state.loadings.columns)
 st.session_state.cfa = cfa
 
-
-model=KMeans(n_clusters=4,random_state=0).fit(factors)
-factors['Cluster']=model.labels_
-
-
-#####
-#input
-######
-tickers = st.text_input(label='Ticker(s)',
-                        value=" ".join(factors.index.to_list()),
-                        key='tickers',
-                        help="Enter all uppercase!",
-                        placeholder='Choose ticker(s)')
-
-if tickers == "":
-    st.write("Reload page to get all tickers")
-else:
-    if tickers.isupper():
-        tickers = st.session_state.tickers.split(" ")
-    else:
-        st.error("Enter ticker(s) in Uppercase!")
-
+#model=KMeans(n_clusters=4,random_state=0).fit(factors)
+#factors['Cluster']=model.labels_
+save_to_sheet(close_prices.index[-1], factors, country)
 
 #######   
 if country == 'United States':
@@ -255,35 +260,157 @@ if country == 'Egypt':
     egx_companies_info = pd.read_csv('egx_companies.csv')
     factors = egx_companies_info[['Ticker', 'Name', 'Sector']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
 
+#####
+#Filters
+######
+if historical == "No":
+    tickers = st.text_input(label='Ticker(s)',
+                            value=" ".join(factors.index.to_list()),
+                            key='tickers',
+                            help="Enter all uppercase!",
+                            placeholder='Choose ticker(s)')
 
-try:
-    if plot == 'Short-term|Medium-term':
-        fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
-                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
-    
-    elif plot == 'Medium-term|Long-term':
-        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
-                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
+    if tickers == "":
+        st.write("Reload page to get all tickers")
     else:
-        fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
-                       hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
+        if tickers.isupper():
+            tickers = st.session_state.tickers.split(" ")
+        else:
+            st.error("Enter ticker(s) in Uppercase!")
 
-    fig.add_hline(y=0)
-    fig.add_vline(x=0)
 
-    container = st.container()
-    with container:
-        plot, df = st.columns([0.7, 0.3])
+    try:
+        if plot == 'Short-term|Medium-term':
+            fig=px.scatter(factors.loc[tickers,:],x='Medium-term',y='Short-term',
+                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
         
-        with plot:
-            st.plotly_chart(fig)
-            st.markdown(f"*Last available data point as of {close_prices.index[-1]}*\n  \n")
-        with df:
-            st.dataframe(factors)            
+        elif plot == 'Medium-term|Long-term':
+            fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Medium-term',
+                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
+        else:
+            fig=px.scatter(factors.loc[tickers,:],x='Long-term',y='Short-term',
+                        hover_data=[factors.loc[tickers,:].index], color=factors.loc[tickers,"Sector"].astype(str))
+
+        fig.add_hline(y=0)
+        fig.add_vline(x=0)
+
+        container = st.container()
+        with container:
+            plot, df = st.columns([0.7, 0.3])
+            
+            with plot:
+                st.plotly_chart(fig)
+                st.markdown(f"*Last available data point as of {close_prices.index[-1]}*\n  \n")
+            with df:
+                st.dataframe(factors)
 
 
-except:
-    st.warning("Invalid ticker(s)")
+    except:
+        st.warning("Invalid ticker(s)")
+
+else:
+    try:
+        tickers = st.text_input(label='Ticker(s)',
+                                value="",
+                                key='tickers',
+                                help="Enter all uppercase!",
+                                placeholder='Choose ticker(s)')
+        conn = st.connection("gsheets", type=GSheetsConnection,max_entries=1)
+        sheet_df = conn.read(country=country, ttl=0).dropna()
+
+        if tickers != "":
+            if tickers.isupper():
+                tickers = st.session_state.tickers.split(" ")
+    
+            # if plot == 'Short-term|Medium-term':
+            #     fig=px.line(sheet_df[sheet_df.Ticker.isin(tickers)],x='Medium-term',y='Short-term',line_shape="spline", markers = True)
+            #     go.Line()
+            #     fig.add_trace()
+            #     fig.update_traces(marker=dict(
+            #         symbol="arrow",
+            #         size=15,
+            #         angleref="previous"))
+            if plot == 'Short-term|Medium-term':
+                fig = go.Figure()
+
+                for ticker in tickers:
+                    data = sheet_df[sheet_df.Ticker==ticker]
+                    fig.add_trace(
+                        go.Scatter(
+                            x=data["Medium-term"],
+                            y=data["Short-term"],
+                            mode="lines+markers",
+                            line=dict(
+                                shape="spline"
+                            ),
+                            marker=dict(
+                                symbol="arrow",
+                                size=15,
+                                angleref="previous",
+                            ),
+                            name=ticker
+                        )
+                    )
+
+            elif plot == 'Medium-term|Long-term':
+                fig = go.Figure()
+
+                for ticker in tickers:
+                    data = sheet_df[sheet_df.Ticker==ticker]
+                    fig.add_trace(
+                        go.Scatter(
+                            x=data["Long-term"],
+                            y=data["Medium-term"],
+                            mode="lines+markers",
+                            line=dict(
+                                shape="spline"
+                            ),
+                            marker=dict(
+                                symbol="arrow",
+                                size=15,
+                                angleref="previous",
+                            ),
+                            name=ticker
+                        )
+                    )
+            else:
+                fig = go.Figure()
+
+                for ticker in tickers:
+                    data = sheet_df[sheet_df.Ticker==ticker]
+                    fig.add_trace(
+                        go.Scatter(
+                            x=data["Long-term"],
+                            y=data["Short-term"],
+                            mode="lines+markers",
+                            line=dict(
+                                shape="spline"
+                            ),
+                            marker=dict(
+                                symbol="arrow",
+                                size=15,
+                                angleref="previous",
+                            ),
+                            name=ticker
+                        )
+                    )
+
+            fig.add_hline(y=0)
+            fig.add_vline(x=0)
+
+            container = st.container()
+            with container:
+                plot, df = st.columns([0.7, 0.3])
+                
+                with plot:
+                    st.plotly_chart(fig)
+                    st.markdown(f"*Last available data point as of {close_prices.index[-1]}*\n  \n")
+                with df:
+                    st.dataframe(factors)
+
+    except Exception as e:
+        print(e)
+        st.warning("Invalid ticker(s)")
 
 st.markdown('''\n  \n  **Top-right Quadrant:** Siginfies extremely bullish and violent movement in price- suited for momentum plays. \n  \n  **Bottom-right:** After a bullish move equties weakened and price started to drop. \n  \n  **Bottom-Left Quadrant:** Falling equties. \n \n  **Top-left:** Falling stocks started to improve their preformance attracting more buyers. \n\n\n  **Note:**   \n\n\n   1. The absolute value of the scores signifies strength of the movement.   \n\n\n   2. Factor Scores are normally distributed with mean of zero. Scores assigned to stocks are, in effect, done on a relative basis. A stock in the bottom left quadrants does not always mean that it is falling instead it is underperforming the rest. \n  Example: If the entire market is extremely bullish, and almost most stocks are uptrending, equties lying in the bottom left quadrant are underperformers but still bullish. (rare case) \n\n\n''')
 st.write("Check Model diagnostics before using")
