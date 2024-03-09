@@ -256,10 +256,11 @@ if country == 'United States':
 
     factors = us_companies_info[['Ticker', 'Name', 'Sector', 'Industry']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
 
-if country == 'Egypt':
+elif country == 'Egypt':
     egx_companies_info = pd.read_csv('egx_companies.csv')
     factors = egx_companies_info[['Ticker', 'Name', 'Sector']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
-
+else:
+    factors["Sector"] = "NA"
 #####
 #Filters
 ######
@@ -316,8 +317,7 @@ else:
                                 help="Enter all uppercase!",
                                 placeholder='Choose ticker(s)')
         conn = st.connection("gsheets", type=GSheetsConnection,max_entries=1)
-        sheet_df = conn.read(country=country, ttl=0).dropna()
-
+        sheet_df = conn.read(worksheet=country, ttl=0).dropna()
         if tickers != "":
             if tickers.isupper():
                 tickers = st.session_state.tickers.split(" ")
