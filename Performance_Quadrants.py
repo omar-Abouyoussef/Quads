@@ -251,10 +251,11 @@ if country == 'United States':
 
     factors = us_companies_info[['Ticker', 'Name', 'Sector', 'Industry']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
 
-if country == 'Egypt':
+elif country == 'Egypt':
     egx_companies_info = pd.read_csv('egx_companies.csv')
     factors = egx_companies_info[['Ticker', 'Name', 'Sector']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
-
+else:
+    factors["Sector"] = "NA"
 
 try:
     if plot == 'Short-term|Medium-term':
