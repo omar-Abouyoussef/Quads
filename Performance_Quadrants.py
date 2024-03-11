@@ -347,7 +347,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-                                size=15,
+                                size=5,
                                 angleref="previous",
                             ),
                             name=ticker
@@ -369,7 +369,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-                                size=15,
+                                size=5,
                                 angleref="previous",
                             ),
                             name=ticker
@@ -390,7 +390,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-                                size=15,
+                                size=5,
                                 angleref="previous",
                             ),
                             name=ticker
