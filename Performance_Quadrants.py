@@ -113,6 +113,8 @@ fx_list = ['EURUSD=X','JPY=X',
            'EURCAD=X', 'EURSEK=X',
            'EURCHF=X', 'EURHUF=X',
            'EURJPY=X', 'CNY=X',
+           'EURCAD=X', 'EURJPY=X',
+           'EURAUD=X', 'NZDJPY=X'
            'HKD=X', 'SGD=X',
            'INR=X', 'MXN=X',
            'PHP=X', 'IDR=X',
