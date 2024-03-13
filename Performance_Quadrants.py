@@ -132,6 +132,8 @@ fx_list = ['EURUSD=X','JPY=X',
            'EURCAD=X', 'EURSEK=X',
            'EURCHF=X', 'EURHUF=X',
            'EURJPY=X', 'CNY=X',
+           'NZDJPY=X', 'EURJPY=X',
+           'EURAUD=X', 'EURCAD=X',
            'HKD=X', 'SGD=X',
            'INR=X', 'MXN=X',
            'PHP=X', 'IDR=X',
@@ -195,6 +197,7 @@ if country == "United States":
         close_prices = close_prices[cols]
 
 close_prices.dropna(axis = 1, inplace = True)    
+print(close_prices)
 
 one_day_return = change(close_prices, 1)
 two_day_return = change(close_prices, 2)
@@ -223,6 +226,7 @@ list(
         index = close_prices.columns
         )
 
+print(performance)
 performance.dropna(inplace=True)
 st.session_state.performance = performance   
 
@@ -235,11 +239,12 @@ st.session_state.loadings = loadings
 
 for idx, col in enumerate(loadings.columns):
     vars = loadings[loadings[col]>0.5].index
-    if vars.any() in ["1-Day", "2-Day", "3-Day"]:
+
+    if (len(set(vars) & set(["1-Day", "2-Day", "3-Day"])) >= 2):
        loadings.rename(columns={ loadings.columns[idx]: "Short-term" }, inplace = True)
-    elif vars.any() in ["1-Week", "2-Week", "3-Week"]:
+    elif (len(set(vars) & set(["1-Week", "2-Week", "3-Week"])) >= 2):
        loadings.rename(columns={ loadings.columns[idx]: "Medium-term" }, inplace = True)
-    elif vars.any() in ["1-Month", "3-Month", "6-Month"]:
+    elif (len(set(vars) & set(["1-Month", "3-Month", "6-Month"])) >= 2):
        loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True) 
 
 factors = pd.DataFrame(cfa.transform(performance.values),
@@ -345,7 +350,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-                                size=15,
+                                size=7,
                                 angleref="previous",
                             ),
                             name=ticker
@@ -367,7 +372,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-                                size=15,
+                                size=7,
                                 angleref="previous",
                             ),
                             name=ticker
@@ -388,7 +393,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-                                size=15,
+                                size=7,
                                 angleref="previous",
                             ),
                             name=ticker
