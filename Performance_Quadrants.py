@@ -36,17 +36,17 @@ def get_us_forex_data(stock, start, end):
 
 def save_to_sheet(date:dt.date,factors,country):
     conn = st.connection("gsheets", type=GSheetsConnection,max_entries=1)
-    gsheets_factors = factors.assign(Date=date).drop_duplicates().reset_index(names=["Ticker"])[["Date","Ticker","Short-term","Medium-term","Long-term"]]
-    gsheets_factors['Date'] = gsheets_factors['Date'].dt.strftime('%Y-%m-%d')
+    gsheets_factors = (factors.assign(Date=date)
+                       .drop_duplicates()
+                       .reset_index(names=["Ticker"])[["Date","Ticker","Short-term","Medium-term","Long-term"]])
+    
     sheet_df = conn.read(worksheet=country, ttl=0).dropna()
     
     print(f"read sheet {date}")
-    print(sheet_df)
-    print(sheet_df.shape)
     if sheet_df.shape[0] == 0:
         conn.update(worksheet=country, data=gsheets_factors)
         print("sheet was empty")
-    elif sheet_df.iloc[-1,0] != date:
+    elif str(sheet_df.iloc[-1,0]) != str(date):
         conn.update(worksheet=country, data=pd.concat([sheet_df,gsheets_factors],axis=0))
         print("sheet updated")
     else:
@@ -59,6 +59,7 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
     if market in ["US", 'FOREX']:
         return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+    
 
     elif market == "EGX":
         close_prices = pd.DataFrame(columns=stock_list)
@@ -84,24 +85,6 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
             e = time.perf_counter()
             st.write(f"Finished in {e-s:.4} s")
             return close_prices
-
-    #     #####################################################
-    #     # s = time.perf_counter()
-    #     # for idx, ticker in enumerate(stock_list):
-    #     #     try:
-    #     #         url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-    #     #         close = requests.get(url).json()
-    #     #         close_prices[ticker] = close
-    #     #     except:
-    #     #         pass
-    #     # url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-    #     # date = requests.get(url).json()
-    #     # close_prices['date'] = date
-    #     # close_prices.set_index('date', inplace=True)
-    #     # e = time.perf_counter()
-    #     # st.write(f"Finished in {e-s:.4} s")
-    #     # return close_prices
-    #     #####################################################
     
     else:
         ticker_list = []
@@ -198,6 +181,9 @@ if country == "United States":
         close_prices = close_prices[cols]
 
 close_prices.dropna(axis = 1, inplace = True)
+close_prices['Date'] = pd.to_datetime(close_prices.index)
+close_prices.set_index(close_prices['Date'].dt.date, inplace=True, drop=True)
+close_prices.drop(columns='Date', inplace=True)
 
 one_day_return = change(close_prices, 1)
 two_day_return = change(close_prices, 2)
@@ -226,7 +212,7 @@ list(
         index = close_prices.columns
         )
 
-print(performance)
+
 performance.dropna(inplace=True)
 st.session_state.performance = performance   
 
@@ -326,15 +312,7 @@ else:
         if tickers != "":
             if tickers.isupper():
                 tickers = st.session_state.tickers.split(" ")
-    
-            # if plot == 'Short-term|Medium-term':
-            #     fig=px.line(sheet_df[sheet_df.Ticker.isin(tickers)],x='Medium-term',y='Short-term',line_shape="spline", markers = True)
-            #     go.Line()
-            #     fig.add_trace()
-            #     fig.update_traces(marker=dict(
-            #         symbol="arrow",
-            #         size=15,
-            #         angleref="previous"))
+                
             if plot == 'Short-term|Medium-term':
                 fig = go.Figure()
 
