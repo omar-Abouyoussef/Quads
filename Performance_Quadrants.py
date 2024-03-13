@@ -350,11 +350,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-<<<<<<< HEAD
-                                size=7,
-=======
                                 size=8,
->>>>>>> 83e0e64180bf8b9b7c4564034b3e6f60e7072159
                                 angleref="previous",
                             ),
                             name=ticker
@@ -376,11 +372,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-<<<<<<< HEAD
-                                size=7,
-=======
                                 size=8,
->>>>>>> 83e0e64180bf8b9b7c4564034b3e6f60e7072159
                                 angleref="previous",
                             ),
                             name=ticker
@@ -401,11 +393,7 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
-<<<<<<< HEAD
-                                size=7,
-=======
                                 size=8,
->>>>>>> 83e0e64180bf8b9b7c4564034b3e6f60e7072159
                                 angleref="previous",
                             ),
                             name=ticker
