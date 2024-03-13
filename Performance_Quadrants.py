@@ -36,7 +36,8 @@ def get_us_forex_data(stock, start, end):
 
 def save_to_sheet(date:dt.date,factors,country):
     conn = st.connection("gsheets", type=GSheetsConnection,max_entries=1)
-    gsheets_factors = factors.assign(Date=date).reset_index(names=["Ticker"])[["Date","Ticker","Short-term","Medium-term","Long-term"]]
+    gsheets_factors = factors.assign(Date=date).drop_duplicates().reset_index(names=["Ticker"])[["Date","Ticker","Short-term","Medium-term","Long-term"]]
+    gsheets_factors['Date'] = gsheets_factors['Date'].dt.strftime('%Y-%m-%d')
     sheet_df = conn.read(worksheet=country, ttl=0).dropna()
     
     print(f"read sheet {date}")
