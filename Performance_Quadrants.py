@@ -133,8 +133,8 @@ fx_list = ['EURUSD=X','JPY=X',
            'EURCAD=X', 'EURSEK=X',
            'EURCHF=X', 'EURHUF=X',
            'EURJPY=X', 'CNY=X',
-           'NZDJPY=X', 'EURJPY=X',
-           'EURAUD=X', 'EURCAD=X',
+           'EURCAD=X', 'EURJPY=X',
+           'EURAUD=X', 'NZDJPY=X'
            'HKD=X', 'SGD=X',
            'INR=X', 'MXN=X',
            'PHP=X', 'IDR=X',
@@ -197,8 +197,7 @@ if country == "United States":
         cols = close_prices.columns[close_prices.iloc[-1,:] > price]
         close_prices = close_prices[cols]
 
-close_prices.dropna(axis = 1, inplace = True)    
-print(close_prices)
+close_prices.dropna(axis = 1, inplace = True)
 
 one_day_return = change(close_prices, 1)
 two_day_return = change(close_prices, 2)
@@ -351,7 +350,11 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
+<<<<<<< HEAD
                                 size=7,
+=======
+                                size=8,
+>>>>>>> 83e0e64180bf8b9b7c4564034b3e6f60e7072159
                                 angleref="previous",
                             ),
                             name=ticker
@@ -373,7 +376,11 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
+<<<<<<< HEAD
                                 size=7,
+=======
+                                size=8,
+>>>>>>> 83e0e64180bf8b9b7c4564034b3e6f60e7072159
                                 angleref="previous",
                             ),
                             name=ticker
@@ -394,7 +401,11 @@ else:
                             ),
                             marker=dict(
                                 symbol="arrow",
+<<<<<<< HEAD
                                 size=7,
+=======
+                                size=8,
+>>>>>>> 83e0e64180bf8b9b7c4564034b3e6f60e7072159
                                 angleref="previous",
                             ),
                             name=ticker
