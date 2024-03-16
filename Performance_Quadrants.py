@@ -233,6 +233,13 @@ for idx, col in enumerate(loadings.columns):
     elif (len(set(vars) & set(["1-Month", "3-Month", "6-Month"])) >= 2):
        loadings.rename(columns={ loadings.columns[idx]: "Long-term" }, inplace = True) 
 
+unused_cols = set(loadings.columns).difference({'Short-term', 'Medium-term', 'Long-term'})
+if  len(unused_cols) > 0:
+    for col in unused_cols:
+        unused_terms = {'Short-term', 'Medium-term', 'Long-term'}.difference(set(loadings.columns))
+        for unused_term in unused_terms:    
+            loadings.rename(columns={col:unused_term}, inplace = True)
+
 factors = pd.DataFrame(cfa.transform(performance.values),
                        index = performance.index,
                        columns = st.session_state.loadings.columns)
