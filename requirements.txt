@@ -1,6 +1,6 @@
 numpy==1.26.3
-pandas==2.2.2
-tvdatafeed==2.1.0
+pandas
+tvdatafeed
 plotly==5.18.0
 retry==0.9.2
 statsmodels==0.14.2
