@@ -106,7 +106,7 @@ df_50_100.index = pd.to_datetime(df_50_100.index).date
 
 ###########
 ####################3
-sector_names = pd.read_excel('C:\\Users\\zeyad\\Desktop\\Quads\\sectors.xlsx', sheet_name = 'Sheet1')
+sector_names = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
 
 
 
