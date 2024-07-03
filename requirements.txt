@@ -37,7 +37,8 @@ multitasking
 numpy       
 oauthlib      
 packaging     
-pandas      
+pandas==1.3.0
+pandas==2.0.1
 pandas-datareader       
 peewee       
 pillow       
