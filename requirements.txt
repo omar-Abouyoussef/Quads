@@ -37,8 +37,7 @@ multitasking
 numpy       
 oauthlib      
 packaging     
-pandas==1.3.0
-pandas==2.0.1
+pandas
 pandas-datareader       
 peewee       
 pillow       
@@ -73,7 +72,8 @@ threadpoolctl
 toml       
 toolz       
 tornado    
-tradingview-screener      
+tradingview-screener
+git+https://github.com/rongardF/tvdatafeed.git
 typing_extensions      
 tzdata       
 tzlocal    
