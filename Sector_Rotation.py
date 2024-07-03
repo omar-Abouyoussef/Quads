@@ -222,4 +222,4 @@ sel_sector = st.session_state.sel_sector
 
 
 st.write('Stocks below their 20 & 50 day average:')
-st.write(df[df.sector==sel_sector].reset_index(drop=True)['name', 'sector','close', 'volume', 'SMA20', 'SMA50', 'SMA100'])
+st.write(df[df.sector==sel_sector].reset_index(drop=True))
