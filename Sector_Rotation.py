@@ -212,7 +212,7 @@ df = (Query()
      Column('close') < Column('SMA20'),
      Column('close') < Column('SMA50') 
  ).limit(len(tickers))
- .get_scanner_data())[1].reset_index()['name', 'sector','close', 'volume', 'SMA20', 'SMA50', 'SMA100']
+ .get_scanner_data())[1]
 
 sector_names = df.sector.unique()
 sel_sector = st.selectbox(label='Sector:',
