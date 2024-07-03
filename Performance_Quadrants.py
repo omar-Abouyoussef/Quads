@@ -8,7 +8,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from factor_analyzer import FactorAnalyzer, ConfirmatoryFactorAnalyzer, ModelSpecificationParser
 from sklearn.cluster import KMeans
-import investpy
+# import investpy
+from tradingview_screener import Query, Column, get_all_symbols
 import streamlit as st
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -159,13 +160,15 @@ if country == 'Forex':
 elif country == 'United States':
     us_companies_info = pd.read_csv('companies.csv')
     etfs = us_companies_info[us_companies_info['ETF']=='Yes']['Ticker'].to_list()
-    stock_list = investpy.stocks.get_stocks_list(country = country)
+    stock_list = get_all_symbols(market=country)
+    # stock_list = investpy.stocks.get_stocks_list(country = country)
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                             start=start, end=today, key=st.secrets["eod_api_key"])
     
 
 else:
-    stock_list = investpy.stocks.get_stocks_list(country = country)
+    stock_list = get_all_symbols(market=country)
+    # stock_list = investpy.stocks.get_stocks_list(country = country)
     close_prices = get_data(market = codes[country], stock_list=stock_list,
                             start=start, end=today, key=st.secrets["eod_api_key"])
     
