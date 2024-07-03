@@ -47,7 +47,7 @@ psycopg2-binary
 pyarrow       
 pyasn1       
 pyasn1-modules      
-pydeck      b 
+pydeck      
 Pygments       
 python-dateutil      
 pytz        
