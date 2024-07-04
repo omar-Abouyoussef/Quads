@@ -255,9 +255,9 @@ fig2.add_trace(go.Bar(
     orientation='v'
 ))
 
-fig2.add_hline(x=20, line_width=1, line_dash="dash")
-fig2.add_hline(x=50, line_width=1, line_dash="dash")
-fig2.add_hline(x=80, line_width=1, line_dash="dash")
+fig2.add_hline(y=20, line_width=1, line_dash="dash")
+fig2.add_hline(y=50, line_width=1, line_dash="dash")
+fig2.add_hline(y=80, line_width=1, line_dash="dash")
 fig2.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
 
 container = st.container()
