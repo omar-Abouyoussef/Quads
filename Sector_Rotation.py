@@ -28,7 +28,7 @@ def get_data(sector, suffix,n,freq, date):
 #streamlit
 
 
-st.set_page_config(page_title="Sector Rotation")
+st.set_page_config(page_title="Sector Rotation", page_layout='wide')
 st.title('Sector Rotation')
 
 ##############################
