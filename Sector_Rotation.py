@@ -28,7 +28,7 @@ def get_data(sector, suffix,n,freq, date):
 #streamlit
 
 
-st.set_page_config(page_title="Sector Rotation", layout="wide")
+st.set_page_config(page_title="Sector Rotation")
 st.title('Sector Rotation')
 
 ##############################
@@ -58,7 +58,7 @@ plot_type = st.session_state.plot_type
 
 
 
-sectors = ['S5', 'SK', 'SE', 'SS', 'SF', 'SI', 'SB', 'SP', 'SY', 'SU', 'SL', 'SV']
+sectors = ['MM', 'SK', 'SE', 'SS', 'SF', 'SI', 'SB', 'SP', 'SY', 'SU', 'SL', 'SV']
 day_5_suffix = 'FD'
 day_20_suffix = 'TW'
 day_50_suffix = 'FI'
@@ -114,7 +114,7 @@ df_50_100.index = pd.to_datetime(df_50_100.index).date
 
 ###########
 ####################3
-sector_names = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
+sector_names = pd.read_excel('C:\\Users\\zeyad\\Desktop\\Quads\\sectors.xlsx', sheet_name = 'Sheet1')
 
 
 
@@ -134,9 +134,7 @@ if historical == 'No':
         fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',title=plot_type,color=sector_names.name, template='plotly_white')
 
 
-    fig.add_vline(x=50)
-    fig.add_hline(y=50)
-    st.plotly_chart(fig)
+
 
 else:
     last_n = st.slider("Last data points", 1, data.shape[0], 5)
@@ -164,7 +162,7 @@ else:
                                     
                                 )
 
-        fig.update_layout(template='plotly_white')
+        fig.update_layout(template='plotly_white', width=1000, height=800)
         fig.update_legends()
         fig.add_hline(y=50)
         fig.add_vline(x=50)
@@ -192,16 +190,51 @@ else:
                                     
                                 )
 
-        fig.update_layout(template='plotly_white')
-        fig.update_legends()
-        fig.add_hline(y=50)
-        fig.add_vline(x=50)
-     
-    st.plotly_chart(fig)    
+fig.update_layout(template='plotly_white', width=1000, height=800)
+fig.update_legends()
+fig.add_hline(y=50)
+fig.add_vline(x=50)  
 
 
+fig2 = go.Figure()
+fig2.add_trace(go.Bar(
+    x=df_20_50.groupby(by='Sector').tail(1)['Short-term'],
+    y=sector_names.name,
+    name='Short-term',
+    marker_color='indianred',
+    orientation='h'
+))
+fig2.add_trace(go.Bar(
+    x=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
+    y=sector_names.name,
+    name='Medium-term',
+    marker_color='lightsalmon',
+    orientation='h'
+))
 
+fig2.add_trace(go.Bar(
+    x=df_50_100.groupby(by='Sector').tail(1)['Long-term'],
+    y=sector_names.name,
+    name='Long-term',
+    marker_color='rgb(55, 83, 109)',
+    orientation='h'
+))
 
+fig2.add_vline(x=20, line_width=1, line_dash="dash")
+fig2.add_vline(x=50, line_width=1, line_dash="dash")
+fig2.add_vline(x=80, line_width=1, line_dash="dash")
+fig2.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
+
+container = st.container()
+with container:
+    plot1, plot2 = st.columns([0.6, 0.4])
+    
+    with plot1:
+        st.plotly_chart(fig)
+    with plot2:
+        st.plotly_chart(fig2) 
+
+  
 
 tickers = get_all_symbols(market)
 
@@ -222,4 +255,4 @@ sel_sector = st.session_state.sel_sector
 
 
 st.write('Stocks below their 20 & 50 day average:')
-st.write(df[df.sector==sel_sector].reset_index(drop=True))
+st.write(df[df.sector==sel_sector])
