@@ -224,15 +224,12 @@ fig.add_vline(x=50)
 # fig2.add_vline(x=50, line_width=1, line_dash="dash")
 # fig2.add_vline(x=80, line_width=1, line_dash="dash")
 # fig2.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
+#######################
+#######################
+#Vertical
+######################
+######################
 
-# container = st.container()
-# with container:
-#     plot1, plot2 = st.columns([0.6, 0.4])
-    
-#     with plot1:
-#         st.plotly_chart(fig)
-#     with plot2:
-#         st.plotly_chart(fig2) 
 
 fig2 = go.Figure()
 fig2.add_trace(go.Bar(
@@ -258,14 +255,14 @@ fig2.add_trace(go.Bar(
     orientation='v'
 ))
 
-fig2.add_vline(x=20, line_width=1, line_dash="dash")
-fig2.add_vline(x=50, line_width=1, line_dash="dash")
-fig2.add_vline(x=80, line_width=1, line_dash="dash")
+fig2.add_hline(x=20, line_width=1, line_dash="dash")
+fig2.add_hline(x=50, line_width=1, line_dash="dash")
+fig2.add_hline(x=80, line_width=1, line_dash="dash")
 fig2.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
 
 container = st.container()
 with container:
-    plot1, plot2 = st.columns([0.6, 0.4])
+    plot1, plot2 = st.columns([0.5, 0.5])
     
     with plot1:
         st.plotly_chart(fig)
