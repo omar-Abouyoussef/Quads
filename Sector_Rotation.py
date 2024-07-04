@@ -202,14 +202,14 @@ fig2.add_trace(go.Bar(
     y=sector_names.name,
     name='Short-term',
     marker_color='indianred',
-    orientation='h'
+    orientation='v'
 ))
 fig2.add_trace(go.Bar(
     x=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
     y=sector_names.name,
     name='Medium-term',
     marker_color='lightsalmon',
-    orientation='h'
+    orientation='v'
 ))
 
 fig2.add_trace(go.Bar(
@@ -217,7 +217,7 @@ fig2.add_trace(go.Bar(
     y=sector_names.name,
     name='Long-term',
     marker_color='rgb(55, 83, 109)',
-    orientation='h'
+    orientation='v'
 ))
 
 fig2.add_vline(x=20, line_width=1, line_dash="dash")
