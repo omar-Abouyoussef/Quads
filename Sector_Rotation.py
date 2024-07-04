@@ -262,7 +262,7 @@ fig2.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
 
 container = st.container()
 with container:
-    plot1, plot2 = st.columns([0.5, 0.5])
+    plot1, plot2 = st.columns([0.6, 0.4])
     
     with plot1:
         st.plotly_chart(fig)
