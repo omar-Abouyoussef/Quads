@@ -196,25 +196,63 @@ fig.add_hline(y=50)
 fig.add_vline(x=50)  
 
 
+# fig2 = go.Figure()
+# fig2.add_trace(go.Bar(
+#     x=df_20_50.groupby(by='Sector').tail(1)['Short-term'],
+#     y=sector_names.name,
+#     name='Short-term',
+#     marker_color='indianred',
+#     orientation='h'
+# ))
+# fig2.add_trace(go.Bar(
+#     x=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
+#     y=sector_names.name,
+#     name='Medium-term',
+#     marker_color='lightsalmon',
+#     orientation='h'
+# ))
+
+# fig2.add_trace(go.Bar(
+#     x=df_50_100.groupby(by='Sector').tail(1)['Long-term'],
+#     y=sector_names.name,
+#     name='Long-term',
+#     marker_color='rgb(55, 83, 109)',
+#     orientation='h'
+# ))
+
+# fig2.add_vline(x=20, line_width=1, line_dash="dash")
+# fig2.add_vline(x=50, line_width=1, line_dash="dash")
+# fig2.add_vline(x=80, line_width=1, line_dash="dash")
+# fig2.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
+
+# container = st.container()
+# with container:
+#     plot1, plot2 = st.columns([0.6, 0.4])
+    
+#     with plot1:
+#         st.plotly_chart(fig)
+#     with plot2:
+#         st.plotly_chart(fig2) 
+
 fig2 = go.Figure()
 fig2.add_trace(go.Bar(
-    x=df_20_50.groupby(by='Sector').tail(1)['Short-term'],
-    y=sector_names.name,
+    x=sector_names.name,
+    y=df_20_50.groupby(by='Sector').tail(1)['Short-term'],
     name='Short-term',
     marker_color='indianred',
     orientation='v'
 ))
 fig2.add_trace(go.Bar(
-    x=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
-    y=sector_names.name,
+    x=sector_names.name,
+    y=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
     name='Medium-term',
     marker_color='lightsalmon',
     orientation='v'
 ))
 
 fig2.add_trace(go.Bar(
-    x=df_50_100.groupby(by='Sector').tail(1)['Long-term'],
-    y=sector_names.name,
+    x=sector_names.name,
+    y=df_50_100.groupby(by='Sector').tail(1)['Long-term'],
     name='Long-term',
     marker_color='rgb(55, 83, 109)',
     orientation='v'
