@@ -38,7 +38,7 @@ st.title('Sector Rotation')
 #inputs
 
 
-market = st.selectbox(label='Coutry:',
+market = st.selectbox(label='Country:',
                        options = ['america'],
                        key='market')
 market = st.session_state.market
@@ -49,7 +49,7 @@ historical = st.selectbox(label='Historical:',
 historical = st.session_state.historical
 
 plot_type = st.selectbox(label='Plot Type:',
-                       options = ['Short-term|Medium-term', 'Medium-term|Long-term' ],
+                       options = ['Short-term|Medium-term', 'Medium-term|Long-term'],
                        key='plot_type')
 plot_type = st.session_state.plot_type
 
@@ -58,7 +58,7 @@ plot_type = st.session_state.plot_type
 
 
 
-sectors = ['MM', 'SK', 'SE', 'SS', 'SF', 'SI', 'SB', 'SP', 'SY', 'SU', 'SL', 'SV']
+sectors = ['MM', 'SB', 'SE', 'SF', 'SI', 'SK', 'SL', 'SP', 'SS', 'SU', 'SV', 'SY']
 day_5_suffix = 'FD'
 day_20_suffix = 'TW'
 day_50_suffix = 'FI'
@@ -71,7 +71,7 @@ in_daily = Interval.in_daily
 frequencies = [in_daily, in_weekly, in_monthly]
 
 
-n_days=52
+n_days=251
 
 df_20_50 = pd.DataFrame()
 for idx, sector in enumerate(sectors):    
@@ -92,7 +92,7 @@ df_20_50.index = pd.to_datetime(df_20_50.index).date
 
 
 
-n_months=24
+n_months=72
 
 df_50_100 = pd.DataFrame()
 for idx, sector in enumerate(sectors):    
@@ -113,8 +113,8 @@ df_50_100.index = pd.to_datetime(df_50_100.index).date
 
 
 ###########
-####################3
-sector_names = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
+####################
+sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
 
 
 
@@ -126,12 +126,12 @@ plot = [df_20_50, df_50_100]
 if historical == 'No':
     if plot_type == 'Short-term|Medium-term':
         group = plot[0].groupby('Sector').tail(1)
-        fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',title=plot_type, color=sector_names.name, template='plotly_white')
+        fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',title=plot_type, color=sectors.name, template='plotly_white')
 
 
     elif plot_type == 'Medium-term|Long-term':
         group = plot[1].groupby('Sector').tail(1)
-        fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',title=plot_type,color=sector_names.name, template='plotly_white')
+        fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',title=plot_type,color=sectors.name, template='plotly_white')
 
 
 
@@ -142,7 +142,7 @@ else:
     if plot_type == 'Short-term|Medium-term':
 
         fig = go.Figure()
-        for sector in sectors:
+        for sector in sectors.symbol:
             data = df_20_50[df_20_50['Sector']==sector]
             fig.add_trace(
                                     go.Scatter(
@@ -157,7 +157,7 @@ else:
                                             size=10,
                                             angleref="previous"
                                         ),hovertext=df_20_50.tail(last_n).index,
-                                        name=sector_names[sector_names.symbol==sector]['name'].values[0]
+                                        name=sectors[sectors.symbol==sector]['name'].values[0]
                                     )
                                     
                                 )
@@ -170,7 +170,7 @@ else:
     elif plot_type == 'Medium-term|Long-term':
 
         fig = go.Figure()
-        for sector in sectors:
+        for sector in sectors.symbol:
             data = df_50_100[df_50_100['Sector']==sector]
             fig.add_trace(
                                     go.Scatter(
@@ -185,7 +185,7 @@ else:
                                             size=10,
                                             angleref="previous"
                                         ),hovertext=df_50_100.tail(last_n).index,
-                                        name=sector_names[sector_names.symbol==sector]['name'].values[0]
+                                        name=sectors[sectors.symbol==sector]['name'].values[0]
                                     )
                                     
                                 )
@@ -199,14 +199,14 @@ fig.add_vline(x=50)
 # fig2 = go.Figure()
 # fig2.add_trace(go.Bar(
 #     x=df_20_50.groupby(by='Sector').tail(1)['Short-term'],
-#     y=sector_names.name,
+#     y=sectors.name,
 #     name='Short-term',
 #     marker_color='indianred',
 #     orientation='h'
 # ))
 # fig2.add_trace(go.Bar(
 #     x=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
-#     y=sector_names.name,
+#     y=sectors.name,
 #     name='Medium-term',
 #     marker_color='lightsalmon',
 #     orientation='h'
@@ -214,7 +214,7 @@ fig.add_vline(x=50)
 
 # fig2.add_trace(go.Bar(
 #     x=df_50_100.groupby(by='Sector').tail(1)['Long-term'],
-#     y=sector_names.name,
+#     y=sectors.name,
 #     name='Long-term',
 #     marker_color='rgb(55, 83, 109)',
 #     orientation='h'
@@ -233,14 +233,14 @@ fig.add_vline(x=50)
 
 fig2 = go.Figure()
 fig2.add_trace(go.Bar(
-    x=sector_names.name,
+    x=sectors.name,
     y=df_20_50.groupby(by='Sector').tail(1)['Short-term'],
     name='Short-term',
     marker_color='indianred',
     orientation='v'
 ))
 fig2.add_trace(go.Bar(
-    x=sector_names.name,
+    x=sectors.name,
     y=df_20_50.groupby(by='Sector').tail(1)['Medium-term'],
     name='Medium-term',
     marker_color='lightsalmon',
@@ -248,7 +248,7 @@ fig2.add_trace(go.Bar(
 ))
 
 fig2.add_trace(go.Bar(
-    x=sector_names.name,
+    x=sectors.name,
     y=df_50_100.groupby(by='Sector').tail(1)['Long-term'],
     name='Long-term',
     marker_color='rgb(55, 83, 109)',
@@ -267,27 +267,58 @@ with container:
     with plot1:
         st.plotly_chart(fig)
     with plot2:
-        st.plotly_chart(fig2) 
-
-  
-
-tickers = get_all_symbols(market)
-
-df = (Query()
- .select('name', 'sector','close', 'volume', 'SMA20', 'SMA50', 'SMA100')
- .where(
-     Column('close') > 20,
-     Column('close') < Column('SMA20'),
-     Column('close') < Column('SMA50') 
- ).limit(len(tickers))
- .get_scanner_data())[1]
-
-sector_names = df.sector.unique()
-sel_sector = st.selectbox(label='Sector:',
-                       options = sector_names,
-                       key='sel_sector')
-sel_sector = st.session_state.sel_sector
+        st.plotly_chart(fig2)
 
 
-st.write('Stocks below their 20 & 50 day average:')
-st.write(df[df.sector==sel_sector])
+#################
+##############################
+#Heatmap
+#############################
+##################################
+
+
+
+
+
+matrix_type = st.selectbox(label='Heatmap:',
+                       options = ['Correlation', 'Beta'],
+                       key='matrix_type')
+matrix_type = st.session_state.matrix_type
+
+
+cycle = st.selectbox(label='Heatmap:',
+                       options = ['Short-term','Medium-term', 'Long-term'],
+                       key='cycle')
+cycle = st.session_state.cycle
+
+
+
+
+if cycle == 'Long-term':
+    pivot = np.log(df_50_100.pivot(columns='Sector')[cycle]).diff().dropna()
+else:
+    pivot = np.log(df_20_50.pivot(columns='Sector')[cycle]).diff().dropna()
+
+pivot.columns = sectors.name
+
+
+if matrix_type == 'Correlation':
+    cor_matrix = pivot.corr()
+
+    mask = np.zeros_like(cor_matrix, dtype=bool)
+    mask[np.triu_indices_from(mask)] = True
+    # Viz
+    cor_matrix_viz = cor_matrix.mask(mask).dropna(how='all')
+    fig = px.imshow(cor_matrix_viz.iloc[:,:-1].round(2),labels=dict(x="", y="", color="Correlation"),
+                    color_continuous_scale='RdBu_r', text_auto=True, aspect = 'auto')
+else:
+    cov_matrix = pivot.cov()
+    beta_matrix = cov_matrix / pivot.var()
+    
+    mask = np.zeros_like(cov_matrix, dtype=bool)
+    mask[np.triu_indices_from(mask)] = True
+
+    beta_matrix_viz = beta_matrix.mask(mask).dropna(how='all').round(2)
+    fig = px.imshow(beta_matrix_viz.iloc[:,:-1].round(2),labels=dict(x="", y="", color="Beta"),
+                    color_continuous_scale='RdBu_r', text_auto=True, aspect = 'auto')
+st.plotly_chart(fig)
