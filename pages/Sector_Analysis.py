@@ -67,7 +67,7 @@ else:
 st.plotly_chart(fig)
 
 
-us_stocks = pd.read_csv('us_stocks_cleaned.csv')
+us_stocks = pd.read_csv('us_stocks_cleaned.csv',keep_default_na=False)
 stock_list = us_stocks[us_stocks.Sector==sector].reset_index(drop=True)['Symbol'].to_list()
 
 
