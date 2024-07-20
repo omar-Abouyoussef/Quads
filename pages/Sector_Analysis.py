@@ -78,8 +78,12 @@ if sector != 'Market':
     end = dt.date.today()
     start = end - dt.timedelta(365)
     yf.pdr_override()
-    data = pdr.get_data_yahoo(stock_list, start, end)
+    
+    @st.cache_data
+    def get_data(stock_list, start, end):
+        return pdr.get_data_yahoo(stock_list, start, end)
 
+    data = get_data(stock_list, start, end)
     close_prices = data["Close"]
     close_prices.dropna(inplace=True, axis=1)
     returns = close_prices.diff().dropna()
