@@ -89,6 +89,7 @@ for idx, sector in enumerate(sectors):
 
 df_20_50.columns = ['Short-term', 'Medium-term', 'Sector']
 df_20_50.index = pd.to_datetime(df_20_50.index).date
+st.session_state.df_20_50 = df_20_50
 
 
 
@@ -110,12 +111,13 @@ for idx, sector in enumerate(sectors):
 
 df_50_100.columns = ['Medium-term', 'Long-term', 'Sector']
 df_50_100.index = pd.to_datetime(df_50_100.index).date
+st.session_state.df_50_100 = df_50_100
 
 
 ###########
 ####################
 sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
-
+st.session_state.sectors = sectors
 
 
 
