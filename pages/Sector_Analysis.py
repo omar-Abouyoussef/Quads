@@ -12,7 +12,7 @@ def scale(x):
     x_scaled = (x - x.mean())/x.std()
     return x_scaled
 
-sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
+sectors = st.session_state.sectors
 
 
 #######
