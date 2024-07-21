@@ -49,7 +49,7 @@ if cycle == 'Long-term':
 
     else:
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol.values[0]][cycle]
-        fig = px.line(series,line_shape="spline") )
+        fig = px.line(series,line_shape="spline")
 
 
 else:
