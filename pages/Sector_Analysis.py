@@ -42,27 +42,27 @@ sector_symbol = sectors[sectors['name']==sector]['symbol']
 if cycle == 'Long-term':
     if standardize == 'Yes':
         series = scale(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol.values[0]][cycle])
-        fig = px.line(series)
+        fig = px.line(series, line_shape="spline"))
         fig.add_hline(1.27, line_width=1, line_dash="dash")
         fig.add_hline(-1.27, line_width=1, line_dash="dash")
 
 
     else:
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol.values[0]][cycle]
-        fig = px.line(series)
+        fig = px.line(series,line_shape="spline") )
 
 
 else:
     if standardize == 'Yes':
         series = scale(st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol.values[0]][cycle])
-        fig = px.line(series)
+        fig = px.line(series,line_shape="spline")
         fig.add_hline(1.27, line_width=1, line_dash="dash")
         fig.add_hline(-1.27, line_width=1, line_dash="dash")
 
 
     else:
         series = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol.values[0]][cycle]
-        fig = px.line(series)
+        fig = px.line(series,line_shape="spline")
 
 st.plotly_chart(fig)
 
