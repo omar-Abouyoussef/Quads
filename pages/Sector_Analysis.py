@@ -77,13 +77,14 @@ stock_list.append(etf)
 if sector != 'Market':
     end = dt.date.today()
     start = end - dt.timedelta(365)
+    interval="1wk"
     yf.pdr_override()
     
     @st.cache_data
-    def get_data(stock_list, start, end):
-        return pdr.get_data_yahoo(stock_list, start, end)
+    def get_data(stock_list, start, end, interval):
+        return pdr.get_data_yahoo(stock_list, start, end, interval)
 
-    data = get_data(stock_list, start, end)
+    data = get_data(stock_list, start, end, interval)
     close_prices = data["Close"]
     close_prices.dropna(inplace=True, axis=1)
     returns = close_prices.diff().dropna()
