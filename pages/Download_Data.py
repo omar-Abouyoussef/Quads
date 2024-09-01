@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
+zfrom concurrent.futures import ThreadPoolExecutor
 import datetime as dt
 import time
 import pandas as pd
@@ -8,16 +8,13 @@ import io
 
 @st.cache_data
 def download(ticker, market, start, end, key):
-    if market in ["US", 'FOREX']:
-        close = pdr.get_data_yahoo(stock_list, start, end)["Close"]
-    else:
-        try:
-            url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-            res = requests.get(url)
-            if res.status_code == 200:
-                close = requests.get(url).json()
-        except:
-            pass
+    try:
+      url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
+      res = requests.get(url)
+      if res.status_code == 200:
+        close = requests.get(url).json()
+    except:
+      pass
     return ticker, close
 
 @st.cache_data
