@@ -88,7 +88,7 @@ st.title('Download data')
 
 #inputs
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia'],
+                       options = ['Egypt', 'United States', 'Saudi Arabia', 'FOREX'],
                        key='country')
 country = st.session_state.country
 
