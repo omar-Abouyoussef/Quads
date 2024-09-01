@@ -5,6 +5,8 @@ import pandas as pd
 import requests
 import streamlit as st
 import io
+import yfinance as yf
+import pandas_datareader.data as pdr
 
 @st.cache_data
 def download(ticker, market, start, end, key):
@@ -110,11 +112,16 @@ end = st.session_state.end
 
 
 
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR'}
+codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'FOREX':'FOREX'}
 
 
-close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
-                        start=start, end=end, key=st.secrets['eod_api_key'])
+if codes[country] in ['US', 'FOREX']:
+  yf.pdr_override()
+  close_prices =  pdr.get_data_yahoo(tickers, start, end)["Close"]
+
+else:   
+  close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
+                          start=start, end=end, key=st.secrets['eod_api_key'])
 
 if close_prices is not None:
   st.dataframe(close_prices)
