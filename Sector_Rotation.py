@@ -120,7 +120,7 @@ st.title('Sector Rotation')
 
 
 market = st.selectbox(label='Country:',
-                       options = ['america', 'germany','egypt', 'ksa'],
+                       options = ['america','canada', 'uk' 'germany','uae', 'ksa', 'egypt'],
                        key='market')
 market = st.session_state.market
 
