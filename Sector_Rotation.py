@@ -38,7 +38,7 @@ def get_index_data(market, interval, n_bars):
 
 
     sectors = info.sector.unique() 
-    st.session_state.sectors = sectors
+    # st.session_state.sectors = sectors
     
     symbols = info.name.unique()
 
@@ -140,7 +140,6 @@ plot_type = st.session_state.plot_type
 
 date = dt.today().date()
 
-
 if market == 'america':
 
     sectors = ['MM', 'SB', 'SE', 'SF', 'SI', 'SK', 'SL', 'SP', 'SS', 'SU', 'SV', 'SY']
@@ -201,7 +200,6 @@ if market == 'america':
     ####################
 
     sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
-    st.session_state.sectors = sectors
 
 else:
     interval = Interval.in_daily
