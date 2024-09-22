@@ -57,14 +57,14 @@ standardize = st.session_state.standardize
 
 sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if market == 'america' else sector    
 
-# st.write(sector_symbol)
-# st.write(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol.values[0]])
 
 if cycle == 'Long-term':
     
     if standardize == 'Yes':
-        series = scale(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle])
-        fig = px.line(series, line_shape="spline")
+        series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
+        zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
+        
+        fig = px.line(zscore, line_shape="spline")
         fig.add_hline(1.27, line_width=1, line_dash="dash")
         fig.add_hline(-1.27, line_width=1, line_dash="dash")
 
@@ -76,8 +76,11 @@ if cycle == 'Long-term':
 
 else:
     if standardize == 'Yes':
-        series = scale(st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle])
-        fig = px.line(series,line_shape="spline")
+        series = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle]
+        zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
+        
+        fig = px.line(zscore,line_shape="spline")
+
         fig.add_hline(1.27, line_width=1, line_dash="dash")
         fig.add_hline(-1.27, line_width=1, line_dash="dash")
 
@@ -87,6 +90,7 @@ else:
         fig = px.line(series,line_shape="spline")
 
 st.plotly_chart(fig)
+
 
 ################
 #################
