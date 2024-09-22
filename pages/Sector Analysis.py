@@ -27,10 +27,11 @@ def scale(x):
     return x_scaled
 
 
+
+us_sectors = pd.read_excel('sectors.xlsx', sheet_name='Sheet1')
 #######
 #inputs
 #######
-sectors = st.session_state.sectors
 
 market = st.selectbox(label='Market:',
                        options = ['america','canada', 'uk', 'germany','uae', 'ksa', 'egypt'],
@@ -43,9 +44,8 @@ cycle = st.selectbox(label='Cycle:',
 cycle = st.session_state.cycle
 
 info = get_market_info(market=market)
-# sector = 'market'
 sector = st.selectbox(label='Sector:',
-                       options = sectors.name if market=='america' else info.sector.unique().tolist() + ['Market'],
+                       options = us_sectors.name if market=='america' else info.sector.unique().tolist() + ['Market'],
                        key='sector')
 sector = st.session_state.sector
 
@@ -55,11 +55,14 @@ standardize = st.selectbox(label='Standardized:',
                        key='standardize')
 standardize = st.session_state.standardize
 
-sector_symbol = sectors[sectors['name']==sector]['symbol'] if market == 'america' else sector    
+sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if market == 'america' else sector    
+
+# st.write(sector_symbol)
+# st.write(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol.values[0]])
 
 if cycle == 'Long-term':
+    
     if standardize == 'Yes':
-        st.write(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle])
         series = scale(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle])
         fig = px.line(series, line_shape="spline")
         fig.add_hline(1.27, line_width=1, line_dash="dash")
