@@ -37,7 +37,7 @@ def get_index_data(market, interval, n_bars):
     info = get_market_info(market)
 
 
-    sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1') if market == 'america' else  info.sector.unique() 
+    sectors = info.sector.unique() 
     st.session_state.sectors = sectors
     
     symbols = info.name.unique()
@@ -200,6 +200,8 @@ if market == 'america':
     ###########
     ####################
 
+    sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
+    st.session_state.sectors = sectors
 
 else:
     interval = Interval.in_daily
@@ -232,6 +234,9 @@ else:
 
 st.session_state.df_20_50 = df_20_50
 st.session_state.df_50_100 = df_50_100
+
+
+
 
 plot = [df_20_50, df_50_100]
 if historical == 'No':
