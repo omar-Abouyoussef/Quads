@@ -36,7 +36,10 @@ def get_index_data(market, interval, n_bars):
     
     info = get_market_info(market)
 
-    sectors = info.sector.unique()
+
+    sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1') if market == 'america' else  info.sector.unique() 
+    st.session_state.sectors = sectors
+    
     symbols = info.name.unique()
 
     symbol_exchange = pd.DataFrame(list(info.exchange), list(info.name)).reset_index()
@@ -196,8 +199,7 @@ if market == 'america':
 
     ###########
     ####################
-    sectors = pd.read_excel('sectors.xlsx', sheet_name = 'Sheet1')
-    st.session_state.sectors = sectors
+
 
 else:
     interval = Interval.in_daily
