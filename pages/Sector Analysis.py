@@ -33,7 +33,7 @@ def scale(x):
 sectors = st.session_state.sectors
 
 market = st.selectbox(label='Market:',
-                       options = ['america','canada', 'uk' 'germany','uae', 'ksa', 'egypt'],
+                       options = ['america','canada', 'uk', 'germany','uae', 'ksa', 'egypt'],
                        key='market')
 market = st.session_state.market
 
