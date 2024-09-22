@@ -4,5 +4,5 @@ datetime
 plotly
 streamlit
 tradingview_screener
-tvDatafeed
+git+https://github.com/rongardF/tvdatafeed.git
 retry
