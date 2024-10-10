@@ -2,7 +2,7 @@ from streamlit_agraph import agraph, Node, Edge, Config
 
 
 
-st.write(US Market only)
+st.write('## US Market only')
 nodes = []
 edges = []
 
