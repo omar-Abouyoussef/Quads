@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+import time
 from tvDatafeed import TvDatafeed, Interval
 from tradingview_screener import Query, Column, get_all_symbols
 import pandas as pd
@@ -33,7 +34,6 @@ def get_price_data(symbol,exchange,interval,n_bars, date):
 
 
 def get_index_data(market, interval, n_bars):
-    
     info = get_market_info(market)
 
 
@@ -84,6 +84,7 @@ def get_index_data(market, interval, n_bars):
             sector_symbols = info[info['sector']==sector]['name']
             pctabove = above.loc[:,sector_symbols].apply(np.mean,axis = 1)
             dic[sector] = pctabove * 100
+  
     return above_mas
 
 
@@ -121,9 +122,10 @@ st.title('Sector Rotation')
 
 #inputs
 
+# options = ['america','canada', 'uk', 'germany','uae', 'ksa', 'egypt'],
 
 market = st.selectbox(label='Country:',
-                       options = ['america','canada', 'uk', 'germany','uae', 'ksa', 'egypt'],
+                       options = ['america','uae', 'ksa', 'egypt'],
                        key='market')
 market = st.session_state.market
 
@@ -139,6 +141,23 @@ plot_type = st.session_state.plot_type
 
 
 date = dt.today().date()
+
+
+
+info = get_market_info(market=market)
+pie = pd.DataFrame(info.value_counts(subset='sector'))
+
+
+fig2 = go.Figure(
+    data = [go.Pie(
+        values=pie['count'],
+        labels=pie.index,
+        hole =0.4, pull = [0.1]*len(pie),
+        name = 'Market'
+                   )]
+    )
+fig2. update_layout(showlegend=False)
+
 
 if market == 'america':
 
@@ -203,8 +222,13 @@ if market == 'america':
 
 else:
     interval = Interval.in_daily
-    n_bars = 500
+    n_bars = 3000
+
+
     dics = get_index_data(market, interval, n_bars)
+
+
+    
     df20, df50, df100= to_dataframe(dics)
     
 
@@ -240,17 +264,22 @@ plot = [df_20_50, df_50_100]
 if historical == 'No':
     if plot_type == 'Short-term|Medium-term':
         group = plot[0].groupby('Sector').tail(1)
-        fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',title=plot_type, color=sectors.name if market == 'america' else group.Sector, template='plotly_white')
+        fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',
+                         title=plot_type, color=sectors.name if market == 'america' else group.Sector,
+                         template='plotly_white')
 
 
     elif plot_type == 'Medium-term|Long-term':
         group = plot[1].groupby('Sector').tail(1)
-        fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',title=plot_type,color=sectors.name if market == 'america' else group.Sector, template='plotly_white')
+        fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',
+                         title=plot_type,color=sectors.name if market == 'america' else group.Sector,
+                         template='plotly_white')
 
 
 
 
 else:
+
     last_n = st.slider("Last data points", 1, 52, 5)
 
     if plot_type == 'Short-term|Medium-term':
@@ -286,6 +315,9 @@ else:
         fig = go.Figure()
         for sector in sectors.symbol if market == 'america' else df_50_100.Sector.unique():
             data = df_50_100[df_50_100['Sector']==sector]
+            if market != 'america':
+                data = data.resample('M').last()
+
             fig.add_trace(
                                     go.Scatter(
                                         x=data["Long-term"].tail(last_n),
@@ -309,19 +341,6 @@ fig.update_legends()
 fig.add_hline(y=50)
 fig.add_vline(x=50)  
 
-info = get_market_info(market=market)
-
-pie = pd.DataFrame(info.value_counts(subset='sector'))
-
-fig2 = go.Figure(
-    data = [go.Pie(
-        values=pie['count'],
-        labels=pie.index,
-        hole =0.4, pull = [0.1]*len(pie),
-        name = 'Market'
-                   )]
-    )
-fig2. update_layout(showlegend=False)
 
 container = st.container()
 with container:
