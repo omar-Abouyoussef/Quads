@@ -4,6 +4,7 @@ openpyxl
 datetime
 plotly
 streamlit
+streamlit_agraph
 tradingview_screener
 git+https://github.com/rongardF/tvdatafeed.git
 retry
