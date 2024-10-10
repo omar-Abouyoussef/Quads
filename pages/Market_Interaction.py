@@ -21,7 +21,7 @@ nodes.append( Node(id="Utilities",
                    label="Utilities", 
                    size=25, 
                    shape="start",
-                   image="https://www.onvista.de/api/og/IE00B4KBBD01.png") 
+                   image="") 
             ) # includes **kwargs
 nodes.append( Node(id="Real Estate", 
                    size=25,
@@ -72,7 +72,7 @@ nodes.append( Node(id="Finance",
                    size=25,
                    shape="circularImage",
                    label="Finance",
-                   image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQobagS6tLb9_Qs67_csDL5NdKkP4Mlr9EnQw&s"
+                   image=""
                    ) 
             )
 
