@@ -250,8 +250,8 @@ edges.append( Edge(source="Utilities",
 
 
 
-config = Config(width=750,
-                height=950,
+config = Config(width=1000,
+                height=1000,
                 directed=True, 
                 physics=True, 
                 hierarchical=False,
