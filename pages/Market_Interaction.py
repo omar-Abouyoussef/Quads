@@ -207,13 +207,7 @@ edges.append( Edge(source="Utilities",
                    # **kwargs
                    ) 
             )
-edges.append( Edge(source="Communication Services", 
-                   label="", 
-                   target="Real Estate",
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )
+
 edges.append( Edge(source="Market", 
                    label="", 
                    target="Consumer Discretionary",
