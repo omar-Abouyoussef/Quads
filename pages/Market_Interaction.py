@@ -224,6 +224,14 @@ edges.append( Edge(source="Market",
                    ) 
             )
 
+edges.append( Edge(source="Market", 
+                   label="", 
+                   target="Real Estate", 
+                   color='green',smooth=False, physics=False
+                   # **kwargs
+                   ) 
+            )
+
 config = Config(width=700,
                 height=700,
                 directed=True, 
