@@ -91,7 +91,7 @@ else:
 
 st.plotly_chart(fig)
 if market != "america":
-    st.write(info)
+    st.write(info[info.sector==sector])
 
 
 ################
