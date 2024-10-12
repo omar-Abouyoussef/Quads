@@ -145,6 +145,7 @@ date = dt.today().date()
 
 
 info = get_market_info(market=market)
+st.write(info)
 pie = pd.DataFrame(info.value_counts(subset='sector'))
 
 
