@@ -8,7 +8,7 @@ import datetime as dt
 from tradingview_screener import Query, Column 
 
 def get_market_info(market):
-    market_info = (Query().select('country','name','exchange','market','sector','close', 'volume','sector','close', 'volume', 'market_cap_basic').
+    market_info = (Query().select('country','name','exchange','market','sector','close', 'volume', 'market_cap_basic').
                    where(Column('volume') > 5000).
                 set_markets(market).
                 limit(20000).
@@ -16,7 +16,7 @@ def get_market_info(market):
     if market == 'egypt':
         infot = market_info
         infor = pd.read_csv('egx_companies.csv')
-        info = pd.concat([infot[['name','exchange', 'sector','close', 'volume','sector','close', 'volume', 'market_cap_basic']], infor.sector], axis=1, join='inner')
+        info = pd.concat([infot[['name','exchange', 'sector','close', 'volume','market_cap_basic']], infor.sector], axis=1, join='inner')
     else:
         info = market_info
     return info
@@ -34,7 +34,7 @@ us_sectors = pd.read_excel('sectors.xlsx', sheet_name='Sheet1')
 #######
 
 market = st.selectbox(label='Market:',
-                       options = ['america','canada', 'uk', 'germany','uae', 'ksa', 'egypt'],
+                       options = ['america','uae', 'ksa', 'egypt'],
                        key='market')
 market = st.session_state.market
 
@@ -90,7 +90,8 @@ else:
         fig = px.line(series,line_shape="spline")
 
 st.plotly_chart(fig)
-st.write(info)
+if market != "america":
+    st.write(info[info==sector])
 
 
 ################
