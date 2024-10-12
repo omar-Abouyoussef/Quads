@@ -17,7 +17,7 @@ def get_market_info(market):
         infot = market_info
         infor = pd.read_csv('egx_companies.csv')
         #info = pd.concat(infot[['name','exchange','close','volume','market_cap_basic']], infor.sector], axis=1, join='inner')
-        info = pd.merge(left=infot[['name','exchange','close','volume','market_cap_basic']], right=infor.sector, left_on='name', right_on='name')
+        info = pd.merge(left=infot[['name','exchange','close','volume','market_cap_basic']], right=infor, left_on='name', right_on='name')
         st.write(info)
     else:
         info = market_info
