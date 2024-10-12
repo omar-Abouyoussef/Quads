@@ -53,7 +53,7 @@ sector = st.session_state.sector
 
 
 standardize = st.selectbox(label='Standardized:',
-                       options = ['Yes', 'No'],
+                       options = ['No', 'Yes'],
                        key='standardize')
 standardize = st.session_state.standardize
 
