@@ -59,7 +59,6 @@ standardize = st.session_state.standardize
 
 sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if market == 'america' else sector    
 
-st.write(info)
 if cycle == 'Long-term':
     
     if standardize == 'Yes':
