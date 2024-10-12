@@ -151,13 +151,6 @@ edges.append( Edge(source="Consumer Discrentionary",
                    ) 
             ) 
 
-edges.append( Edge(source="Technology", 
-                   label="", 
-                   target="Market", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )
 
 edges.append( Edge(source="Technology", 
                    label="", 
@@ -166,6 +159,22 @@ edges.append( Edge(source="Technology",
                    # **kwargs
                    ) 
             )
+edges.append( Edge(source="Technology", 
+                   label="", 
+                   target="Market", 
+                   color='green',smooth=True,type='CurvedCW'
+                   # **kwargs
+                   ) 
+            )
+edges.append( Edge(source="Market", 
+                   label="", 
+                   target="Technology", 
+                   color='green',smooth=True,type='CurvedCW'
+                   # **kwargs
+                   ) 
+            )
+
+
 
 
 edges.append( Edge(source="Industrials", 
