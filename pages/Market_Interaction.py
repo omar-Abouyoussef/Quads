@@ -93,10 +93,17 @@ nodes.append( Node(id="Technology",
                    ) 
             )
 
+
+######################
+#####################
+#edges
+####################
+######################
 edges.append( Edge(source="Real Estate", 
                    label="", 
                    target="Utilities", 
-                   color='green',smooth=True,type='CurvedCW'
+                   color='green',smooth=False,
+                   arrows='False'
                    # **kwargs
                    ) 
             ) 
@@ -104,37 +111,22 @@ edges.append( Edge(source="Real Estate",
 edges.append( Edge(source="Consumer Staples", 
                    label="", 
                    target="Utilities", 
-                   color='green',smooth=True,type='CurvedCW'
+                   color='green',smooth=False,
+                   arrows='False'
                    # **kwargs
                    ) 
             ) 
 
-edges.append( Edge(source="Consumer Discrentionary", 
+################
+################
+
+edges.append( Edge(source="Energy", 
                    label="", 
                    target="Market", 
                    color='green',smooth=True,type='CurvedCW'
                    # **kwargs
                    ) 
             ) 
-
-
-edges.append( Edge(source="Communication Services", 
-                   label="", 
-                   target="Market", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            ) 
-
-edges.append( Edge(source="Market", 
-                   label="", 
-                   target="Communication Services", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )
-
-
 edges.append( Edge(source="Market", 
                    label="", 
                    target="Energy", 
@@ -144,24 +136,58 @@ edges.append( Edge(source="Market",
             ) 
 
 
-
-edges.append( Edge(source="Industrials", 
+edges.append( Edge(source="Finance", 
                    label="", 
-                   target="Finance", 
+                   target="Market", 
+                   color='green',smooth=True,type='CurvedCW'
+                   # **kwargs
+                   ) 
+            ) 
+edges.append( Edge(source="Consumer Discrentionary", 
+                   label="", 
+                   target="Market", 
                    color='green',smooth=True,type='CurvedCW'
                    # **kwargs
                    ) 
             ) 
 
-
-
-edges.append( Edge(source="Basic Materials", 
+edges.append( Edge(source="Technology", 
                    label="", 
-                   target="Industrials", 
+                   target="Market", 
                    color='green',smooth=True,type='CurvedCW'
                    # **kwargs
                    ) 
             )
+
+edges.append( Edge(source="Technology", 
+                   label="", 
+                   target="Health Care", 
+                   color='green',smooth=True,type='CurvedCW'
+                   # **kwargs
+                   ) 
+            )
+
+
+edges.append( Edge(source="Industrials", 
+                   label="", 
+                   target="Technology", 
+                   color='green',smooth=True,type='CurvedCW'
+                   # **kwargs
+                   ) 
+            )
+
+ 
+
+edges.append( Edge(source="Industrials", 
+                   label="", 
+                   target="Consumer Discretionary",
+                   color='green',smooth=True,type='CurvedCW'
+                   # **kwargs
+                   ) 
+            )  
+
+
+
 edges.append( Edge(source="Finance", 
                    label="", 
                    target="Industrials", 
@@ -169,86 +195,31 @@ edges.append( Edge(source="Finance",
                    # **kwargs
                    ) 
             )  
-edges.append( Edge(source="Consumer Discretionary", 
+
+
+edges.append( Edge(source="Basic Materials", 
                    label="", 
                    target="Industrials", 
                    color='green',smooth=True,type='CurvedCW'
                    # **kwargs
                    ) 
-            )  
-
-edges.append( Edge(source="Industrials", 
-                   label="", 
-                   target="Basic Materials", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )  
-
-edges.append( Edge(source="Industrials", 
-                   label="", 
-                   target="Technology",
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )  
-edges.append( Edge(source="Market", 
-                   label="", 
-                   target="Technology", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
             ) 
 
-edges.append( Edge(source="Utilities", 
-                   label="", 
-                   target="Real Estate", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )
+
 
 edges.append( Edge(source="Market", 
                    label="", 
-                   target="Consumer Discretionary",
-                   color='green' ,smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )
-
-#########
-#Staples
-############
-
-edges.append( Edge(source="Basic Materials", 
-                   label="", 
-                   target="Consumer Staples", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            )
-edges.append( Edge(source="Consumer Discrentionary", 
-                   label="", 
-                   target="Consumer Staples", 
-                   color='green',smooth=True,type='CurvedCW'
-                   # **kwargs
-                   ) 
-            ) 
-edges.append( Edge(source="Utilities", 
-                   label="", 
-                   target="Consumer Staples", 
+                   target="Communication Services", 
                    color='green',smooth=True,type='CurvedCW'
                    # **kwargs
                    ) 
             )
 
-
-
-config = Config(width=1000,
-                height=1000,
+config = Config(width=700,
+                height=700,
                 directed=True, 
                 physics=True, 
-                hierarchical=False,
+                hierarchical=True,
 
                 # **kwargs
                 )
