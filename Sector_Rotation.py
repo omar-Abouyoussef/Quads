@@ -265,8 +265,7 @@ if historical == 'No':
     if plot_type == 'Short-term|Medium-term':
         group = plot[0].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',
-                         title=plot_type, color=sectors.name if market == 'america' else group.Sector,
-                         size=50, template='plotly_white')
+                         title=plot_type, color=sectors.name if market == 'america' else group.Sector, size=50, template='plotly_white')
 
 
     elif plot_type == 'Medium-term|Long-term':
