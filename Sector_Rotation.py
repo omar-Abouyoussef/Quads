@@ -266,14 +266,14 @@ if historical == 'No':
         group = plot[0].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',
                          title=plot_type, color=sectors.name if market == 'america' else group.Sector,
-                         size=px.Constant(20), template='plotly_white')
+                         size=px.Constant(5), template='plotly_white')
 
 
     elif plot_type == 'Medium-term|Long-term':
         group = plot[1].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',
                          title=plot_type,color=sectors.name if market == 'america' else group.Sector,
-                         size=px.Constant(20), template='plotly_white')
+                         size=px.Constant(5), template='plotly_white')
 
 
 
