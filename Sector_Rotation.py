@@ -277,7 +277,7 @@ if historical == 'No':
 
 
 
-    fig.update_traces(marker=dic(size=5))
+    fig.update_traces(marker=dict(size=5))
 else:
 
     last_n = st.slider("Last data points", 1, 52, 5)
