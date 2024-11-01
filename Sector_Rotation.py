@@ -298,7 +298,7 @@ else:
                                         marker=dict(
                                             symbol="arrow",
                                             size=10,
-                                            angleref="previous", color=data.tail(last_n).index
+                                            angleref="previous", colorscale="rainbow"
                                         ),hovertext=df_20_50.tail(last_n).index,
                                         name=sectors[sectors.symbol==sector]['name'].values[0] if market=='america' else df_20_50[df_20_50.Sector==sector]['Sector'].values[0]
                                     )
