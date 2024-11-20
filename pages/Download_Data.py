@@ -88,7 +88,7 @@ st.title('Download data')
 
 #inputs
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia', 'FOREX'],
+                       options = ['Egypt', 'United States', 'Canada', 'Saudi Arabia', 'FOREX'],
                        key='country')
 country = st.session_state.country
 
@@ -112,7 +112,7 @@ end = st.session_state.end
 
 
 
-codes = {'Egypt':'EGX', 'United States':'US', 'Saudi Arabia':'SR', 'FOREX':'FOREX'}
+codes = {'Egypt':'EGX', 'United States':'US', 'Canada':'TO', 'Saudi Arabia':'SR', 'FOREX':'FOREX'}
 
 
 if codes[country] in ['US', 'FOREX']:
