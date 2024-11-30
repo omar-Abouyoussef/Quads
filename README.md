@@ -12,6 +12,8 @@ Sector Sentiment Analysis: Visualizes the sentiment across stock market sectors 
 Performance Monitoring: Tracks the relative performance of sectors
 
 User-Friendly Interface: Built with Streamlit, making it easy to interact with the data and models.
+![Screenshot 2024-10-09 232412](https://github.com/user-attachments/assets/15fcc8b4-d133-4107-8c5f-0fb794342c5f)
+![Screenshot 2024-10-09 232447](https://github.com/user-attachments/assets/cfa6bff5-2b90-43a9-9808-8947a01e642c)
 
 
 ## Usage
@@ -22,3 +24,4 @@ User-Friendly Interface: Built with Streamlit, making it easy to interact with t
 
 2. Gain insights into sector movements and make informed decisions based on visual trends.
 
+![Screenshot 2024-10-09 232646](https://github.com/user-attachments/assets/9825c810-2f94-451e-85b7-5825783ad6a8)
