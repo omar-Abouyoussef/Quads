@@ -115,7 +115,7 @@ end = st.session_state.end
 codes = {'Egypt':'EGX', 'United States':'US', 'Canada':'TO', 'United Kingdom' : 'L', 'Germany':'DE', 'Saudi Arabia':'SR', 'FOREX':'FOREX'}
 
 
-if codes[country] in ['US', 'FOREX']:
+if codes[country] in ['US','DE', 'L', 'FOREX']:
   yf.pdr_override()
   close_prices =  pdr.get_data_yahoo(tickers, start, end)["Close"]
 
