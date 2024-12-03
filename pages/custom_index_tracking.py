@@ -108,7 +108,7 @@ elif market == 'egypt':
     stocks=stocks[stocks['sector']==sector_name]['name']
     stock_list = stocks.values.tolist()
 
-    close = st.session_state.close_price_data
+    close = st.session_state.close_price_data.loc[:,stock_list]
     close.index.name = 'Date'
     close.index = pd.to_datetime(close.index.date)
     st.write(close.index.date)
