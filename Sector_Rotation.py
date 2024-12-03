@@ -70,7 +70,7 @@ def get_index_data(market, interval, n_bars):
                 data = get_price_data(symbol,exchange,interval,n_bars, date)
 
                 close = pd.DataFrame(data['close'])
-                close_price_data = data['close']
+                close_price_data[symbol] = data['close']
                 close[f'{period}ma'] = close.rolling(period).mean()
                 close.dropna(inplace=True)
                 close[f'above{period}'] = (close['close'] > close[f'{period}ma']).astype(int)             
