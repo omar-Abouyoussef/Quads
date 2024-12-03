@@ -224,7 +224,7 @@ if market == 'america':
 
 else:
     interval = Interval.in_daily
-    n_bars = 3000
+    n_bars = 1500
 
 
     dics = get_index_data(market, interval, n_bars)
