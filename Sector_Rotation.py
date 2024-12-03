@@ -59,6 +59,7 @@ def get_index_data(market, interval, n_bars):
 
     for period, dic in above_mas.items():
         above = {}
+        close_price_data = {}
         counter = 0
         for symbol, exchange in symbol_exchange.items():
             close = pd.DataFrame()
@@ -69,6 +70,7 @@ def get_index_data(market, interval, n_bars):
                 data = get_price_data(symbol,exchange,interval,n_bars, date)
 
                 close = pd.DataFrame(data['close'])
+                close_price_data = data['close']
                 close[f'{period}ma'] = close.rolling(period).mean()
                 close.dropna(inplace=True)
                 close[f'above{period}'] = (close['close'] > close[f'{period}ma']).astype(int)             
@@ -84,7 +86,7 @@ def get_index_data(market, interval, n_bars):
             sector_symbols = info[info['sector']==sector]['name']
             pctabove = above.loc[:,sector_symbols].apply(np.mean,axis = 1)
             dic[sector] = pctabove * 100
-  
+    st.session_state.close_price_data
     return above_mas
 
 
