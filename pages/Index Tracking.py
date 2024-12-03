@@ -7,7 +7,6 @@ import plotly.express as px
 import plotly.tools as tls
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 from tradingview_screener import Query, Column, get_all_symbols
 from tvDatafeed import TvDatafeed, Interval
@@ -16,7 +15,7 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn import linear_model
 from retry import retry
 import streamlit as st
-
+import matplotlib.pyplot as plt
 @retry((Exception), tries=10, delay=1, backoff=0)
 def get_data(sector, suffix,n,freq):
     tv = TvDatafeed()
