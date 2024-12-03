@@ -86,7 +86,7 @@ def get_index_data(market, interval, n_bars):
             sector_symbols = info[info['sector']==sector]['name']
             pctabove = above.loc[:,sector_symbols].apply(np.mean,axis = 1)
             dic[sector] = pctabove * 100
-    st.session_state.close_price_data
+    st.session_state.close_price_data = pd.DataFrame(close_price_data)
     return above_mas
 
 
