@@ -127,34 +127,17 @@ index.index.name = 'Date'
 df = pd.merge(index, close,
                         left_on=index.index,
                         right_on=close.index).set_index("key_0").astype(float)
-# print(df)
+print(df)
 df.index.name = "Date"
 df = df.tail(1000)
 n = (df.isna().sum()>60)
 bad_tickers = n[n==True].index.to_list()
-# print(df)
-
-df = df.drop(bad_tickers, axis=1)
-df = df.dropna()
-# st.write(df)
-
-
-
-###############################
-##############################
-
-df = pd.merge(index, close,
-                        left_on=index.index,
-                        right_on=close.index).set_index("key_0").astype(float)
-df.index.name = "Date"
-df = df.tail(2000)
-n = (df.isna().sum()>60)
-bad_tickers = n[n==True].index.to_list()
-
 
 df = df.drop(bad_tickers, axis=1)
 df = df.dropna()
 st.write(df)
+
+
 
 #"LASSO"
 # reg_data= df
