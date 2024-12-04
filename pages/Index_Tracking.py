@@ -222,7 +222,9 @@ plt.figure(figsize=(14,8))
 st.write((params.T.iloc[:,-30:]>0).astype(int))
 fig = go.Figure(
     data=go.Heatmap(
-                     z=(params.T.iloc[:,-20:]>0).astype(int),
+                     z=(params.T.iloc[:,-20:]>0).astype(str),
+        x=params.index,
+        y=params.columns,
         colorscale="rdbu"
 )
 )
