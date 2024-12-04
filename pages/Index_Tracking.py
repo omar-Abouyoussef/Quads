@@ -216,22 +216,18 @@ st.plotly_chart(fig)
 ##################
 plt.figure(figsize=(14,8))
 
-fig = px.imshow((params.T.iloc[:,-10:]>0).astype(float), color_continuous_scale="RdBu", aspect="auto", range_color=[-2,2],
-                facet_col_spacing=0.1, facet_row_spacing=0.1
-               )
-fig.update_layout(coloraxis_showscale=False, grid_xgap=0.7, grid_ygap=0.7)
-st.plotly_chart(fig)
 
-st.write(params.iloc[:,-1].T)
-#fig = go.Figure(
-#    data=go.Heatmap(
-#                     z=(params.T.iloc[:,-10:]>0).astype(int),
-#        x=params.index,
-#        y=params.columns,
-#        colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']]
-#)
-#)
-#st.plotly_chart(fig)
+
+st.write(params.iloc[-1,:].T)
+fig = go.Figure(
+    data=go.Heatmap(
+                     z=(params.T.iloc[:,-10:]>0).astype(int),
+        x=params.index, y=params.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
+        xgap=2,ygap=2
+)
+)
+fig.update_layout(coloraxis_showscale=False
+st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 
 
