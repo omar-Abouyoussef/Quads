@@ -216,7 +216,9 @@ st.plotly_chart(fig)
 ##################
 plt.figure(figsize=(14,8))
 
-fig = px.imshow((params.T.iloc[:,-10:]>0).astype(float), color_continuous_scale="RdBu", aspect="auto", range_color=[-1.5,1.5])
+fig = px.imshow((params.T.iloc[:,-10:]>0).astype(float), color_continuous_scale="RdBu", aspect="auto", range_color=[-2,2],
+                facet_col_spacing=0.1, facet_row_spacing=0.1
+               )
 fig.update_layout(coloraxis_showscale=False)
 st.plotly_chart(fig)
 
