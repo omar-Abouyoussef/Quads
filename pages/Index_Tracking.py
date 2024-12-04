@@ -226,7 +226,7 @@ fig = go.Figure(
 )
  st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
-
+st.write((params.T.iloc[:,-30:]>0).astype(int)))
 
 
 
