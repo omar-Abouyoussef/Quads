@@ -217,9 +217,9 @@ st.plotly_chart(fig)
 plt.figure(figsize=(14,8))
 
 #fig = px.imshow(params.T.iloc[:,-30:]>0, origin='lower')
-st.plotly_chart(fig)
+#st.plotly_chart(fig)
 
-
+st.write((params.T.iloc[:,-30:]>0).astype(int))
 fig = go.Figure(
     data=go.Heatmap(
                      z=(params.T.iloc[:,-20:]>0).astype(int)
@@ -227,7 +227,7 @@ fig = go.Figure(
 )
 st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
-st.write((params.T.iloc[:,-30:]>0).astype(int))
+
 
 
 
