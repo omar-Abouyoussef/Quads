@@ -214,8 +214,6 @@ st.plotly_chart(fig)
 #################
 #Heatmap
 ##################
-plt.figure(figsize=(14,8))
-
 
 col1, col2 = st.columns([0.7,0.3])
 
@@ -232,7 +230,11 @@ fig.update_coloraxes(showscale=False)
 st.plotly_chart(fig)
 
 with col2:
-    st.write((weights.iloc[-1,:].T)*100)
+    
+    portfolio= (weights.iloc[-1,:].T)*100
+    portfolio.name="Weights"
+    portfolio.index.name="Tickers"
+    st.write(portfolio)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 
 
