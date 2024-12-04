@@ -108,19 +108,14 @@ elif market == 'egypt':
     stocks=stocks[stocks['sector']==sector_name]['name']
     stock_list = stocks.values.tolist()
     
-
-
-    
     close = st.session_state.close_price_data
-
-    # close = close.loc[:,stock_list]
-    #st.write(close)                #
     
+    stock_list = list(set(stock_list).intersection(close.columns.values.tolist()))
+    close = close.loc[:,stock_list]
     
     close.index = pd.to_datetime(close.index.date)
     close.index.name = 'Date'
-print(stock_list)            #   
-print(close)  #
+    
 index.name = 'INDEX'
 index.index = pd.to_datetime(pd.to_datetime(index.index).date)
 index.index.name = 'Date'
@@ -134,7 +129,7 @@ df = pd.merge(index, close,
                         left_on=index.index,
                         right_on=close.index).set_index("key_0").astype(float)
 df.index.name = "Date"
-df = df.iloc[-1000:,:]
+df = df.tai(1000)
 n = (df.isna().sum()>60)
 bad_tickers = n[n==True].index.to_list()
 
