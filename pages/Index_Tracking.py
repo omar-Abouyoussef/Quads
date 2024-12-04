@@ -219,7 +219,7 @@ plt.figure(figsize=(14,8))
 fig = px.imshow((params.T.iloc[:,-10:]>0).astype(float), color_continuous_scale="RdBu", aspect="auto", range_color=[-2,2],
                 facet_col_spacing=0.1, facet_row_spacing=0.1
                )
-fig.update_layout(coloraxis_showscale=False)
+fig.update_layout(coloraxis_showscale=False, grid_xgap=0.7, grid_ygap=0.7)
 st.plotly_chart(fig)
 
 st.write(params.iloc[:,-1].T)
