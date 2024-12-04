@@ -216,10 +216,10 @@ st.plotly_chart(fig)
 ##################
 plt.figure(figsize=(14,8))
 
-fig = px.imshow((params.T.iloc[:,-10:]>0).astype(int), color_continuous_scale="RdBu_r", aspect="auto", text_auto=True)
+fig = px.imshow((params.T.iloc[:,-10:]>0).astype(int), color_continuous_scale="RdBu_r", aspect="auto", opacity=0.5)
 st.plotly_chart(fig)
 
-st.write((params.T.iloc[:,-30:]>0).astype(int))
+st.write(params.iloc[:,-1].T)
 #fig = go.Figure(
 #    data=go.Heatmap(
 #                     z=(params.T.iloc[:,-10:]>0).astype(int),
