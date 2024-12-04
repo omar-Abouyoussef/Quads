@@ -225,7 +225,7 @@ fig = go.Figure(
                      z=(params.T.iloc[:,-10:]>0).astype(int),
         x=params.index,
         y=params.columns,
-        colorscale="rdbu"
+        colorscale="set1"
 )
 )
 st.plotly_chart(fig)
