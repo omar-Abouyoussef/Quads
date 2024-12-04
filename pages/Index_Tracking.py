@@ -112,7 +112,7 @@ elif market == 'egypt':
 
     st.write(st.session_state.close_price_data)  #
     close = st.session_state.close_price_data
-    close = close.loc[:,stock_list]
+    close = close.loc[:,[stock_list]]
     st.write(close)                #
     
     
