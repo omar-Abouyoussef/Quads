@@ -3,6 +3,8 @@ numpy
 openpyxl
 datetime
 plotly
+matplotlib
+seaborn
 streamlit
 streamlit_agraph
 tradingview_screener
