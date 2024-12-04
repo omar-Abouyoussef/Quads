@@ -207,8 +207,8 @@ st.plotly_chart(fig)
 # st.plotly_chart(fig)
 
 
-tst = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
-fig  = px.line(tst.round(2)*100)
+weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
+fig  = px.line(weights.round(2)*100)
 fig.update_layout(title_text="Index Tracking Weights", xaxis_title="", yaxis_title="")
 st.plotly_chart(fig)
 #################
@@ -218,7 +218,7 @@ plt.figure(figsize=(14,8))
 
 
 
-st.write(params.iloc[-1,:].T)
+st.write(weights.iloc[-1,:].T)
 fig = go.Figure(
     data=go.Heatmap(
                      z=(params.T.iloc[:,-10:]>0).astype(int), coloraxis="coloraxis",
@@ -227,7 +227,7 @@ fig = go.Figure(
 )
 )
 
-fig.update_traces(showscale=False)
+fig.update_coloraxes(showscale=False)
 st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 
