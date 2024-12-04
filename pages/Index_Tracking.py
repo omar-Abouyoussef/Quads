@@ -103,7 +103,7 @@ if market == 'america':
     close = pdr.get_data_yahoo(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'], interval = '1d', start=start, end=end)['Close']
     
 elif market == 'egypt':
-index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
+    index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
 
     stocks=stocks[stocks['sector']==sector_name]['name']
     stock_list = stocks.values.tolist()
