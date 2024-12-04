@@ -217,8 +217,9 @@ st.plotly_chart(fig)
 plt.figure(figsize=(14,8))
 
 
+col1, col2 = st.columns([0.7,0.3])
 
-st.write(weights.iloc[-1,:].T)
+with col1:
 fig = go.Figure(
     data=go.Heatmap(
                      z=(params.T.iloc[:,-10:]>0).astype(int), coloraxis="coloraxis",
@@ -229,6 +230,9 @@ fig = go.Figure(
 
 fig.update_coloraxes(showscale=False)
 st.plotly_chart(fig)
+
+with col2:
+    st.write((weights.iloc[-1,:].T)*100)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 
 
