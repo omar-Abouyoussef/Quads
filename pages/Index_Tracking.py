@@ -220,7 +220,7 @@ plt.figure(figsize=(14,8))
 col1, col2 = st.columns([0.7,0.3])
 
 with col1:
-fig = go.Figure(
+    fig = go.Figure(
     data=go.Heatmap(
                      z=(params.T.iloc[:,-10:]>0).astype(int), coloraxis="coloraxis",
         x=params.index, y=params.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
