@@ -224,7 +224,7 @@ fig = go.Figure(
     data=go.Heatmap(
                      z=(params.T.iloc[:,-30:]>0).astype(int))
 )
- st.plotly_chart(fig)
+st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 st.write((params.T.iloc[:,-30:]>0).astype(int)))
 
