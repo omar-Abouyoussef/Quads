@@ -110,10 +110,11 @@ elif market == 'egypt':
     
     print(stock_list)            #
 
-    st.write(st.session_state.close_price_data)  #
+    
     close = st.session_state.close_price_data
-    close = close.loc[:,[stock_list]]
-    st.write(close)                #
+    st.write(close)  #
+    close = close.loc[:,stock_list]
+    #st.write(close)                #
     
     
     close.index = pd.to_datetime(close.index.date)
