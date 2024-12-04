@@ -129,7 +129,7 @@ df = pd.merge(index, close,
                         left_on=index.index,
                         right_on=close.index).set_index("key_0").astype(float)
 df.index.name = "Date"
-df = df.tai(2000)
+df = df.tail(2000)
 n = (df.isna().sum()>60)
 bad_tickers = n[n==True].index.to_list()
 
