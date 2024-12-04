@@ -46,7 +46,7 @@ in_daily = Interval.in_daily
 frequencies = [in_daily, in_weekly, in_monthly]
 
 
-market = st.selectbox(label='market:',
+market = st.selectbox(label='Market:',
                        options = markets,
                        key='market')
 market = st.session_state.market
@@ -65,7 +65,7 @@ sector_name = st.selectbox(label='Sector:',
                        key='sector_name')
 sector_name = st.session_state.sector_name
 
-duration = st.selectbox(label='duration:',
+duration = st.selectbox(label='Duration:',
                        options = list(duration_dic.keys()),
                        key='duration')
 duration = st.session_state.duration
@@ -127,7 +127,6 @@ index.index.name = 'Date'
 df = pd.merge(index, close,
                         left_on=index.index,
                         right_on=close.index).set_index("key_0").astype(float)
-print(df)
 df.index.name = "Date"
 df = df.tail(1000)
 n = (df.isna().sum()>60)
@@ -135,7 +134,6 @@ bad_tickers = n[n==True].index.to_list()
 
 df = df.drop(bad_tickers, axis=1)
 df = df.dropna()
-st.write(df)
 
 
 
@@ -190,11 +188,14 @@ params.columns = X.columns
 X_temp = X.loc[params.index,:]
 fit = params.mul(X_temp).sum(axis=1)
 
+
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='original', mode='lines'))
 fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='predicted', mode='lines'))
+fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
 st.plotly_chart(fig)
+
 
 """# Weights
 
@@ -215,8 +216,8 @@ st.plotly_chart(fig)
 ##################
 plt.figure(figsize=(14,8))
 
-# fig = px.imshow(params.T.iloc[:,-30:]>0, origin='lower')
-# st.plotly_chart(fig)
+fig = px.imshow(params.T.iloc[:,-30:]>0, origin='lower')
+st.plotly_chart(fig)
 
 
 # fig = go.Figure(data=go.Heatmap(
