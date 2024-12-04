@@ -103,22 +103,40 @@ if market == 'america':
     close = pdr.get_data_yahoo(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'], interval = '1d', start=start, end=end)['Close']
     
 elif market == 'egypt':
-    index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
+index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
 
     stocks=stocks[stocks['sector']==sector_name]['name']
     stock_list = stocks.values.tolist()
-    
+
+
     close = st.session_state.close_price_data
-    
-    stock_list = list(set(stock_list).intersection(close.columns.values.tolist()))
-    close = close.loc[:,stock_list]
-    
     close.index = pd.to_datetime(close.index.date)
     close.index.name = 'Date'
-    
+
+    stock_list = list(set(stock_list).intersection(close.columns.values.tolist()))
+
+    close = close.loc[:,stock_list]
+
 index.name = 'INDEX'
 index.index = pd.to_datetime(pd.to_datetime(index.index).date)
 index.index.name = 'Date'
+# print(index)
+###############################
+##############################
+
+df = pd.merge(index, close,
+                        left_on=index.index,
+                        right_on=close.index).set_index("key_0").astype(float)
+# print(df)
+df.index.name = "Date"
+df = df.tail(1000)
+n = (df.isna().sum()>60)
+bad_tickers = n[n==True].index.to_list()
+# print(df)
+
+df = df.drop(bad_tickers, axis=1)
+df = df.dropna()
+# st.write(df)
 
 
 
