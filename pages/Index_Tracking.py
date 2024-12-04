@@ -136,6 +136,7 @@ bad_tickers = n[n==True].index.to_list()
 
 df = df.drop(bad_tickers, axis=1)
 df = df.dropna()
+st.write(df)
 
 #"LASSO"
 # reg_data= df
