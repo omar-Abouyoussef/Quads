@@ -226,7 +226,7 @@ fig = go.Figure(
         xgap=2,ygap=2
 )
 )
-fig.update_layout(coloraxis_showscale=False
+fig.update_layout(coloraxis_showscale=False)
 st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 
