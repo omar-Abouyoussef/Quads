@@ -5,6 +5,7 @@ datetime
 plotly
 matplotlib
 seaborn
+scikit_learn
 streamlit
 streamlit_agraph
 tradingview_screener
