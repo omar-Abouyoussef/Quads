@@ -108,7 +108,7 @@ elif market == 'egypt':
     stocks=stocks[stocks['sector']==sector_name]['name']
     stock_list = stocks.values.tolist()
     
-    st.write(stock_list)            #
+    print(stock_list)            #
 
     st.write(st.session_state.close_price_data)  #
     close = st.session_state.close_price_data
