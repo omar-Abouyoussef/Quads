@@ -216,7 +216,7 @@ st.plotly_chart(fig)
 ##################
 plt.figure(figsize=(14,8))
 
-fig = px.imshow(params.T.iloc[:,-30:]>0, origin='lower', color_continuous_scale="RdBu_r", aspect="auto", text_auto=True)
+fig = px.imshow((params.T.iloc[:,-10:]>0).astype(int), color_continuous_scale="RdBu_r", aspect="auto", text_auto=True)
 st.plotly_chart(fig)
 
 st.write((params.T.iloc[:,-30:]>0).astype(int))
