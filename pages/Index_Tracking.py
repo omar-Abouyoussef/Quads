@@ -116,6 +116,10 @@ index.name = 'INDEX'
 index.index = pd.to_datetime(pd.to_datetime(index.index).date)
 index.index.name = 'Date'
 
+
+st.write(st.session_state.close_price_data)
+st.write(stock_list)
+st.write(close)
 ###############################
 ##############################
 
@@ -130,7 +134,6 @@ bad_tickers = n[n==True].index.to_list()
 
 df = df.drop(bad_tickers, axis=1)
 df = df.dropna()
-st.write(df)
 
 #"LASSO"
 # reg_data= df
@@ -151,7 +154,7 @@ st.write(df)
 # """ # Rolling Lasso"""
 
 
-"""Index Tracking"""
+
 reg_data = df
 
 X = reg_data.drop("INDEX", axis=1)
@@ -193,10 +196,10 @@ st.plotly_chart(fig)
 
 """
 
-fig  = px.line(params)
-fig.update_layout(title_text="Index Tracking Coefficients", xaxis_title="", yaxis_title="")
-fig.add_hline(y=0)
-st.plotly_chart(fig)
+# fig  = px.line(params)
+# fig.update_layout(title_text="Index Tracking Coefficients", xaxis_title="", yaxis_title="")
+# fig.add_hline(y=0)
+# st.plotly_chart(fig)
 
 
 tst = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
