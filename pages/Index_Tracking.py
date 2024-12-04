@@ -221,13 +221,13 @@ plt.figure(figsize=(14,8))
 st.write(params.iloc[-1,:].T)
 fig = go.Figure(
     data=go.Heatmap(
-                     z=(params.T.iloc[:,-10:]>0).astype(int),
+                     z=(params.T.iloc[:,-10:]>0).astype(int), coloraxis="coloraxis",
         x=params.index, y=params.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
         xgap=4,ygap=4
 )
 )
-fig.update_layout(coloraxis_showscale=False)
-fig.update_coloraxis(showscale=False)
+
+fig.update_traces(showscale=False)
 st.plotly_chart(fig)
 # sns.heatmap(params.T.iloc[:,-30:]>0)
 
