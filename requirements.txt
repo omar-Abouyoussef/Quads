@@ -5,6 +5,7 @@ datetime
 plotly
 matplotlib
 seaborn
+statsmodels
 scikit_learn
 streamlit
 streamlit_agraph
