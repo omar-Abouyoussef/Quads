@@ -78,7 +78,7 @@ duration = st.session_state.duration
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
           max_value=252,
-          value=5)
+          value=1)
 
 regularization = st.slider(label='Penalty:',
           min_value=0,
@@ -256,8 +256,8 @@ with col1:
 
     fig = go.Figure(
     data=go.Heatmap(
-                     z=(weights.tail(60).T).astype(float), coloraxis="coloraxis",
-        x=pd.to_datetime(weights.tail(60).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
+                     z=(weights.tail(252).T).astype(float), coloraxis="coloraxis",
+        x=pd.to_datetime(weights.tail(252).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
         xgap=3, ygap=3
 )
 )
