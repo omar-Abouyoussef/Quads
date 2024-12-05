@@ -226,7 +226,7 @@ X_temp = X.loc[params.index,:]
 fit = params.mul(X_temp).sum(axis=1)
 
 
-f"\n\n\n Tracking error: {np.round(((1-score[-1])*100),4)}"
+f"\n\n\n Tracking error: {np.round(((1-score[-1])*100),4)}%"
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='Smoothed Index', mode='lines'))
 fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines'))
