@@ -12,6 +12,7 @@ import seaborn as sns
 from tradingview_screener import Query, Column, get_all_symbols
 from tvDatafeed import TvDatafeed, Interval
 import streamlit as st
+import statsmodels.api as sm
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn import linear_model
 from retry import retry
@@ -40,7 +41,7 @@ sector_names_us_dic = {'Basic Materials': 'SB', 'Telecommunications': 'SL', 'Fin
 # day_100_suffix = 'OH'
 # day_200_suffix = 'TH'
 
-duration_dic={'Short-term':'TW','Medium-term':'FI', 'Long-term':'OH'}
+duration_dic={'Short-term':'TW','Medium-term':'FI'}
 markets=['america','egypt']
 
 in_monthly = Interval.in_monthly
@@ -72,6 +73,7 @@ duration = st.selectbox(label='Duration:',
                        options = list(duration_dic.keys()),
                        key='duration')
 duration = st.session_state.duration
+
 
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
@@ -165,21 +167,46 @@ df = df.dropna()
 
 reg_data = df
 
-X = reg_data.drop("INDEX", axis=1)
-y=reg_data["INDEX"]
 
+
+lowess = sm.nonparametric.lowess
+
+smooth = pd.DataFrame(
+    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
+    index=df.index
+                      )
+
+#####################
+#Model
+#####################
 coefs = []
 intercept = []
 score = []
 date = []
-x = reg_data.drop("INDEX", axis=1)
-window_size = 30
 
-for i in range(0, len(x) - window_size + 1,  rebalance):
+X = reg_data.drop("INDEX", axis=1)
+# y=reg_data["INDEX"]
+
+X = X.shift(1)[1:]
+# y=reg_data["INDEX"][1:]
+
+############
+#Smoothing
+
+lowess = sm.nonparametric.lowess
+smooth = pd.DataFrame(
+    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
+    index=df.index
+                      )
+y = smooth.iloc[1:,1]
+
+
+window_size = 30
+for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
-    X_window = x.iloc[i:i+window_size]
-    y_window = reg_data["INDEX"].iloc[i:i+window_size]
+    X_window = X.iloc[i:i+window_size]
+    y_window = y.iloc[i:i+window_size]
     model = linear_model.ElasticNet(alpha=1, l1_ratio=1, positive=True)
     model.fit(X_window,y_window)
 
@@ -199,15 +226,17 @@ X_temp = X.loc[params.index,:]
 fit = params.mul(X_temp).sum(axis=1)
 
 
+f"\n\n\n Tracking error: {np.round(1-score[-1],4)}"
 fig = go.Figure()
-fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='original', mode='lines'))
-fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='predicted', mode='lines'))
+fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='Smoothed Index', mode='lines'))
+fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines'))
 fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
 st.plotly_chart(fig)
 
 
-"""# Weights
+
+"""### Weights
 
 """
 
@@ -222,20 +251,20 @@ st.plotly_chart(fig)
 #################
 #Heatmap
 ##################
-col1, col2 = st.columns([0.8,0.2])
+col1, col2 = st.columns([0.8,0.1])
 with col1:
 
     fig = go.Figure(
     data=go.Heatmap(
-                     z=(weights.tail(30).T).astype(float), coloraxis="coloraxis",
-        x=pd.to_datetime(weights.tail(30).index).date.astype(str), y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
-        xgap=2, ygap=2
+                     z=(weights.tail(60).T).astype(float), coloraxis="coloraxis",
+        x=pd.to_datetime(weights.tail(60).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
+        xgap=3, ygap=3
 )
 )
     fig.update_xaxes(type='category')
     fig.update_yaxes(type='category')
                    
-    fig.update_layout(title='Holdings Across Time')
+    fig.update_layout(height = 600, title='Holdings Across Time')
 
     fig.update_coloraxes(showscale=False)
     st.plotly_chart(fig)
