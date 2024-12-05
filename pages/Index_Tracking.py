@@ -19,29 +19,7 @@ from sklearn import linear_model
 from retry import retry
 import streamlit as st
 
-# Custom CSS for styling
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #FFFFFF;
-        font-family: sans-serif;
-    }
-    .stApp {
-        padding: 20px;
-    }
-    h1, h2, h3 {
-        color: #4CAF50;  /* Match the theme */
-    }
-    .css-1d391kg {  /* Customizing buttons */
-        background-color: #4CAF50 !important;
-        color: white !important;
-        border-radius: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+
 
 @retry((Exception), tries=10, delay=1, backoff=0)
 def get_data(sector, suffix,n,freq):
