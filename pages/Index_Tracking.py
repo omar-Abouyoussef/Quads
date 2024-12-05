@@ -41,7 +41,7 @@ sector_names_us_dic = {'Basic Materials': 'SB', 'Telecommunications': 'SL', 'Fin
 # day_100_suffix = 'OH'
 # day_200_suffix = 'TH'
 
-duration_dic={'Short-term':'TW','Medium-term':'FI'}
+# duration_dic={'Short-term':'TW','Medium-term':'FI', 'Long-term':'OH'}
 markets=['america','egypt']
 
 in_monthly = Interval.in_monthly
@@ -69,11 +69,11 @@ sector_name = st.selectbox(label='Sector:',
                        key='sector_name')
 sector_name = st.session_state.sector_name
 
-duration = st.selectbox(label='Duration:',
-                       options = list(duration_dic.keys()),
-                       key='duration')
-duration = st.session_state.duration
-
+# duration = st.selectbox(label='Duration:',
+#                        options = list(duration_dic.keys()),
+#                        key='duration')
+# duration = st.session_state.duration
+duration='Medium-term'
 
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
