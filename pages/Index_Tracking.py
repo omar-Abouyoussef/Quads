@@ -25,7 +25,10 @@ def get_data(sector, suffix,n,freq):
                     n_bars=n)['close']
     return response
 
-
+@st.cache_data
+def get_us_close_prices(stock_list, start, end, interval='1d'):
+    close = pdr.get_data_yahoo(stock_list, start, end, interval)
+    return close
 
 sectors = ['MM', 'SB', 'SE', 'SF', 'SI', 'SK', 'SL', 'SP', 'SS', 'SU', 'SV', 'SY']
 
@@ -100,8 +103,8 @@ if market == 'america':
     yf.pdr_override()
 
     #Fetch CLose Prices
-    close = pdr.get_data_yahoo(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'], interval = '1d', start=start, end=end)['Close']
-    
+    close = get_us_close_prices(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'],
+                                start=start, end=end, interval = '1d')['Close']
 elif market == 'egypt':
     index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
 
@@ -120,7 +123,7 @@ elif market == 'egypt':
 index.name = 'INDEX'
 index.index = pd.to_datetime(pd.to_datetime(index.index).date)
 index.index.name = 'Date'
-# print(index)
+
 ###############################
 ##############################
 
@@ -129,12 +132,15 @@ df = pd.merge(index, close,
                         right_on=close.index).set_index("key_0").astype(float)
 df.index.name = "Date"
 df = df.tail(1000)
-n = (df.isna().sum()>60)
-bad_tickers = n[n==True].index.to_list()
+n = (df.isna().sum()>30)
+new_tickers = n[n==True].index.to_list()
 
-df = df.drop(bad_tickers, axis=1)
+deactivated_tickers = df.tail(1).isna().sum()>0
+deactivated_tickers = deactivated_tickers[deactivated_tickers==True].index.to_list()
+
+df = df.drop(new_tickers+deactivated_tickers, axis=1)
+
 df = df.dropna()
-
 
 
 #"LASSO"
@@ -182,8 +188,12 @@ for i in range(0, len(x) - window_size + 1,  rebalance):
     score.append(model.score(X_window,y_window))
     date.append(X_window.index[-1])
 params = pd.DataFrame(coefs, index=date)
-weights_coin = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
+
+weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
+
+weights.index.name='Date'
 params.columns = X.columns
+weights.columns = X.columns
 
 X_temp = X.loc[params.index,:]
 fit = params.mul(X_temp).sum(axis=1)
@@ -206,50 +216,33 @@ st.plotly_chart(fig)
 # fig.add_hline(y=0)
 # st.plotly_chart(fig)
 
-
-weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
 fig  = px.line(weights.round(2)*100)
 fig.update_layout(title_text="Index Tracking Weights", xaxis_title="", yaxis_title="")
 st.plotly_chart(fig)
 #################
 #Heatmap
 ##################
-
-col1, col2 = st.columns([0.7,0.3])
-
+col1, col2 = st.columns([0.8,0.2])
 with col1:
+
     fig = go.Figure(
     data=go.Heatmap(
-                     z=(params.T.iloc[:,-30:]>0).astype(int), coloraxis="coloraxis",
-        x=params.index, y=params.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
-        xgap=4,ygap=4
+                     z=(weights.tail(30).T).astype(float), coloraxis="coloraxis",
+        x=pd.to_datetime(weights.tail(30).index).date.astype(str), y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
+        xgap=2, ygap=2
 )
 )
+    fig.update_xaxes(type='category')
+    fig.update_yaxes(type='category')
+                   
+    fig.update_layout(title='Holdings Across Time')
 
-fig.update_coloraxes(showscale=False)
-st.plotly_chart(fig)
+    fig.update_coloraxes(showscale=False)
+    st.plotly_chart(fig)
 
 with col2:
-    
+    """###### Weights"""
     portfolio= (weights.iloc[-1,:].T)*100
     portfolio.name="Weights"
     portfolio.index.name="Tickers"
-    st.write(portfolio)
-# sns.heatmap(params.T.iloc[:,-30:]>0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    st.write(portfolio.sort_values(ascending=False).round(2))
