@@ -253,7 +253,7 @@ st.plotly_chart(fig)
 #Heatmap
 ##################
 
-alltime_zero_weight_tickers= (weights.isna().sum()==len(weights)).index.values.tolist()
+alltime_zero_weight_tickers= ((weights==0).sum()==weights.shape[0]).index.values.tolist()
 st.write(alltime_zero_weight_tickers)
 Weights=weights.drop(alltime_zero_weight_tickers, axis=1)
 
