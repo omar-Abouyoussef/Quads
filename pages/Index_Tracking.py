@@ -172,7 +172,7 @@ reg_data = df
 lowess = sm.nonparametric.lowess
 
 smooth = pd.DataFrame(
-    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
+    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.03),
     index=df.index
                       )
 
@@ -195,7 +195,7 @@ y=reg_data["INDEX"]
 
 lowess = sm.nonparametric.lowess
 smooth = pd.DataFrame(
-    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
+    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.03),
     index=df.index
                       )
 smoothed = smooth.iloc[:,1]
