@@ -69,11 +69,10 @@ sector_name = st.selectbox(label='Sector:',
                        key='sector_name')
 sector_name = st.session_state.sector_name
 
-# duration = st.selectbox(label='Duration:',
-#                        options = list(duration_dic.keys()),
-#                        key='duration')
-# duration = st.session_state.duration
-duration = 'Medium-term'
+duration = st.selectbox(label='Duration:',
+                        options = list(duration_dic.keys()),
+                        key='duration')
+duration = st.session_state.duration
 
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
