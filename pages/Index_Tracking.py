@@ -251,6 +251,10 @@ st.plotly_chart(fig)
 #################
 #Heatmap
 ##################
+
+alltime_zero_weight_tickers= weights.isna().sum().index.values.tolist()
+Weights=weights.drop(alltime_zero_weight_tickers, axis=1)
+
 col1, col2 = st.columns([0.8,0.1])
 with col1:
 
