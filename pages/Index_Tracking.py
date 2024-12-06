@@ -256,7 +256,7 @@ st.plotly_chart(fig)
 alltime_zero_weight_tickers= ((weights==0.0).sum()==weights.shape[0]).index.to_list()
 alltime_zero_weight_tickers= (weights == 0.0).sum()==weights.shape[0]
 alltime_zero_weight_tickers= alltime_zero_weight_tickers[alltime_zero_weight_tickers==True].index.to_list()
-Weights=weights.drop(alltime_zero_weight_tickers, axis=1)
+weights=weights.drop(alltime_zero_weight_tickers, axis=1)
 
 col1, col2 = st.columns([0.8,0.1])
 with col1:
