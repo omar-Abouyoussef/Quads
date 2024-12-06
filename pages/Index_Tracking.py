@@ -172,12 +172,7 @@ reg_data = df
 
 
 
-lowess = sm.nonparametric.lowess
 
-smooth = pd.DataFrame(
-    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
-    index=df.index
-                      )
 
 #####################
 #Model
@@ -214,6 +209,7 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     model.fit(X_window,y_window)
 
     coefs.append(model.coef_)
+    st.write(model.coef_)
     intercept.append(model.intercept_)
     score.append(model.score(X_window,y_window))
     date.append(X_window.index[-1])
