@@ -229,7 +229,7 @@ fit = params.mul(X_temp).sum(axis=1)
 f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='Index', mode='lines'))
-fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines', line=dict(dash='dot'))
+fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 fig.add_trace(go.Scatter(y=smoothed, x=params.index, name='Smoothed Index', mode='lines'))
 fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
