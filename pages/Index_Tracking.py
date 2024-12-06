@@ -1,4 +1,3 @@
-
 #import the libraries
 import datetime as dt
 import yfinance as yf
@@ -18,8 +17,6 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn import linear_model
 from retry import retry
 import streamlit as st
-
-
 
 @retry((Exception), tries=10, delay=1, backoff=0)
 def get_data(sector, suffix,n,freq):
@@ -44,7 +41,7 @@ sector_names_us_dic = {'Basic Materials': 'SB', 'Telecommunications': 'SL', 'Fin
 # day_100_suffix = 'OH'
 # day_200_suffix = 'TH'
 
-# duration_dic={'Short-term':'TW','Medium-term':'FI', 'Long-term':'OH'}
+duration_dic={'Short-term':'TW','Medium-term':'FI'}
 markets=['america','egypt']
 
 in_monthly = Interval.in_monthly
@@ -76,7 +73,7 @@ sector_name = st.session_state.sector_name
 #                        options = list(duration_dic.keys()),
 #                        key='duration')
 # duration = st.session_state.duration
-duration='Medium-term'
+duration = 'Medium-term'
 
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
@@ -172,7 +169,12 @@ reg_data = df
 
 
 
+lowess = sm.nonparametric.lowess
 
+smooth = pd.DataFrame(
+    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
+    index=df.index
+                      )
 
 #####################
 #Model
@@ -196,7 +198,7 @@ smooth = pd.DataFrame(
     lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
     index=df.index
                       )
-y = smooth[1:]
+y = smooth.iloc[1:,1]
 
 
 window_size = 30
@@ -208,13 +210,12 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     model = linear_model.ElasticNet(alpha=1, l1_ratio=1, positive=True)
     model.fit(X_window,y_window)
 
-    coefs.append(model.coef_.tolist())
+    coefs.append(model.coef_)
     intercept.append(model.intercept_)
     score.append(model.score(X_window,y_window))
     date.append(X_window.index[-1])
-st.write(coefs)
 params = pd.DataFrame(coefs, index=date)
-st.write(params)
+
 weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
 
 weights.index.name='Date'
@@ -225,7 +226,7 @@ X_temp = X.loc[params.index,:]
 fit = params.mul(X_temp).sum(axis=1)
 
 
-f"\n\n\n Tracking error: {np.round(((1-score[-1])*100),2)}%"
+f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='Smoothed Index', mode='lines'))
 fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines'))
@@ -255,8 +256,8 @@ with col1:
 
     fig = go.Figure(
     data=go.Heatmap(
-                     z=(weights.tail(252).T).astype(float), coloraxis="coloraxis",
-        x=pd.to_datetime(weights.tail(252).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
+                     z=(weights.tail(60).T).astype(float), coloraxis="coloraxis",
+        x=pd.to_datetime(weights.tail(60).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
         xgap=3, ygap=3
 )
 )
