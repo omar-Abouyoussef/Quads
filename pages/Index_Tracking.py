@@ -185,7 +185,7 @@ date = []
 X = reg_data.drop("INDEX", axis=1)
 # y=reg_data["INDEX"]
 
-#X = X.shift(1)[1:]
+X = X.shift(1)[1:]
 # y=reg_data["INDEX"][1:]
 
 ############
@@ -196,7 +196,7 @@ smooth = pd.DataFrame(
     lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
     index=df.index
                       )
-y = smooth
+y = smooth[1:]
 
 
 window_size = 30
