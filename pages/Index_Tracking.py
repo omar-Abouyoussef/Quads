@@ -256,8 +256,8 @@ with col1:
 
     fig = go.Figure(
     data=go.Heatmap(
-                     z=(weights.tail(60).T).astype(float), coloraxis="coloraxis",
-        x=pd.to_datetime(weights.tail(60).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
+                     z=(weights.tail(252).T).astype(float), coloraxis="coloraxis",
+        x=pd.to_datetime(weights.tail(252).index).date.astype(str), connectgaps=True, y=weights.columns, colorscale=[[0,'rgb(239,35,60)'],[1,'rgb(72,202,228)']],
         xgap=3, ygap=3
 )
 )
