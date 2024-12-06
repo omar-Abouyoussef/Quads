@@ -33,7 +33,7 @@ def get_us_close_prices(stock_list, start, end, interval='1d'):
 
 sectors = ['MM', 'SB', 'SE', 'SF', 'SI', 'SK', 'SL', 'SP', 'SS', 'SU', 'SV', 'SY']
 
-sector_etf_dic = {'MM':'RSP', 'SB':'XLB', 'SL':'XLC', 'SF':'XLF', 'SI':'XLI', 'SK':'XLK', 'SP':'XLP', 'SS':'XLRE', 'SU':'XLU', 'SV':'XLV', 'SY':'XLY'}
+sector_etf_dic = {'MM':'RSP', 'SB':'XLB', 'SL':'XLC', 'SF':'XLF', 'SI':'XLI', 'SK':'XLK', 'SP':'XLP', 'SS':'XLRE', 'SU':'XLU', 'SV':'XLV', 'SY':'XLY', 'SE':'XLE'}
 sector_names_us_dic = {'Basic Materials': 'SB', 'Telecommunications': 'SL', 'Finance': 'SF', 'Industrials': 'SI', 'Technology': 'SK', 'Consumer Staples': 'SP', 'Real Estate': 'SS', 'Utilities': 'SU', 'Health Care': 'SV', 'Consumer Discretionary': 'SY', 'Energy': 'SE'}
 # day_5_suffix = 'FD'
 # day_20_suffix = 'TW'
