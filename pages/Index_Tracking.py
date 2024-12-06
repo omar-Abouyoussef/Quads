@@ -198,7 +198,7 @@ smooth = pd.DataFrame(
     lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.04),
     index=df.index
                       )
-y = smooth.iloc[1:,:]
+y = smooth.iloc[1:,1]
 
 
 window_size = 30
