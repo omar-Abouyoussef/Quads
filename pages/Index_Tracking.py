@@ -208,7 +208,7 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     model = linear_model.ElasticNet(alpha=1, l1_ratio=1, positive=True)
     model.fit(X_window,y_window)
 
-    coefs.append(model.coef_)
+    coefs.append(model.coef_.values.to_list())
     intercept.append(model.intercept_)
     score.append(model.score(X_window,y_window))
     date.append(X_window.index[-1])
