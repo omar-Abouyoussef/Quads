@@ -214,6 +214,8 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     date.append(X_window.index[-1])
 print(coefs)
 print(date) 
+print(len(coefs))
+print(len(date))
 params = pd.DataFrame(coefs, index=date)
 weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
 
