@@ -230,7 +230,7 @@ f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='Index', mode='lines'))
 fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines', line=dict(dash='dot')))
-fig.add_trace(go.Scatter(y=smoothed, x=params.index, name='Smoothed Index', mode='lines'))
+#fig.add_trace(go.Scatter(y=smoothed, x=params.index, name='Smoothed Index', mode='lines'))
 fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
 st.plotly_chart(fig)
@@ -253,7 +253,8 @@ st.plotly_chart(fig)
 #Heatmap
 ##################
 
-alltime_zero_weight_tickers= weights.isna().sum().index.values.tolist()
+alltime_zero_weight_tickers= (weights.isna().sum()==len(weights)).index.values.tolist()
+st.write(alltime_zero_weight_tickers)
 Weights=weights.drop(alltime_zero_weight_tickers, axis=1)
 
 col1, col2 = st.columns([0.8,0.1])
