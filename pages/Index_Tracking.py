@@ -187,7 +187,7 @@ date = []
 X = reg_data.drop("INDEX", axis=1)
 # y=reg_data["INDEX"]
 
-X = X.[1:]
+X = X[1:]
 # y=reg_data["INDEX"][1:]
 
 ############
