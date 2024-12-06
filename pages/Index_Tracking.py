@@ -212,8 +212,8 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     intercept.append(model.intercept_)
     score.append(model.score(X_window,y_window))
     date.append(X_window.index[-1])
+st.write(coefs)  
 params = pd.DataFrame(coefs, index=date)
-st.write(coefs)
 weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
 
 weights.index.name='Date'
