@@ -190,7 +190,7 @@ date = []
 X = reg_data.drop("INDEX", axis=1)
 # y=reg_data["INDEX"]
 
-X = X.shift(1)[1:]
+#X = X.shift(1)[1:]
 # y=reg_data["INDEX"][1:]
 
 ############
