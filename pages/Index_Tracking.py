@@ -76,7 +76,7 @@ duration = st.session_state.duration
 
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
-          max_value=252,
+          max_value=30,
           value=1)
 
 regularization = st.slider(label='Penalty:',
