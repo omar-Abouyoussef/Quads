@@ -234,7 +234,8 @@ fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
 st.plotly_chart(fig)
 
-
+st.markdown(""" In the Sector Analysis page the graph offered valuable insight into the current sector sentiment and its cycle. One of the major benefits is that it is Mean-reverting.
+\n\n The graph shows a portoflio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portoflio and the penalty term which controls the weights in the portoflio.""")
 
 """### Weights
 
