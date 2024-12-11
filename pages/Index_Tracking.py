@@ -85,7 +85,7 @@ regularization = st.slider(label='Penalty:',
           value=1,
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
                 the number of equities held in the portfolio. Higher values shrinks the regression coefficients (portoflio weights) towards zero
-                alloing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error.""")
+                allowing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error.""")
 
 ##################
 ##################
@@ -235,7 +235,7 @@ fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 st.plotly_chart(fig)
 
 st.markdown(""" In the Sector Analysis page the graph offered valuable insight into the current sector sentiment and its cycle. One of the major benefits is that it is Mean-reverting.
-\n\n The graph shows a portoflio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portoflio and the penalty term which controls the weights in the portoflio. ***more info?***  *check the question mark of the penalty option* """)
+\n\n The graph shows a portoflio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portoflio and the penalty term which controls the weights in the portoflio. \n\n ***more info?***  *check the question mark of the penalty option* """)
 
 """### Weights
 
