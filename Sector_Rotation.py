@@ -355,7 +355,8 @@ with container:
     with plot2:
         st.plotly_chart(fig2)
 
-
+st.markdown("""This graph offers valuable insight into sector rotation on a daily and monthly basis. This models the full cycle of market sectors and its sentiment. Sectors that are in the Bottom-Left Quadrant rotate in a clockwise manner till returning back again, this Quadrant also offers the best opportunities to capture a big a move. This is especially true when setting the cycle option to "Medium-term|Long-term" and Historical option to "Yes"
+***Top-right Quadrant:*** Siginfies extremely bullish and violent movement in price- suited for momentum plays.   ***Bottom-right:*** After a bullish move sectors weakened and price started to drop.   ***Bottom-Left Quadrant:*** Falling sector.   ***Top-left:*** Falling sector started to improve their preformance attracting more buyers.""")
 fig3 = go.Figure()
 fig3.add_trace(go.Bar(
     x=sectors.name if market == 'america' else df_20_50.Sector.unique(),
@@ -386,6 +387,8 @@ fig3.add_hline(y=80, line_width=1, line_dash="dash")
 fig3.update_layout(barmode='group', xaxis_tickangle=-45, width=1000, height=800)
 
 st.plotly_chart(fig3)
+
+st.market
 #################
 ##############################
 #Heatmap
