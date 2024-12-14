@@ -102,7 +102,7 @@ if market == 'america':
     index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_names_us_dic[sector_name]][duration]
 
     #stocks=stocks[(stocks['Sector']==sector_name) & (stocks['Last Sale']>10)]['Symbol']
-    stocks=stocks.loc[(stocks['Sector']==sector_name) & (stocks['Last Sale'].str.replace("$","").str.replace(",","").astype(float)>10.0), ['Symbol']]
+    stocks=stocks.loc[(stocks['Sector']==sector_name) & (stocks['Volume'].astype(int)>500000), ['Symbol']]
     stock_list = stocks.values.tolist()
 
     start = index.index[0]
