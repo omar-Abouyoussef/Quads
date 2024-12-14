@@ -91,7 +91,7 @@ rho = st.slider(label='rho:',
                   max_value=1.0,
                   value=0.8,
                 step=0.1,
-help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 applies l1 norm regularization- LASSO. rho=0 applies l2 regularization- Ridge regression")
+help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 applies l1 norm regularization- LASSO. rho=0 applies l2 regularization- Ridge regression. Rho and Penalty parameters both have implications on diversification")
 ##################
 ##################
 #Fetch Index
