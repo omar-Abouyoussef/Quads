@@ -86,7 +86,11 @@ regularization = st.slider(label='Penalty:',
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
                 the number of equities held in the portfolio. Higher values shrinks the regression coefficients (portoflio weights) towards zero
                 allowing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error, and limits opportunities""")
-
+rho = st.slider(label='rho:',
+                  min_value=0,
+                  max_value=1,
+                  value=1,
+help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 applies l1 norm regularization- LASSO. rho=0 applies l2 regularization- Ridge regression")
 ##################
 ##################
 #Fetch Index
@@ -206,7 +210,7 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=1, positive=True)
+    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True)
     model.fit(X_window,y_window)
 
     coefs.append(model.coef_)
