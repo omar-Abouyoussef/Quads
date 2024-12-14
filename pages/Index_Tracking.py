@@ -87,9 +87,9 @@ regularization = st.slider(label='Penalty:',
                 the number of equities held in the portfolio. Higher values shrinks the regression coefficients (portoflio weights) towards zero
                 allowing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error, and limits opportunities""")
 rho = st.slider(label='rho:',
-                  min_value=0,
-                  max_value=1,
-                  value=1,
+                  min_value=0.0,
+                  max_value=1.0,
+                  value=1.0,
                 step=0.1,
 help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 applies l1 norm regularization- LASSO. rho=0 applies l2 regularization- Ridge regression")
 ##################
