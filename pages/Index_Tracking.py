@@ -82,7 +82,7 @@ rebalance = st.slider(label='Rebalance every days:',
 regularization = st.slider(label='Penalty:',
           min_value=0,
           max_value=10,
-          value=3,
+          value=5,
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
                 the number of equities held in the portfolio. Higher values shrinks the regression coefficients (portoflio weights) towards zero
                 allowing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error, and limits opportunities""")
