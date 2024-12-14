@@ -104,7 +104,6 @@ if market == 'america':
     stocks=stocks[(stocks['Sector']==sector_name) & (stocks['Volume']>500000)]['Symbol']
     #stocks=stocks.loc[(stocks['Sector']==sector_name) & (stocks['Volume'].astype(int)>500000), ['Symbol']]
     stock_list = stocks.values.tolist()
-    st.write(stock_list)
     start = index.index[0]
     end = dt.date.today()
     yf.pdr_override()
