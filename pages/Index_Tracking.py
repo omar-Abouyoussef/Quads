@@ -79,7 +79,7 @@ rebalance = st.slider(label='Rebalance every days:',
 
 regularization = st.slider(label='Penalty:',
           min_value=0.0,
-          max_value=10.0,
+          max_value=1.0,
           value=1/1000,
           step=0.001,
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
