@@ -78,9 +78,10 @@ rebalance = st.slider(label='Rebalance every days:',
           value=5)
 
 regularization = st.slider(label='Penalty:',
-          min_value=0,
-          max_value=10,
-          value=8,
+          min_value=0.0,
+          max_value=0.1,
+          value=1/1000,
+          step=0.001,
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
                 the number of equities held in the portfolio. Higher values shrinks the regression coefficients (portoflio weights) towards zero
                 allowing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error, and limits opportunities""")
@@ -167,40 +168,25 @@ df = df.dropna()
 
 
 
-reg_data = df
-
-
-
-lowess = sm.nonparametric.lowess
-
-smooth = pd.DataFrame(
-    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.03),
-    index=df.index
-                      )
-
 #####################
 #Model
 #####################
-coefs = []
-intercept = []
-score = []
-date = []
+
+
+sc= StandardScaler(with_mean=True, with_std=False)
+df_standardized = sc.fit_transform(df)
+df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
+
+reg_data = df_standardized
 
 X = reg_data.drop("INDEX", axis=1)
 y=reg_data["INDEX"]
 
-#X = X.shift(1)[1:]
-# y=reg_data["INDEX"][1:]
 
-############
-#Smoothing
-
-lowess = sm.nonparametric.lowess
-smooth = pd.DataFrame(
-    lowess(endog=reg_data['INDEX'], exog=reg_data['INDEX'].index, frac=0.03),
-    index=df.index
-                      )
-smoothed = smooth.iloc[:,1]
+coefs = []
+# intercept = []
+score = []
+date = []
 
 
 window_size = 30
@@ -209,11 +195,11 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True)
+    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=False)
     model.fit(X_window,y_window)
 
     coefs.append(model.coef_)
-    intercept.append(model.intercept_)
+    # intercept.append(model.intercept_)
     score.append(model.score(X_window,y_window))
     date.append(X_window.index[-1])
 params = pd.DataFrame(coefs, index=date)
@@ -225,13 +211,16 @@ params.columns = X.columns
 weights.columns = X.columns
 
 X_temp = X.loc[params.index,:]
-fit = params.mul(X_temp).sum(axis=1)
-
+fits = params.mul(X_temp).sum(axis=1)
+derivative = weights.mul(X_temp).sum(axis=1)
+ 
 
 f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,], x=params.index, name='Index', mode='lines'))
-fig.add_trace(go.Scatter(y= fit + intercept, x=params.index, name='Tracker', mode='lines', line=dict(dash='dot')))
+fig.add_trace(go.Scatter(y= fits, x=params.index, name='Tracker', mode='lines', line=dict(dash='dot')))
+fig.add_trace(go.Scatter(y= derivative, x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
+
 #fig.add_trace(go.Scatter(y=smoothed, x=params.index, name='Smoothed Index', mode='lines'))
 fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
