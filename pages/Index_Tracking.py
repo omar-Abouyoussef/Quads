@@ -100,8 +100,8 @@ help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 ap
 if market == 'america':
     index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_names_us_dic[sector_name]][duration]
 
-    stocks=stocks[(stocks['Sector']==sector_name) & (stocks['Volume']>500000)]['Symbol']
-    #stocks=stocks.loc[(stocks['Sector']==sector_name) & (stocks['Volume'].astype(int)>500000), ['Symbol']]
+    stocks=stocks[(stocks['Sector']==sector_name) & (stocks['Volume']>500000) & (stocks['Last Sale'].str.replace("$","").astype(float)>10)]['Symbol']
+    stocks=stocks.loc[, ['Symbol']]
     stock_list = stocks.values.tolist()
     start = index.index[0]
     end = dt.date.today()
