@@ -79,7 +79,7 @@ rebalance = st.slider(label='Rebalance every days:',
 
 regularization = st.slider(label='Penalty:',
           min_value=0.0,
-          max_value=1.0,
+          max_value=10.0,
           value=1/1000,
           step=0.001,
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
@@ -173,7 +173,7 @@ df = df.dropna()
 #####################
 
 
-sc= StandardScaler(with_mean=True, with_std=False)
+sc= StandardScaler(with_mean=True, with_std=True)
 df_standardized = sc.fit_transform(df)
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
@@ -189,7 +189,7 @@ score = []
 date = []
 
 
-window_size = 30
+window_size = 60
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
