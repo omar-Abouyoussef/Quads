@@ -173,11 +173,11 @@ df = df.dropna()
 #Model
 #####################
 
-df_returns= np.log(1+df.pct_change())[1:]
+df_log_returns= np.diff(np.log(df))[1:]
 
 sc= StandardScaler(with_mean=True, with_std=True)
-df_standardized = sc.fit_transform(df_returns)
-df_standardized = pd.DataFrame(df_standardized, index=df_returns.index, columns=df.columns)
+df_standardized = sc.fit_transform(df_log_returns)
+df_standardized = pd.DataFrame(df_standardized, index=df_log_returns.index, columns=df.columns)
 
 
 reg_data = df_returns
@@ -191,7 +191,7 @@ score = []
 date = []
 
 
-window_size = 20
+window_size = 30
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
