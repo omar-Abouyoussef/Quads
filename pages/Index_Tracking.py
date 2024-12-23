@@ -173,8 +173,8 @@ df = df.dropna()
 #Model
 #####################
 
-sc= StandardScaler(with_mean=True, with_std=True)
-df_standardized = sc.fit_transform(df)
+sc= StandardScaler(with_mean=True, with_std=False)
+df_standardized = sc.fit_transform(np.log(df))
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
 
