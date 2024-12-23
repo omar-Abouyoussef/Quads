@@ -190,7 +190,7 @@ score = []
 date = []
 
 
-window_size = 20
+window_size = 500
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
