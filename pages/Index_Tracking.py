@@ -173,7 +173,7 @@ df = df.dropna()
 #Model
 #####################
 
-sc= StandardScaler(with_mean=True, with_std=True)
+sc= StandardScaler(with_mean=False, with_std=True)
 df_standardized = sc.fit_transform(df)
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
@@ -195,7 +195,7 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=False)
+    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=True)
     model.fit(X_window,y_window)
 
     coefs.append(model.coef_)
