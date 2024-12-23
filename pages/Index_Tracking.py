@@ -173,7 +173,7 @@ df = df.dropna()
 #Model
 #####################
 
-df_log_returns= np.diff(np.log(df))[1:]
+df_log_returns= np.diff(np.log(df))
 
 sc= StandardScaler(with_mean=True, with_std=True)
 df_standardized = sc.fit_transform(df_log_returns)
