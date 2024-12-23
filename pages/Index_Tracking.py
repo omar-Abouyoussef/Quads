@@ -75,7 +75,7 @@ duration = st.selectbox(label='Duration:',
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
           max_value=30,
-          value=5)
+          value=1)
 
 regularization = st.slider(label='Penalty:',
           min_value=0.0,
@@ -88,7 +88,7 @@ regularization = st.slider(label='Penalty:',
 rho = st.slider(label='rho:',
                   min_value=0.0,
                   max_value=1.0,
-                  value=0.8,
+                  value=0.0,
                 step=0.1,
 help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 applies l1 norm regularization- LASSO. rho=0 applies l2 regularization- Ridge regression. Rho and Penalty parameters both have implications on diversification. Low values will allow the portfolio to be diversified, broad, and spread across many stocks.")
 ###############
