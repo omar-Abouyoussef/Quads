@@ -173,7 +173,7 @@ df = df.dropna()
 #Model
 #####################
 
-sc= StandardScaler(with_mean=True, with_std=False)
+sc= StandardScaler(with_mean=True, with_std=True)
 df_standardized = sc.fit_transform(df)
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
@@ -195,7 +195,7 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=True)
+    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=False)
     model.fit(X_window,y_window)
 
     coefs.append(model.coef_)
@@ -218,7 +218,7 @@ derivative = weights.mul(X_temp).sum(axis=1)
 f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
 fig = go.Figure()
 fig.add_trace(go.Scatter(y= y.loc[params.index,] , x=params.index, name='Index', mode='lines'))
-# fig.add_trace(go.Scatter(y= fits / fits[0], x=params.index, name='Tracker', mode='lines', line=dict(dash='dot')))
+# fig.add_trace(go.Scatter(y= fits / fits[0], x=params.index, name='Fit', mode='lines', line=dict(dash='dot')))
 fig.add_trace(go.Scatter(y= derivative, x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 
 #fig.add_trace(go.Scatter(y=smoothed, x=params.index, name='Smoothed Index', mode='lines'))
