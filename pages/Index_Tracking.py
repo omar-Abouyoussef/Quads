@@ -173,7 +173,7 @@ df = df.dropna()
 #Model
 #####################
 
-df_returns= (df+1).pct.change()
+df_returns= (df+1).pct_change()
 
 sc= StandardScaler(with_mean=True, with_std=True)
 df_standardized = sc.fit_transform(df_returns)
