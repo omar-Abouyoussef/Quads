@@ -178,7 +178,8 @@ sc= StandardScaler(with_mean=True, with_std=False)
 df_standardized = sc.fit_transform(df)
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
-reg_data = df_standardized
+df_returns= np.log(1+df.pct_change())[1:]
+reg_data = df_returns
 
 X = reg_data.drop("INDEX", axis=1)
 y=reg_data["INDEX"]
