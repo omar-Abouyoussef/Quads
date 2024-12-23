@@ -174,7 +174,7 @@ df = df.dropna()
 #####################
 
 sc= StandardScaler(with_mean=True, with_std=False)
-df_standardized = sc.fit_transform(np.log(df))
+df_standardized = sc.fit_transform(np.log(df+1))
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
 
