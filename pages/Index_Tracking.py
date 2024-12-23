@@ -212,14 +212,14 @@ weights.index.name='Date'
 params.columns = X.columns
 weights.columns = X.columns
 
-X_temp = X.loc[params.index,:]
+X_temp = df.loc[params.index,:]
 fits = params.mul(X_temp).sum(axis=1)
 derivative = weights.mul(X_temp).sum(axis=1)
  
 
 f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
 fig = go.Figure()
-fig.add_trace(go.Scatter(y= y.loc[params.index,] , x=params.index, name='Index', mode='lines'))
+fig.add_trace(go.Scatter(y= df.loc[params.index,] , x=params.index, name='Index', mode='lines'))
 # fig.add_trace(go.Scatter(y= fits / fits[0], x=params.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 fig.add_trace(go.Scatter(y= derivative, x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 
