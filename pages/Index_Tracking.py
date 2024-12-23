@@ -173,14 +173,14 @@ df = df.dropna()
 #Model
 #####################
 
+df_returns= np.log(1+df.pct_change())[1:]
 
-sc= StandardScaler(with_mean=True, with_std=False)
-df_standardized = sc.fit_transform(df)
+sc= StandardScaler(with_mean=True, with_std=True)
+df_standardized = sc.fit_transform(df_returns)
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
-df_returns= np.log(1+df.pct_change())[1:]
-reg_data = df_returns
 
+reg_data = df_returns
 X = reg_data.drop("INDEX", axis=1)
 y=reg_data["INDEX"]
 
