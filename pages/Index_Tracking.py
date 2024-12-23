@@ -109,7 +109,7 @@ if market == 'america':
     yf.pdr_override()
 
     #Fetch CLose Prices
-    close = get_us_close_prices(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'],
+    close = get_us_close_prices(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'] + ['GLD'],
                                 start=start, end=end, interval = '1d')['Close']
 elif market == 'egypt':
     index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
@@ -190,7 +190,7 @@ score = []
 date = []
 
 
-window_size = 60
+window_size = 100
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
