@@ -195,7 +195,7 @@ for i in range(0, len(X) - window_size + 1,  rebalance):
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=True)
+    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=False)
     model.fit(X_window,y_window)
 
     coefs.append(model.coef_)
