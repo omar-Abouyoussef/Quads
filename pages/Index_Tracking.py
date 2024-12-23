@@ -174,7 +174,7 @@ df = df.dropna()
 #####################
 
 
-sc= StandardScaler(with_mean=True, with_std=False)
+sc= StandardScaler(with_mean=True, with_std=True)
 df_standardized = sc.fit_transform(df)
 df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
@@ -228,7 +228,7 @@ fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 st.plotly_chart(fig)
 
 st.markdown(""" In the Sector Analysis page the graph offered valuable insight into the current sector sentiment and its cycle. One of the major benefits is that it is Mean-reverting.
-\n\n The graph shows a portoflio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portoflio and the penalty term which controls the weights in the portoflio. \n\n ***more info?***  *check the question mark of the penalty option* """)
+\n\n The graph shows a portfolio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portfolio and the penalty term which controls the weights in the portfolio. \n\n ***more info?***  *check the question mark of the penalty option* """)
 
 """### Weights
 
