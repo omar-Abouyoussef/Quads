@@ -173,9 +173,9 @@ df = df.dropna()
 #Model
 #####################
 
-sc= StandardScaler(with_mean=True, with_std=False)
-df_standardized = sc.fit_transform(df)
-df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
+# sc= StandardScaler(with_mean=True, with_std=False)
+# df_standardized = sc.fit_transform(df)
+# df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
 
 reg_data = df
