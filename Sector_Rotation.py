@@ -63,7 +63,7 @@ in_daily = Interval.in_daily
 frequencies = [in_daily, in_weekly, in_monthly]
 
 
-n_days=52
+n_days=1000
 
 df_20_50 = pd.DataFrame()
 for idx, sector in enumerate(sectors):    
@@ -84,7 +84,7 @@ df_20_50.index = pd.to_datetime(df_20_50.index).date
 
 
 
-n_months=24
+n_months=100
 
 df_50_100 = pd.DataFrame()
 for idx, sector in enumerate(sectors):    
