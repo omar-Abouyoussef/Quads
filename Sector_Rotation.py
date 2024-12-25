@@ -178,7 +178,7 @@ if market == 'america':
     frequencies = [in_daily, in_weekly, in_monthly]
 
 
-    n_days=251
+    n_days=1000
 
     df_20_50 = pd.DataFrame()
     for idx, sector in enumerate(sectors):    
@@ -199,7 +199,7 @@ if market == 'america':
 
 
 
-    n_months=72
+    n_months=100
 
     df_50_100 = pd.DataFrame()
     for idx, sector in enumerate(sectors):    
