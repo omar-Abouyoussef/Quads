@@ -207,7 +207,7 @@ if market == 'america':
 
         day_50_ma_response = get_data_us(sector,day_50_suffix,n_months,frequencies[2],date)
 
-        day_100_ma_response = get_data_us(sector,day_200_suffix,n_months,frequencies[2],date)
+        day_100_ma_response = get_data_us(sector,day_100_suffix,n_months,frequencies[2],date)
 
 
         data = pd.concat([day_50_ma_response,day_100_ma_response], axis = 1)
