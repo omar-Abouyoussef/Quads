@@ -4,19 +4,15 @@ import yfinance as yf
 import pandas_datareader.data as pdr
 import plotly.graph_objects as go
 import plotly.express as px
-import plotly.tools as tls
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from tradingview_screener import Query, Column, get_all_symbols
 from tvDatafeed import TvDatafeed, Interval
 import streamlit as st
-import statsmodels.api as sm
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-from sklearn import linear_model
 from retry import retry
 import streamlit as st
+from cvxpy import *
+
 
 @retry((Exception), tries=10, delay=1, backoff=0)
 def get_data(sector, suffix,n,freq):
@@ -30,6 +26,30 @@ def get_data(sector, suffix,n,freq):
 def get_us_close_prices(stock_list, start, end, interval='1d'):
     close = pdr.get_data_yahoo(stock_list, start, end, interval)
     return close
+
+
+def loss_fn(y, X, w):
+    loss = sum_squares(np.matrix(X) @ w - np.matrix(y).reshape((-1,1)))
+    return loss
+
+def l1_loss_fn(y, X, w, lmbda):
+    loss = sum_squares(np.matrix(X) @ w - np.matrix(y).reshape((-1,1))) + lmbda*norm1(w)
+    return loss
+
+def optimize_portfolio(y,X,regularization, verbose):
+    """
+    returns
+    -------
+     optimal_weights, loss
+    """
+    lmbda = Parameter(value = regularization, nonneg=True)
+    w = Variable((X.shape[1],1), pos=True)
+    constraints = [sum(w)<=1.0, w <= 1.0]
+    objective = Minimize(l1_loss_fn(y,X,w,lmbda))
+    prob = Problem(objective,constraints)
+    prob.solve(solver ='CLARABEL', verbose=verbose)
+    return w.value, prob.value/X.shape[0]
+
 
 sectors = ['MM', 'SB', 'SE', 'SF', 'SI', 'SK', 'SL', 'SP', 'SS', 'SU', 'SV', 'SY']
 
@@ -75,22 +95,17 @@ duration = st.selectbox(label='Duration:',
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
           max_value=30,
-          value=1)
+          value=5)
 
 regularization = st.slider(label='Penalty:',
           min_value=0.0,
-          max_value=0.5,
-          value=1/1000,
+          max_value=1.0,
+          value=0,
           step=0.001,
           help="""Penalty controls the regularization parameter in LASSO Regrssion, which helps in controlling
                 the number of equities held in the portfolio. Higher values shrinks the regression coefficients (portoflio weights) towards zero
                 allowing the portfolio to be more sparse, hence decreasing transactions costs but increasing Tracking error, and limits opportunities""")
-rho = st.slider(label='rho:',
-                  min_value=0.0,
-                  max_value=1.0,
-                  value=0.0,
-                step=0.1,
-help="ElasticNet rho parameter: controls l1 and l2 norm regularization. rho=1 applies l1 norm regularization- LASSO. rho=0 applies l2 regularization- Ridge regression. Rho and Penalty parameters both have implications on diversification. Low values will allow the portfolio to be diversified, broad, and spread across many stocks.")
+
 ###############
 ##################
 #Fetch Index
@@ -109,7 +124,7 @@ if market == 'america':
     yf.pdr_override()
 
     #Fetch CLose Prices
-    close = get_us_close_prices(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'] + ['GLD'],
+    close = get_us_close_prices(stock_list+[sector_etf_dic[sector_names_us_dic[sector_name]]]+['RINF'] + ['TLT'] + ['UVXY'],
                                 start=start, end=end, interval = '1d')['Close']
 elif market == 'egypt':
     index = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_name][duration]
@@ -149,85 +164,75 @@ df = df.drop(new_tickers+deactivated_tickers, axis=1)
 df = df.dropna()
 
 
-#"LASSO"
-# reg_data= df
-# X = reg_data.drop("INDEX", axis=1)
-# y=reg_data["INDEX"]
 
-# model = linear_model.ElasticNet(alpha=1, l1_ratio=1, positive=False)
-# model.fit(X, y)
-# print(model.coef_.round(2))
-# print(model.intercept_)
-# model.score(X, y)
+#df_norm worked without multiplying by 100 and CLARABEL solver window10
+#df_norm worked with multiplying by 100 and OSQP solver window10
+# divide by max works with CLARABEL AND SCS
 
-# fig = go.Figure()
-# fig.add_trace(go.Scatter(y= y, x=y.index, name='original', mode='lines'))
-# fig.add_trace(go.Scatter(y= model.predict(X), x=y.index, name='predicted', mode='lines'))
-# fig.show()
+# df_norm = (df /df.iloc[0,])
+benchmark = 'INDEX'
+X = df.drop(benchmark, axis=1)
+X = X / X.max()
 
-# """ # Rolling Lasso"""
+y = df[benchmark] /100
 
+
+# df_standardized = (df - df.mean())
+
+# y_standardized=df_standardized[benchmark]
+# X_standardized=df_standardized.drop(benchmark, axis=1)
+
+# X_rt = X.pct_change()[1:]
+# y_rt = y.pct_change()[1:]
 
 
 #####################
 #Model
 #####################
 
-sc= StandardScaler(with_mean=True, with_std=True)
-df_standardized = sc.fit_transform(df)
-df_standardized = pd.DataFrame(df_standardized, index=df.index, columns=df.columns)
 
-
-reg_data = df_standardized
-X = reg_data.drop("INDEX", axis=1)
-y=reg_data["INDEX"]
-
-
-coefs = []
+weights = []
 # intercept = []
 score = []
 date = []
 
 
-window_size = 30
+window_size = 10
+
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    model = linear_model.ElasticNet(alpha=regularization, l1_ratio=rho, positive=True, fit_intercept=False)
-    model.fit(X_window,y_window)
-
-    coefs.append(model.coef_)
-    # intercept.append(model.intercept_)
-    score.append(model.score(X_window,y_window))
+    optimal_weights, loss  = optimize_portfolio(y_window,X_window,regularization,False)
+    weights.append(optimal_weights.reshape(-1,))
+    score.append(loss)
     date.append(X_window.index[-1])
-params = pd.DataFrame(coefs, index=date)
-
-weights = params.apply(lambda x: abs(x)/abs(x).sum(), axis=1)
+weights = pd.DataFrame(weights, index=date)
 
 weights.index.name='Date'
-params.columns = X.columns
 weights.columns = X.columns
 
-X_temp = X.loc[params.index,:]
-fits = params.mul(X_temp).sum(axis=1)
+
+
+#PLotting 
+X_temp = X.loc[weights.index,:]
 derivative = weights.mul(X_temp).sum(axis=1)
- 
 
-f"\n\n\n Tracking error: {np.round((1-score[-1])*100,2)}%"
+f"\n\n\n Tracking error: {np.round((score[-1])*100,2)}%"
 fig = go.Figure()
-fig.add_trace(go.Scatter(y= y.loc[params.index,] , x=params.index, name='Index', mode='lines'))
-# fig.add_trace(go.Scatter(y= fits / fits[0], x=params.index, name='Fit', mode='lines', line=dict(dash='dot')))
-fig.add_trace(go.Scatter(y= derivative, x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
+fig.add_trace(go.Scatter(y= (y.loc[weights.index,])*100, x=weights.index, name='Index', mode='lines'))
+# fig.add_trace(go.Scatter(y= fits, x=weights.index, name='Tracker', mode='lines', line=dict(dash='dot')))
+fig.add_trace(go.Scatter(y= (derivative)*100, x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 
-#fig.add_trace(go.Scatter(y=smoothed, x=params.index, name='Smoothed Index', mode='lines'))
+#fig.add_trace(go.Scatter(y=smoothed, x=weights.index, name='Smoothed Index', mode='lines'))
 fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
+
 
 st.plotly_chart(fig)
 
 st.markdown(""" In the Sector Analysis page the graph offered valuable insight into the current sector sentiment and its cycle. One of the major benefits is that it is Mean-reverting.
-\n\n The graph shows a portfolio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portfolio and the penalty term which controls the weights in the portfolio. \n\n ***more info?***  *check the question mark of the penalty option* """)
+\n\n The graph shows a portoflio that tracks the sector cycle/sentiment and the tracking error. \n\n Select the rebalancing frequency for the portoflio and the penalty term which controls the weights in the portoflio. \n\n ***more info?***  *check the question mark of the penalty option* """)
 
 """### Weights
 
