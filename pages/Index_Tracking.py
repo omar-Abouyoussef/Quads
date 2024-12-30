@@ -172,6 +172,7 @@ df = df.dropna()
 # df_norm = (df /df.iloc[0,])
 benchmark = 'INDEX'
 X = df.drop(benchmark, axis=1)
+y = df[benchmark]
 X_norm = X / X.max()
 
 y_norm = df[benchmark] /100
