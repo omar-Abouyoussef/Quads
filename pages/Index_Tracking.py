@@ -33,7 +33,7 @@ def loss_fn(y, X, w):
     return loss
 
 def l1_loss_fn(y, X, w, lmbda):
-    loss = sum_squares(np.matrix(X) @ w - np.matrix(y).reshape((-1,1))) + lmbda*norm1(w)
+    loss = sum_squares(np.array(X) @ w - np.matrix(y).reshape((-1,1))) + lmbda*norm1(w)
     return loss
 
 def optimize_portfolio(y,X,regularization, verbose):
