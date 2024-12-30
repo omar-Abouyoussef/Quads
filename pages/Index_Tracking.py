@@ -172,9 +172,9 @@ df = df.dropna()
 # df_norm = (df /df.iloc[0,])
 benchmark = 'INDEX'
 X = df.drop(benchmark, axis=1)
-X = X / X.max()
+X_norm = X / X.max()
 
-y = df[benchmark] /100
+y_norm = df[benchmark] /100
 
 
 # df_standardized = (df - df.mean())
@@ -202,8 +202,8 @@ window_size = 10
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
-    X_window = X.iloc[i:i+window_size]
-    y_window = y.iloc[i:i+window_size]
+    X_window = X_norm.iloc[i:i+window_size]
+    y_window = y_norm.iloc[i:i+window_size]
     optimal_weights, loss  = optimize_portfolio(y_window,X_window,regularization,False)
     weights.append(optimal_weights.reshape(-1,))
     score.append(loss)
@@ -221,7 +221,7 @@ derivative = weights.mul(X_temp).sum(axis=1)
 
 f"\n\n\n Tracking error: {np.round((score[-1])*100,2)}%"
 fig = go.Figure()
-fig.add_trace(go.Scatter(y= (y.loc[weights.index,])*100, x=weights.index, name='Index', mode='lines'))
+fig.add_trace(go.Scatter(y= (y.loc[weights.index,]), x=weights.index, name='Index', mode='lines'))
 # fig.add_trace(go.Scatter(y= fits, x=weights.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 fig.add_trace(go.Scatter(y= (derivative)*100, x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 
