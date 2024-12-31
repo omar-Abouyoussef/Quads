@@ -174,8 +174,8 @@ benchmark = 'INDEX'
 X = df.drop(benchmark, axis=1)
 y = df[benchmark]
 
-X_norm = X / X.max()
-y_norm = df[benchmark] /100
+# X_norm = X / X.max()
+# y_norm = df[benchmark] /100
 
 
 # df_standardized = (df - df.mean())
@@ -203,8 +203,8 @@ window_size = 10
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
-    X_window = X_norm.iloc[i:i+window_size]
-    y_window = y_norm.iloc[i:i+window_size]
+    X_window = X.iloc[i:i+window_size]
+    y_window = y.iloc[i:i+window_size]
     optimal_weights, loss  = optimize_portfolio(y_window,X_window,regularization,False)
     weights.append(optimal_weights.reshape(-1,))
     score.append(loss)
