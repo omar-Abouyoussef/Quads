@@ -94,8 +94,8 @@ duration = st.selectbox(label='Duration:',
 
 rebalance = st.slider(label='Rebalance every days:',
           min_value=1,
-          max_value=30,
-          value=5)
+          max_value=252,
+          value=10)
 
 regularization = st.slider(label='Penalty:',
           min_value=0.0,
@@ -198,35 +198,50 @@ score = []
 date = []
 
 
-window_size = 10
-
+window_size = 252
 for i in range(0, len(X) - window_size + 1,  rebalance):
 
     # Extract the current rolling window
     X_window = X.iloc[i:i+window_size]
     y_window = y.iloc[i:i+window_size]
-    optimal_weights, loss  = optimize_portfolio(y_window,X_window,regularization,False)
+
+    # # # Preprocesing and normalization
+    # X_cntrd = (X_window - X_window.mean())
+    # X_cntrd['intercept'] = [1]*X_window.shape[0]
+
+    # y_cntrd = (y_window - y_window.mean())
+
+    optimal_weights, loss  = optimize_portfolio(y_window,X_window,regularization,upper_bound,verbose)
     weights.append(optimal_weights.reshape(-1,))
     score.append(loss)
     date.append(X_window.index[-1])
-weights = pd.DataFrame(weights, index=date)
 
+weights = pd.DataFrame(weights, index=date)
+rebalancing_dates = weights.index
 weights.index.name='Date'
+weights.index = pd.to_datetime(weights.index)
 weights.columns = X.columns
+weights = weights.reindex(X.index).ffill().round(3)
+weights.dropna(inplace=True)
 
 
 
 #PLotting 
-X_temp = X.loc[weights.index,:]
-derivative = weights.mul(X_temp).sum(axis=1)
+derivative = X.mul(weights).sum(axis=1)
+derivative = derivative.reindex(weights.index).ffill()
 
+#  / y.iloc[0,] * 100
+#
 f"\n\n\n Tracking error: {np.round((score[-1])*100,2)}%"
 fig = go.Figure()
-fig.add_trace(go.Scatter(y= (y.loc[weights.index,]), x=weights.index, name='Index', mode='lines'))
+fig.add_trace(go.Scatter(y= (y), x=y.index, name='Index', mode='lines'))
 # fig.add_trace(go.Scatter(y= fits, x=weights.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 fig.add_trace(go.Scatter(y= (derivative), x=derivative.index, name='Tracker', mode='lines', line=dict(dash='dot')))
 
+# for d in rebalancing_dates:
+#     fig.add_vline(x=d, line_width=0.5, line_dash="dot", line_color="green")
 #fig.add_trace(go.Scatter(y=smoothed, x=weights.index, name='Smoothed Index', mode='lines'))
+fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 fig.update_layout(title_text="Index Tracking", xaxis_title="", yaxis_title="")
 
 
