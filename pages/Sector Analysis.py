@@ -57,6 +57,11 @@ standardize = st.selectbox(label='Standardized:',
                        key='standardize')
 standardize = st.session_state.standardize
 
+if market != 'america':
+    st.download_button(label='Download Market Price Data:',
+                   data=st.session_state.close_price_data.to_csv(),
+                      file_name='Market_data.csv')
+                   
 sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if market == 'america' else sector    
 
 if cycle == 'Long-term':
