@@ -150,7 +150,7 @@ df = df.dropna()
 
 st.download_button(label='Download Data:',
                   data=df.to_csv(),
-                  file_name='sector_data.csv',
+                  file_name=f'{sectorname}.csv',
                   mime='csv')
 
 
