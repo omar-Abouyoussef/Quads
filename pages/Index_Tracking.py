@@ -149,7 +149,7 @@ df = df.drop(new_tickers+deactivated_tickers, axis=1)
 df = df.dropna()
 
 st.download_button(label='Download Data:',
-                  data=df,
+                  data=df.to_csv(),
                   file_name='sector_data.csv',
                   mime='csv')
 
