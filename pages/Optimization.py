@@ -111,7 +111,7 @@ risk_free_rate = st.session_state.risk_free_rate
 
 alpha = st.number_input(label="Sparsity:",
                         value=0.0,
-                        key=alpha)
+                        key="alpha")
 alpha = st.session_state.alpha
 ###########
 #############
