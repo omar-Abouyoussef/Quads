@@ -21,12 +21,12 @@ def portfolio_performance(W, mean_returns, cov):
     return portfolio_returns, portfolio_risk
 
 ############################
-def negative_sharpe_ratio(W, mean_returns, cov, risk_free_rate,alpha):
+def negative_sharpe_ratio(W, mean_returns, cov, risk_free_rate):
     portfolio_return, portfolio_risk = portfolio_performance(W, mean_returns, cov)
-    neg_sharpe_ratio = -(portfolio_return - risk_free_rate)/portfolio_risk + alpha*np.sum(np.abs(W))
+    neg_sharpe_ratio = -(portfolio_return - risk_free_rate)/portfolio_risk
     return neg_sharpe_ratio
 
-def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate,alpha):
+def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
     """
     returns
     -------
@@ -50,7 +50,7 @@ def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate,alpha):
     #minimize negative SharpeRatio
     result = sc.minimize(negative_sharpe_ratio,
                         W,
-                        args=(mean_returns, cov, risk_free_rate,alpha),
+                        args=(mean_returns, cov, risk_free_rate),
                         method='SLSQP',
                         bounds= bounds,
                         constraints=constraint_set)
@@ -63,12 +63,12 @@ def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate,alpha):
 
 
 
-def main(close, risk_free_rate:float,  upper_bound:float, alpha:float):
+def main(close, risk_free_rate:float,  upper_bound:float):
     close = pd.read_csv(close, index_col=0, header=0)
     mean_returns, cov = stock_performance(close)
 
     #maximum Sharpe Ratio portfolio
-    SR, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate,alpha)
+    SR, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
     portfolio_returns, portfolio_risk = portfolio_performance(optimal_weights, mean_returns, cov)
 
     st.write(f'Expected return: {portfolio_returns.round(3)}, Risk: {portfolio_risk.round(3)} with Sharpe Ratio:{SR.round(3)}\n')
@@ -109,17 +109,14 @@ risk_free_rate = st.number_input(label='Risk Free Rate:',
                               key='risk_free_rate')
 risk_free_rate = st.session_state.risk_free_rate
 
-alpha = st.number_input(label="Sparsity:",
-                        value=0.0,
-                        key="alpha")
-alpha = st.session_state.alpha
+
 ###########
 #############
 
 if close:
     portfolio_weights = main(close,
         risk_free_rate=risk_free_rate,
-        upper_bound=upper_bound,alpha=alpha
+        upper_bound=upper_bound
         )
 
     cols = st.columns([0.7,0.3])
