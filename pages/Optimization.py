@@ -119,7 +119,7 @@ alpha = st.session_state.alpha
 if close:
     portfolio_weights = main(close,
         risk_free_rate=risk_free_rate,
-        upper_bound=upper_bound,alpha
+        upper_bound=upper_bound,alpha=alpha
         )
 
     cols = st.columns([0.7,0.3])
