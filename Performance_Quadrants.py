@@ -167,6 +167,7 @@ elif country == 'United States':
 
     #close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
     #                        start=start, end=today, key=st.secrets["eod_api_key"])
+    yf.pdr_override()
     cop = get_data(market = codes[country], stock_list=['COP','XOM'],
                             start=start, end=today, key=st.secrets["eod_api_key"])
     st.write(cop)
