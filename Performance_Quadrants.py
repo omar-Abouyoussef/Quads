@@ -160,7 +160,7 @@ elif country == 'United States':
     us_companies_info = pd.read_csv('companies.csv')
     etfs = us_companies_info[us_companies_info['ETF']=='Yes']['Ticker'].to_list()
     # stock_list = investpy.stocks.get_stocks_list(country = country)
-    stock_list = pd.read_csv('us_stocks_cleaned.csv')['Symbol'].to_list()[0]
+    stock_list = pd.read_csv('us_stocks_cleaned.csv')['Symbol'].to_list()
     st.write(stock_list)
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                             start=start, end=today, key=st.secrets["eod_api_key"])
