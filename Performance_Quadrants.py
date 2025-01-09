@@ -165,11 +165,9 @@ elif country == 'United States':
     us_stock_data = pd.read_csv('us_stocks_cleaned.csv').dropna(subset='Symbol')
     stock_list = us_stock_data['Symbol'].to_list()
 
-    #close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
-    #                        start=start, end=today, key=st.secrets["eod_api_key"])
-    yf.pdr_override()
-    cop = pdr.get_data_yahoo('COP', start, today)["Close"]
-    st.write(cop)
+    close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
+                           start=start, end=today, key=st.secrets["eod_api_key"])
+
     
 
 else:
