@@ -166,15 +166,7 @@ elif country == 'United States':
     
     # stock_list = investpy.stocks.get_stocks_list(country = country)
     us_stock_data = pd.read_csv('us_stocks_cleaned.csv').dropna(subset='Symbol')
-
-    us_stock_data["Last Sale"]=us_stock_data["Last Sale"].str.replace("$","")
-    us_stock_data["Last Sale"]=us_stock_data["Last Sale"].str.replace(",","").astype(float)
-
-    if price:
-        stock_list = us_stock_data[(us_stock_data['Last Sale']>price)]['Symbol'].to_list()
-        
-    else:
-        stock_list = us_stock_data['Symbol'].to_list()
+    stock_list = us_stock_data['Symbol'].to_list()
 
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                             start=start, end=today, key=st.secrets["eod_api_key"])
@@ -189,14 +181,14 @@ else:
     
 ##################################
 
-# if country == "United States":
-#     price = st.number_input(label='Minimum price: ',
-#                               key='fltr')
-#     price = st.session_state.fltr
+if country == "United States":
+    price = st.number_input(label='Minimum price: ',
+                              key='fltr')
+    price = st.session_state.fltr
 
-#     if price:
-#         cols = close_prices.columns[close_prices.iloc[-1,:] > price]
-#         close_prices = close_prices[cols]
+    if price:
+        cols = close_prices.columns[close_prices.iloc[-1,:] > price]
+        close_prices = close_prices[cols]
 
 close_prices.dropna(axis = 1, inplace = True)
 close_prices['Date'] = pd.to_datetime(close_prices.index)
