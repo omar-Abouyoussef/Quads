@@ -157,9 +157,6 @@ if country == 'Forex':
 
     
 elif country == 'United States':
-    price = st.number_input(label='Minimum price: ',key='fltr')
-    price = st.session_state.fltr
-
         
     us_companies_info = pd.read_csv('companies.csv')
     etfs = us_companies_info[us_companies_info['ETF']=='Yes']['Ticker'].to_list()
