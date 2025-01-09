@@ -181,10 +181,13 @@ if country == "United States":
         cols = close_prices.columns[close_prices.iloc[-1,:] > price]
         close_prices = close_prices[cols]
 
+st.write(close_prices)
 close_prices.dropna(axis = 1, inplace = True)
 close_prices['Date'] = pd.to_datetime(close_prices.index)
 close_prices.set_index(close_prices['Date'].dt.date, inplace=True, drop=True)
 close_prices.drop(columns='Date', inplace=True)
+st.write('After dropna')
+st.write(close_prices)
 
 one_day_return = change(close_prices, 1)
 two_day_return = change(close_prices, 2)
