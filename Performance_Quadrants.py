@@ -165,10 +165,11 @@ elif country == 'United States':
     us_stock_data = pd.read_csv('us_stocks_cleaned.csv').dropna(subset='Symbol')
     stock_list = us_stock_data['Symbol'].to_list()
 
-    close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
+    #close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
+    #                        start=start, end=today, key=st.secrets["eod_api_key"])
+    cop = get_data(market = codes[country], stock_list=['COP','XOM'],
                             start=start, end=today, key=st.secrets["eod_api_key"])
-
-    st.write(close_prices)
+    st.write(cop)
     
 
 else:
