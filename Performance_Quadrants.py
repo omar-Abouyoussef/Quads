@@ -179,7 +179,7 @@ elif country == 'United States':
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                             start=start, end=today, key=st.secrets["eod_api_key"])
 
-        st.write(close_prices)
+    st.write(close_prices)
     
 
 else:
