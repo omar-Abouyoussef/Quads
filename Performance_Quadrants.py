@@ -91,7 +91,8 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
         ticker_list = []
         for stock in stock_list:
             ticker_list.append(stock+f'.{market}')
-        return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
+        return yf.download(stock_list, start, end)["Close"]
+    #pdr.get_data_yahoo(ticker_list, start, end)["Close"]
 ######################
 ####################
 
@@ -169,7 +170,7 @@ elif country == 'United States':
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                            start=start, end=today, key=st.secrets["eod_api_key"])
 
-    
+    st.write(close_prices)
 
 else:
     stock_list = investpy.stocks.get_stocks_list(country = country)
