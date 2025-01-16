@@ -124,7 +124,8 @@ pages = [st.Page("Sector_Rotation.py", title="Sector Rotation"),
          st.Page("pages/Sector Analysis.py", title="Sector Analysis"),
         st.Page("pages/Market_Interaction.py", title="Market interaction")]
 
-st.navigation(pages)
+pg = st.navigation(pages)
+pg.run()
 ##############################
 #inputs
 ##########################
