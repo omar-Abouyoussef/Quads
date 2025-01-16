@@ -122,7 +122,7 @@ st.title('Sector Rotation')
 
 pages = [st.Page("Sector_Rotation.py", title="Sector Rotation"),
          st.Page("pages/Sector Analysis.py", title="Sector Analysis"),
-        st.Page("pages/Market_interaction.py", title="Market interaction")]
+        st.Page("pages/Market_Interaction.py", title="Market interaction")]
 
 st.navigation(pages)
 ##############################
