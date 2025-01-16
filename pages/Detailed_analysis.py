@@ -13,6 +13,8 @@ from sklearn.metrics import confusion_matrix, classification_report
 """### Detailed Analysis \n\n\n\n"""
 X=st.session_state.X
 y= st.session_state.y
+
+st.write(f'{y.name}')
 features = st.session_state.features
 
 X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.4, shuffle=True, random_state=1)
