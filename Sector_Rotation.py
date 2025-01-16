@@ -120,7 +120,8 @@ def get_data_us(sector, suffix,n,freq, date):
 st.set_page_config(page_title="Sector Rotation", layout='wide')
 st.title('Sector Rotation')
 
-pages = [st.Page("Sector Analysis.py", title="Sector Analysis"),
+pages = [st.Page("Sector_Rotation.py", title="Sector Rotation"),
+         st.Page("Sector Analysis.py", title="Sector Analysis"),
         st.Page("Market_interaction.py", title="Market interaction")]
 
 st.navigation(pages)
