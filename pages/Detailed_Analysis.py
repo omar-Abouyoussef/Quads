@@ -32,7 +32,7 @@ y_hat = regression_tree.predict(X_test)
 fig = px.scatter(x=y_hat,y=y_test, hover_data=[y_test.index.date], trendline='ols', template='seaborn')
 fig.update_layout(xaxis_title='Prediction', yaxis_title='Actual Returns')
 st.plotly_chart(fig,theme=None)
-st.write(st.session_state.current.columns)
+st.write(regression_tree.predict(st.session_state.current))
 
 
 
