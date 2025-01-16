@@ -122,6 +122,7 @@ st.title('Sector Rotation')
 st.sidebar.page_link("Sector_Rotation.py", label="Sector Rotation")
 st.sidebar.page_link("pages/Sector Analysis.py", label="Sector Analysis")
 st.sidebar.page_link("pages/Market_Interaction.py", label="Market Interaction")
+
 ##############################
 #inputs
 ##########################
