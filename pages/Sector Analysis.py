@@ -200,7 +200,7 @@ if market =='america':
     data['rinf'] = get_stock_data(symbol='RINF',exchange='AMEX',n=n,freq=freq,date=date)
     data['uvxy'] = get_stock_data(symbol='UVXY',exchange='AMEX',n=n,freq=freq,date=date)
     data['shy'] = get_stock_data(symbol='SHY',exchange='NASDAQ',n=n,freq=freq,date=date)
-    data['gld'] = get_stock_data(symbol='GLD',exchange='NASDAQ',n=n,freq=freq,date=date)
+    data['gld'] = get_stock_data(symbol='GLD',exchange='AMEX',n=n,freq=freq,date=date)
 
     df_ret = pd.DataFrame()
     df =  data.copy()
