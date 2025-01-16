@@ -186,7 +186,10 @@ if market =='america':
     fcast_n=30
     freq = frequencies[0]
 
-    data = pd.DataFrame(get_stock_data(symbol=us_sectors[us_sectors['name']==sector]['etf'].values[0],exchange='AMEX',n=n,freq=freq,date=date))
+    etf = us_sectors[us_sectors['name']==sector]['etf'].values[0]
+    st.session_state.etf = etf 
+    
+    data = pd.DataFrame(get_stock_data(symbol=etf,exchange='AMEX',n=n,freq=freq,date=date))
     data.columns = ['etf']
 
     data['sector_long_term_sentiment'] = get_index_data(sector=sector_names_us_dic[sector],suffix=day_100_suffix,n=n,freq=freq,date=date)
@@ -213,15 +216,15 @@ if market =='america':
             'market_short_term_sentiment','market_long_term_sentiment']] = data[['sector_long_term_sentiment','sector_short_term_sentiment',
                                                                                                 'market_short_term_sentiment','market_long_term_sentiment']]
     df_ret['etf'] = df_ret['etf'].shift(-fcast_n)
-    print(df_ret.shape)
 
     df_final = df_ret.iloc[fcast_n:-fcast_n,].dropna()
 
 
     X=df_final.drop('etf',axis=1)
     y = df_final['etf']
-    print('shape',X.shape)
+    y.name = etf
     features = X.columns
+    
     st.session_state.X = X
     st.session_state.y = y
     st.session_state.features = features
