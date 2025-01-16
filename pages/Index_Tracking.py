@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from tradingview_screener import Query, Column, get_all_symbols
+from tradingview_screener import Query, Column
 from tvDatafeed import TvDatafeed, Interval
 import streamlit as st
 import statsmodels.api as sm
