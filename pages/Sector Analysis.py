@@ -261,6 +261,7 @@ if market =='america':
         viz_model = dtreeviz.model(model = base_classifier, X_train=X_train, y_train=y_train, feature_names=X_train.columns, class_names=['BEARISH','BULLISH'],target_name='Expectation')
         current = df_ret.dropna(subset=features).iloc[-1,1:]
         tree_fig = viz_model.view(x=current, show_just_path=False, show_root_edge_labels=False, show_node_labels=False,leaftype='pie',max_X_features_TD=2, colors=COLORS).svg()
+        st.session_state.current = current
 
         f"""##### Expected {fcast_n}-Day Move"""
         svg_write(tree_fig)        
