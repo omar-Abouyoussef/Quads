@@ -32,8 +32,8 @@ y_hat = regression_tree.predict(X_test)
 fig = px.scatter(x=y_hat,y=y_test, hover_data=[y_test.index.date], trendline='ols', template='seaborn')
 fig.update_layout(xaxis_title='Prediction', yaxis_title='Actual Returns')
 st.plotly_chart(fig,theme=None)
-st.write(f'Expected Return: {regression_tree.predict(st.session_state.current.values.reshape((1,-1))):.2f}')
-
+y_pred = regression_tree.predict(st.session_state.current.values.reshape((1,-1)))
+st.write(f"Expexted Return: {y_pred.round(2)}")
 
 
 threshold = st.slider(label='Certainty',
