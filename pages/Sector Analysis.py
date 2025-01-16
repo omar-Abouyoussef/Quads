@@ -228,7 +228,7 @@ if market =='america':
 
 
     switch_page = st.button("Detailed Analysis")
-    page_file = 'pages\Detailed_analysis.py'
+    page_file = 'pages/Detailed_analysis.py'
 
     if switch_page:
         # Switch to the selected page
