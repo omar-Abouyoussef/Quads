@@ -34,7 +34,7 @@ fig = px.scatter(x=y_hat,y=y_test, hover_data=[y_test.index.date], trendline='ol
 fig.update_layout(xaxis_title='Prediction', yaxis_title='Actual Returns')
 st.plotly_chart(fig,theme=None)
 y_pred = regression_tree.predict(st.session_state.current.values.reshape((1,-1)))
-st.write(f"Expexted Return: {np.round(y_pred,2)}")
+st.write(f"Expexted Return: {np.round(y_pred,4)}")
 
 
 threshold = st.slider(label='Certainty',
