@@ -119,7 +119,9 @@ def get_data_us(sector, suffix,n,freq, date):
 
 st.set_page_config(page_title="Sector Rotation", layout='wide')
 st.title('Sector Rotation')
-
+st.sidebar.page_link("Sector_Rotation.py", label="Sector Rotation")
+st.sidebar.page_link("pages/Sector Analysis.py", label="Sector Analysis")
+st.sidebar.page_link("pages/Market_Interaction.py", label="Market Interaction")
 ##############################
 #inputs
 ##########################
