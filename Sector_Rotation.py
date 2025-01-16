@@ -1,7 +1,7 @@
 from datetime import datetime as dt
 import time
 from tvDatafeed import TvDatafeed, Interval
-from tradingview_screener import Query, Column, get_all_symbols
+from tradingview_screener import Query, Column
 import pandas as pd
 import numpy as np
 import plotly.express as px
