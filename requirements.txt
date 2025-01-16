@@ -15,3 +15,5 @@ retry
 pandas_datareader
 yfinance==0.2.40
 cvxpy
+dtreeviz
+graphviz
