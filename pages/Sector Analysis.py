@@ -199,12 +199,12 @@ if market =='america':
 
     data['rinf'] = get_stock_data(symbol='RINF',exchange='AMEX',n=n,freq=freq,date=date)
     data['uvxy'] = get_stock_data(symbol='UVXY',exchange='AMEX',n=n,freq=freq,date=date)
-    data['shy'] = get_stock_data(symbol='SHY',exchange='NASDAQ',n=n,freq=freq,date=date)
+    data['tlt'] = get_stock_data(symbol='TLT',exchange='NASDAQ',n=n,freq=freq,date=date)
     data['gld'] = get_stock_data(symbol='GLD',exchange='AMEX',n=n,freq=freq,date=date)
 
     df_ret = pd.DataFrame()
     df =  data.copy()
-    df_ret[['etf', 'bond_price_change','inflation_expectation_change', 'vix_change', 'Gold_price_change']] = (df[['etf', 'shy', 'rinf','uvxy','gld']]).pct_change(fcast_n)
+    df_ret[['etf', 'bond_price_change','inflation_expectation_change', 'vix_change', 'Gold_price_change']] = (df[['etf', 'tlt', 'rinf','uvxy','gld']]).pct_change(fcast_n)
     # df_ret[['sector_long_term_sentiment_change','sector_short_term_sentiment_change',
     #        'market_short_term_sentiment_change','market_long_term_sentiment_change','inflation_expectation_change']] = (df[['sector_long_term_sentiment','sector_short_term_sentiment',
                                                                                             #        'market_short_term_sentiment','market_long_term_sentiment', 'rinf']]+100).pct_change(30)
