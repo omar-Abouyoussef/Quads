@@ -14,13 +14,15 @@ from sklearn.metrics import confusion_matrix, classification_report
 """### Detailed Analysis \n\n\n\n"""
 X=st.session_state.X
 y= st.session_state.y
+X_train = X.iloc[:-250,]
+y_train = y[:-250]
 X_test = X.tail(250)
 y_test = y.tail(250)
 
 st.write(f'{y.name}')
 features = st.session_state.features
 
-X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y.iloc[:-250,], test_size=0.4, shuffle=True, random_state=1)
+#X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y.iloc[:-250,], test_size=0.4, shuffle=True, random_state=1)
 
 sm.add_constant(X)
 regression = sm.OLS(endog=y_train,exog=X_train).fit()
@@ -52,13 +54,14 @@ threshold = st.slider(label='Certainty',
 if threshold:
     y_binned = (y>0).astype(int).values
     y_test = y_binned[-250:]
-    
-    X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y_binned[:-250], test_size=0.4, shuffle=True, random_state=1, stratify=y_binned[:-250])
+    X_train = X.iloc[:-250,]
+    y_train = y_binned[:-250]
+    #X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y_binned[:-250], test_size=0.4, shuffle=True, random_state=1, stratify=y_binned[:-250])
     base_classifier = DecisionTreeClassifier(max_depth=5, max_leaf_nodes=10, min_samples_leaf=10, splitter='best').fit(X_train,y_train)     #max_depth=10, max_leaf_nodes=20    better threshold
     
     clf = FixedThresholdClassifier(estimator=base_classifier,threshold=threshold)
     clf.fit(X_train,y_train)                                                            #max_depth=20, max_leaf_nodes=30
-    st.write(f'Validation: {clf.score(X_val,y_val):.2f}')
+    st.write(f'Validation: {clf.score(X_train,y_train):.2f}')
     st.write(f'Test: {clf.score(X_test,y_test):.2f}')
     yhat = clf.predict(X_test)
     report_df = pd.DataFrame(classification_report(y_test, yhat,output_dict=True))
