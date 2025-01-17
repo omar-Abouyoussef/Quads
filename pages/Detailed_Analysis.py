@@ -52,7 +52,7 @@ threshold = st.slider(label='Certainty',
 if threshold:
     y_binned = (y>0).astype(int).values
     y_test = y_binned[-250:]
-    X.iloc[:-250,].shape
+    
     X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y_binned[:-250], test_size=0.4, shuffle=True, random_state=1, stratify=y_binned)
     base_classifier = DecisionTreeClassifier(max_depth=5, max_leaf_nodes=10, min_samples_leaf=10, splitter='best').fit(X_train,y_train)     #max_depth=10, max_leaf_nodes=20    better threshold
     
