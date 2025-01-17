@@ -34,6 +34,7 @@ fig = px.scatter(x=y_hat,y=y_test, hover_data=[y_test.index.date], trendline='ol
 fig.update_layout(xaxis_title='Prediction', yaxis_title='Actual Returns')
 fig.update_yaxes(tickformat=".2%")
 fig.update_xaxes(tickformat=".2%")
+fig.add_hline(y=0)
 st.plotly_chart(fig,theme=None)
 y_pred = regression_tree.predict(st.session_state.current.values.reshape((1,-1)))
 st.write(f"Expected Return: {np.round(y_pred,4)*100}%")
