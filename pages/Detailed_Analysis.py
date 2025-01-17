@@ -14,8 +14,8 @@ from sklearn.metrics import confusion_matrix, classification_report
 """### Detailed Analysis \n\n\n\n"""
 X=st.session_state.X
 y= st.session_state.y
-X_test = X.iloc[-250:,:]
-y_test = y[-250:,:]
+X_test = X.tail(250)
+y_test = y.tail(250)
 
 st.write(f'{y.name}')
 features = st.session_state.features
