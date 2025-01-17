@@ -58,8 +58,8 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
     
     if market in ["US", 'FOREX']:
-        # pdr.get_data_yahoo(stock_list, start, end)["Close"]
-        return yf.download(stock_list, start, end, keepna=True)["Close"]
+        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+        #return yf.download(stock_list, start, end, keepna=True)["Close"]
     
 
     elif market == "EGX":
@@ -169,7 +169,7 @@ elif country == 'United States':
 
     #close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                            #start=start, end=today, key=st.secrets["eod_api_key"])
-    close_prices = yf.download(etfs, start, today, keepna=True)["Close"]
+    close_prices = pdr.get_data_yahoo(etfs, start, today, keepna=True)["Close"]
     
     st.write(close_prices)
 
