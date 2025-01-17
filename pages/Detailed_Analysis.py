@@ -24,7 +24,7 @@ sm.add_constant(X)
 regression = sm.OLS(endog=y_train,exog=X_train).fit()
 st.write(regression.summary().tables[0].as_html(), unsafe_allow_html=True)
 st.write(regression.summary().tables[1].as_html(), unsafe_allow_html=True)
-
+st.write(regression.summary().tables[2].as_html(), unsafe_allow_html=True)
 
 
 regression_tree = DecisionTreeRegressor(max_depth=10, max_leaf_nodes=30, min_samples_split=50, splitter='best')       #max_depth=10, max_leaf_nodes=30, min_samples_split=50, splitter='best')
