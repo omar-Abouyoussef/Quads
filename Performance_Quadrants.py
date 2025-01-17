@@ -169,7 +169,7 @@ elif country == 'United States':
 
     #close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                            #start=start, end=today, key=st.secrets["eod_api_key"])
-    close_prices = yf.download(stock_list+etfs, start, today, keepna=True)["Close"]
+    close_prices = yf.download(etfs, start, today, keepna=True)["Close"]
     
     st.write(close_prices)
 
