@@ -34,7 +34,7 @@ fig = px.scatter(x=y_hat,y=y_test, hover_data=[y_test.index.date], trendline='ol
 fig.update_layout(xaxis_title='Prediction', yaxis_title='Actual Returns')
 st.plotly_chart(fig,theme=None)
 y_pred = regression_tree.predict(st.session_state.current.values.reshape((1,-1)))
-st.write(f"Expexted Return: {np.round(y_pred,4)}")
+st.write(f"Expected Return: {np.round(y_pred,4)*100}")
 
 
 threshold = st.slider(label='Certainty',
@@ -58,4 +58,4 @@ if threshold:
     report_df.columns = ['Bearish','Bullish','accuracy','macro avg','weighted avg']
     st.write(report_df.T)
     y_prob = clf.predict_proba(st.session_state.current.values.reshape((1,-1)))
-    st.write(f'Probability of Success:{y_prob[:,1].round(3)}')
+    st.write(f'Probability of Success:{y_prob[:,1].round(3)*100}')
