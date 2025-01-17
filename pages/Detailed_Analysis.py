@@ -56,7 +56,7 @@ if threshold:
     
     clf = FixedThresholdClassifier(estimator=base_classifier,threshold=threshold)
     clf.fit(X_train,y_train)                                                            #max_depth=20, max_leaf_nodes=30
-    st.write(f'Train: {clf.score(X_train,y_train):.2f}')
+    st.write(f'Validation: {clf.score(X_val,y_val):.2f}')
     st.write(f'Test: {clf.score(X_test,y_test):.2f}')
     yhat = clf.predict(X_test)
     report_df = pd.DataFrame(classification_report(y_test, yhat,output_dict=True))
