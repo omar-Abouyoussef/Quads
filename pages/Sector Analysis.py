@@ -168,6 +168,13 @@ if market != "america":
 
 if market =='america':
 
+    forecast = st.slider(label="Forecast Horizon:",
+                         min_value=1,
+                         max_value=500,
+                         step=1,
+                         value=30)
+    
+
     sector_names_us_dic = {'Basic Materials': 'SB', 'Telecommunications': 'SL', 'Finance': 'SF', 'Industrials': 'SI', 'Technology': 'SK', 'Consumer Staples': 'SP', 'Real Estate': 'SS', 'Utilities': 'SU', 'Health Care': 'SV', 'Consumer Discretionary': 'SY', 'Energy': 'SE', 'Market':'MM'}
     sector_etf_dic = {'MM':'IWM', 'SB':'XLB', 'SL':'XLC', 'SF':'XLF', 'SI':'XLI', 'SK':'XLK', 'SP':'XLP', 'SS':'XLRE', 'SU':'XLU', 'SV':'XLV', 'SY':'XLY', 'SE':'XLE'}
 
@@ -183,7 +190,7 @@ if market =='america':
     in_daily = Interval.in_daily
     frequencies = [in_daily, in_weekly, in_monthly]
     n=2500
-    fcast_n=30
+    fcast_n=forecast
     freq = frequencies[0]
 
     etf = us_sectors[us_sectors['name']==sector]['etf'].values[0]
