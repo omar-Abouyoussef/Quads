@@ -14,11 +14,13 @@ from sklearn.metrics import confusion_matrix, classification_report
 """### Detailed Analysis \n\n\n\n"""
 X=st.session_state.X
 y= st.session_state.y
+X_test = X.iloc[-250:,:]
+y_test = y[-250:,:]
 
 st.write(f'{y.name}')
 features = st.session_state.features
 
-X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.4, shuffle=True, random_state=1)
+X_train, X_val, y_train, y_val = train_test_split(X,y, test_size=0.4, shuffle=True, random_state=1)
 
 sm.add_constant(X)
 regression = sm.OLS(endog=y_train,exog=X_train).fit()
