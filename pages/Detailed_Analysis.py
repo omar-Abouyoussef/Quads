@@ -20,7 +20,7 @@ y_test = y.tail(250)
 st.write(f'{y.name}')
 features = st.session_state.features
 
-X_train, X_val, y_train, y_val = train_test_split(X,y, test_size=0.4, shuffle=True, random_state=1)
+X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y.iloc[:-250,], test_size=0.4, shuffle=True, random_state=1)
 
 sm.add_constant(X)
 regression = sm.OLS(endog=y_train,exog=X_train).fit()
@@ -51,7 +51,7 @@ threshold = st.slider(label='Certainty',
 
 if threshold:
     y_binned = (y>0).astype(int).values
-    X_train, X_test, y_train, y_test = train_test_split(X,y_binned, test_size=0.4, shuffle=True, random_state=1, stratify=y_binned)
+    X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y_binned.iloc[:-250,], test_size=0.4, shuffle=True, random_state=1, stratify=y_binned)
     base_classifier = DecisionTreeClassifier(max_depth=5, max_leaf_nodes=10, min_samples_leaf=10, splitter='best').fit(X_train,y_train)     #max_depth=10, max_leaf_nodes=20    better threshold
     
     clf = FixedThresholdClassifier(estimator=base_classifier,threshold=threshold)
