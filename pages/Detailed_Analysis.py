@@ -61,4 +61,4 @@ if threshold:
     report_df.columns = ['Bearish','Bullish','accuracy','macro avg','weighted avg']
     st.write(report_df.T)
     y_prob = clf.predict_proba(st.session_state.current.values.reshape((1,-1)))
-    st.write(f'Probability of Success:{y_prob[:,1].round(3)*100}%')
+    st.write(f'Probability of Bullish Move:{y_prob[:,1].round(3)*100}%')
