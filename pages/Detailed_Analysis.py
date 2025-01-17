@@ -51,7 +51,7 @@ threshold = st.slider(label='Certainty',
 
 if threshold:
     y_binned = (y>0).astype(int).values
-    X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y_binned.iloc[:-250,], test_size=0.4, shuffle=True, random_state=1, stratify=y_binned)
+    X_train, X_val, y_train, y_val = train_test_split(X.iloc[:-250,], y_binned[:-250], test_size=0.4, shuffle=True, random_state=1, stratify=y_binned)
     base_classifier = DecisionTreeClassifier(max_depth=5, max_leaf_nodes=10, min_samples_leaf=10, splitter='best').fit(X_train,y_train)     #max_depth=10, max_leaf_nodes=20    better threshold
     
     clf = FixedThresholdClassifier(estimator=base_classifier,threshold=threshold)
