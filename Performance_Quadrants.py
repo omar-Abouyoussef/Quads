@@ -169,7 +169,8 @@ elif country == 'United States':
 
     #close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                            #start=start, end=today, key=st.secrets["eod_api_key"])
-    close_prices = pdr.get_data_yahoo(etfs, start, today, keepna=True)["Close"]
+    tickers = yf.Tickers(stock_list+etfs)
+    close_prices = tickers.history(start=start, end=today, interval="12mo")["Close"]
     
     st.write(close_prices)
 
