@@ -143,7 +143,6 @@ risk_free_rate = st.session_state.risk_free_rate
 
 type = st.selectbox(label='Optimization Type',
                    options=['Sharpe Ratio','Minimum Risk'])
-type = st.session_state.type
 
 
 ###########
