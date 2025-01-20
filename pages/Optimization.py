@@ -100,7 +100,7 @@ def main(type, close, risk_free_rate:float,  upper_bound:float):
     if type == 'Sharpe Ratio':
         metric, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
     else:
-        metric, optimal_weights = minimum_risk_portfolio((mean_returns, cov, upper_bound, risk_free_rate)
+        metric, optimal_weights = minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
                                
     portfolio_returns, portfolio_risk = portfolio_performance(optimal_weights, mean_returns, cov)
     st.write(f'Expected return: {portfolio_returns.round(3)}, Risk: {portfolio_risk.round(3)} with {type}:{metric.round(3)}\n')
