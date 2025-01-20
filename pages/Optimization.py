@@ -141,7 +141,7 @@ risk_free_rate = st.number_input(label='Risk Free Rate:',
                               key='risk_free_rate')
 risk_free_rate = st.session_state.risk_free_rate
 
-type = st.selectbox(label='Optimization'
+type = st.selectbox(label='Optimization Type',
                    options=['Sharpe Ratio','Minimum Risk'])
 type = st.session_state.type
 
