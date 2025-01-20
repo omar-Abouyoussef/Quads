@@ -57,20 +57,53 @@ def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
     neg_sharpe_ratio, optimal_weights = result['fun'], result['x'].round(4)
     return -neg_sharpe_ratio, optimal_weights
 
+def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
+    """
+    returns
+    -------
+    sharpe_ratio, optimal_weights"""
+     #assign random weights
+    np.random.seed(1)
+    W = np.random.random(len(mean_returns))
+    W = [weight/ np.sum(W) for weight in W]
+
+    #add bounds
+    bound = (0,upper_bound)
+    bounds = tuple(bound for w in range(len(W)))
+
+    #constraint 
+    def constraint(W):
+        return np.sum(W) - 1
+    constraint_set = [{'type': 'eq', 'fun': constraint}]
+    
+    def portfolio_variance(W,cov):
+        return (np.sqrt(W.T @ cov @ W) * np.sqrt(252))
+
+    result = sc.minimize(portfolio_variance,
+                        W,
+                        args = (cov),
+                        bounds = bounds,
+                        constraints = constraint_set,
+                        method = 'SLSQP')
+
+    sharpe_ratio, optimal_weights = result['fun'], result['x'].round(4)
+    return -sharpe_ratio, optimal_weights
 
 
-
-def main(close, risk_free_rate:float,  upper_bound:float):
+def main(type, close, risk_free_rate:float,  upper_bound:float):
     close = pd.read_csv(close, index_col=0, header=0)
 
-    close, mean_returns, cov = liquid_data(close)
-    # mean_returns, cov = stock_performance(close)
+    # close, mean_returns, cov = liquid_data(close)
+    mean_returns, cov = stock_performance(close)
 
     #maximum Sharpe Ratio portfolio
-    SR, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
+    if type = 'Sharpe Ratio':
+        metric, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
+    else:
+        metric, optimal_weights = minimum_risk_portfolio((mean_returns, cov, upper_bound, risk_free_rate)
+                               
     portfolio_returns, portfolio_risk = portfolio_performance(optimal_weights, mean_returns, cov)
-
-    st.write(f'Expected return: {portfolio_returns.round(3)}, Risk: {portfolio_risk.round(3)} with Sharpe Ratio:{SR.round(3)}\n')
+    st.write(f'Expected return: {portfolio_returns.round(3)}, Risk: {portfolio_risk.round(3)} with {type}:{metric.round(3)}\n')
  
     df = pd.DataFrame({"ticker":close.columns.to_list(), "weight": optimal_weights})
     best_weights = df.loc[df['weight']>0,:].reset_index(drop=True)
@@ -108,12 +141,16 @@ risk_free_rate = st.number_input(label='Risk Free Rate:',
                               key='risk_free_rate')
 risk_free_rate = st.session_state.risk_free_rate
 
+type = st.selectbox(label='Optimization'
+                   options=['Sharpe Ratio','Minimum Risk'])
+type = st.session_state.type
+
 
 ###########
 #############
 
 if close:
-    portfolio_weights = main(close,
+    portfolio_weights = main(type, close,
         risk_free_rate=risk_free_rate,
         upper_bound=upper_bound
         )
