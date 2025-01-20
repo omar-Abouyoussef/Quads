@@ -21,7 +21,7 @@ def portfolio_performance(W, mean_returns, cov, n):
     return portfolio_returns, portfolio_risk
 
 ############################
-def negative_sharpe_ratio(W, mean_returns, cov, risk_free_rate):
+def negative_sharpe_ratio(W, mean_returns, cov, risk_free_rate,n):
     portfolio_return, portfolio_risk = portfolio_performance(W, mean_returns, cov, n)
     neg_sharpe_ratio = -(portfolio_return - risk_free_rate)/portfolio_risk
     return neg_sharpe_ratio
@@ -76,8 +76,8 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n):
         return np.sum(W) - 1
     constraint_set = [{'type': 'eq', 'fun': constraint}]
     
-    def portfolio_variance(W,cov):
-        return (np.sqrt(W.T @ cov @ W) * np.sqrt(252))
+    def portfolio_variance(W,cov,n):
+        return (np.sqrt(W.T @ cov @ W) * np.sqrt(n))
 
     result = sc.minimize(portfolio_variance,
                         W,
