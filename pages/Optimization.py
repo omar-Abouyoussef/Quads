@@ -58,28 +58,6 @@ def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
     return -neg_sharpe_ratio, optimal_weights
 
 
-def liquid_data(X):
-    X = X.tail(1000)
-    n = (X.isna().sum()>X.shape[0]*0.5)
-    new_tickers = n[n==True].index.to_list()
-
-    deactivated_tickers = X.tail(1).isna().sum()>0
-    deactivated_tickers = deactivated_tickers[deactivated_tickers==True].index.to_list()
-
-    X = X.drop(new_tickers+deactivated_tickers, axis=1)
-    X_rt = X.pct_change()[1:]
-    ###########################
-    ###########################
-    ############################
-    n = ((X_rt==0).sum()>X_rt.shape[0]*0.2)
-    illiquid = n[n==True].index.to_list()
-
-    X_rt = X_rt.drop(illiquid, axis=1)
-    X_rt.dropna(inplace=True)
-    return X, X_rt, X_rt.cov()
-
-
-
 
 
 def main(close, risk_free_rate:float,  upper_bound:float):
