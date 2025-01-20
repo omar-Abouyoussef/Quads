@@ -86,8 +86,8 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
                         constraints = constraint_set,
                         method = 'SLSQP')
 
-    sharpe_ratio, optimal_weights = result['fun'], result['x'].round(4)
-    return -sharpe_ratio, optimal_weights
+    min_risk, optimal_weights = result['fun'], result['x'].round(4)
+    return min_risk, optimal_weights
 
 
 def main(type, close, risk_free_rate:float,  upper_bound:float):
