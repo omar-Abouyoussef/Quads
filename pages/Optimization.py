@@ -14,19 +14,19 @@ def stock_performance(close):
     cov = returns.cov()
     return mean_returns, cov
 
-def portfolio_performance(W, mean_returns, cov):
+def portfolio_performance(W, mean_returns, cov, n):
     W = np.asarray(W)
-    portfolio_returns = (np.dot(W, mean_returns) * 252)
-    portfolio_risk = np.sqrt(W.T @ cov @ W) * np.sqrt(252)
+    portfolio_returns = (np.dot(W, mean_returns) * n)
+    portfolio_risk = np.sqrt(W.T @ cov @ W) * np.sqrt(n)
     return portfolio_returns, portfolio_risk
 
 ############################
 def negative_sharpe_ratio(W, mean_returns, cov, risk_free_rate):
-    portfolio_return, portfolio_risk = portfolio_performance(W, mean_returns, cov)
+    portfolio_return, portfolio_risk = portfolio_performance(W, mean_returns, cov, n)
     neg_sharpe_ratio = -(portfolio_return - risk_free_rate)/portfolio_risk
     return neg_sharpe_ratio
 
-def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
+def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n):
     """
     returns
     -------
@@ -50,14 +50,14 @@ def optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
     #minimize negative SharpeRatio
     result = sc.minimize(negative_sharpe_ratio,
                         W,
-                        args=(mean_returns, cov, risk_free_rate),
+                        args=(mean_returns, cov, risk_free_rate,n),
                         method='SLSQP',
                         bounds= bounds,
                         constraints=constraint_set)
     neg_sharpe_ratio, optimal_weights = result['fun'], result['x'].round(4)
     return -neg_sharpe_ratio, optimal_weights
 
-def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
+def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n):
     """
     returns
     -------
@@ -81,7 +81,7 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
 
     result = sc.minimize(portfolio_variance,
                         W,
-                        args = (cov),
+                        args = (cov,n),
                         bounds = bounds,
                         constraints = constraint_set,
                         method = 'SLSQP')
@@ -90,7 +90,7 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate):
     return min_risk, optimal_weights
 
 
-def main(type, close, risk_free_rate:float,  upper_bound:float):
+def main(type, close, n, risk_free_rate:float,  upper_bound:float):
     close = pd.read_csv(close, index_col=0, header=0)
 
     # close, mean_returns, cov = liquid_data(close)
@@ -98,11 +98,11 @@ def main(type, close, risk_free_rate:float,  upper_bound:float):
 
     #maximum Sharpe Ratio portfolio
     if type == 'Sharpe Ratio':
-        metric, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
+        metric, optimal_weights = optimize_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n)
     else:
-        metric, optimal_weights = minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate)
+        metric, optimal_weights = minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n)
                                
-    portfolio_returns, portfolio_risk = portfolio_performance(optimal_weights, mean_returns, cov)
+    portfolio_returns, portfolio_risk = portfolio_performance(optimal_weights, mean_returns, cov,n)
     st.write(f'Expected return: {portfolio_returns.round(3)}, Risk: {portfolio_risk.round(3)} with {type}:{metric.round(3)}\n')
  
     df = pd.DataFrame({"ticker":close.columns.to_list(), "weight": optimal_weights})
@@ -141,6 +141,10 @@ risk_free_rate = st.number_input(label='Risk Free Rate:',
                               key='risk_free_rate')
 risk_free_rate = st.session_state.risk_free_rate
 
+holding_period = st.number_input(label='Holding Period:',
+                              value = 252,
+                              key='Holding Period:')
+
 type = st.selectbox(label='Optimization Type',
                    options=['Sharpe Ratio','Minimum Risk'])
 
@@ -149,7 +153,7 @@ type = st.selectbox(label='Optimization Type',
 #############
 
 if close:
-    portfolio_weights = main(type, close,
+    portfolio_weights = main(type, close,holding_period,
         risk_free_rate=risk_free_rate,
         upper_bound=upper_bound
         )
