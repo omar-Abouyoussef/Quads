@@ -157,13 +157,16 @@ if country == 'Forex':
 
     
 elif country == 'United States':
-        
+
+    
     us_companies_info = pd.read_csv('companies.csv')
     etfs = us_companies_info[us_companies_info['ETF']=='Yes']['Ticker'].to_list()
     
     # stock_list = investpy.stocks.get_stocks_list(country = country)
-    us_stock_data = pd.read_csv('us_stocks_cleaned.csv').dropna(subset='Symbol')
-    stock_list = us_stock_data['Symbol'].str.strip().to_list()
+    us_stock_data = pd.read_csv('us_stocks_cleaned.csv')
+    sector=st.selectbox(label="Choose Sector",
+                        options=us_stock_data.Sector.unique)
+    stock_list = us_stock_data[us_stock_data["Sector"]==sector]["Symbol"].to_list()
 
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                            start=start, end=today, key=st.secrets["eod_api_key"])
