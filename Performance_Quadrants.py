@@ -165,7 +165,7 @@ elif country == 'United States':
     # stock_list = investpy.stocks.get_stocks_list(country = country)
     us_stock_data = pd.read_csv('us_stocks_cleaned.csv')
     sector=st.selectbox(label="Choose Sector",
-                        options=us_stock_data.Sector.unique.tolist())
+                        options=us_stock_data["Sector"].unique().tolist())
     stock_list = us_stock_data[us_stock_data["Sector"]==sector]["Symbol"].to_list()
 
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
