@@ -167,7 +167,7 @@ elif country == 'United States':
     #sector=st.selectbox(label="Choose Sector",
                         #options=us_stock_data["Sector"].unique().tolist())
     #stock_list = us_stock_data[us_stock_data["Sector"]==sector]["Symbol"].to_list()
-    stock_list = us_stock_data["Symbol"].to_list()
+    stock_list = us_stock_data["Symbol"].str.split().to_list()
     close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
                            start=start, end=today, key=st.secrets["eod_api_key"])
     
