@@ -151,7 +151,7 @@ historical = st.session_state.historical
 #download data
 ###########################
 
-yf.pdr_override()
+#yf.pdr_override()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
                             start=start, end=today, key=st.secrets["eod_api_key"])
