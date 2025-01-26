@@ -58,7 +58,9 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
     
     if market in ["US", 'FOREX']:
-        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+        tickers = yf.Tickers(stock_list)
+        return tickers.download(stock_list,start,end)['Close']
+        # return pdr.get_data_yahoo(stock_list, start, end)["Close"]
     
 
     elif market == "EGX":
