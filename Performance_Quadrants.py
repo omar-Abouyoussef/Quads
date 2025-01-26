@@ -58,9 +58,9 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
     
     if market in ["US", 'FOREX']:
-        tickers = yf.Tickers(stock_list)
-        return tickers.download(stock_list,start,end)['Close']
-        # return pdr.get_data_yahoo(stock_list, start, end)["Close"]
+        #tickers = yf.Tickers(stock_list)
+        #return tickers.download(stock_list,start,end)['Close']
+        return pdr.get_data_yahoo(stock_list, start, end)["Close"]
     
 
     elif market == "EGX":
@@ -92,9 +92,9 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
         ticker_list = []
         for stock in stock_list:
             ticker_list.append(stock+f'.{market}')
-        tickers=yf.Tickers(ticker_list)
-        return tickers.download(start=start,end=end)
-        #return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
+        #tickers=yf.Tickers(ticker_list)
+        #return tickers.download(start=start,end=end)
+        return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
 ######################
 ####################
 
@@ -153,7 +153,7 @@ historical = st.session_state.historical
 #download data
 ###########################
 
-#yf.pdr_override()
+yf.pdr_override()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
                             start=start, end=today, key=st.secrets["eod_api_key"])
