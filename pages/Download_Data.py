@@ -116,10 +116,9 @@ codes = {'Egypt':'EGX', 'United States':'US', 'Canada':'TO', 'United Kingdom' : 
 
 
 if codes[country] in ['US','DE', 'L', 'FOREX']:
-  # yf.pdr_override()
-  # close_prices =  pdr.get_data_yahoo(tickers, start, end)["Close"]
-  tickers = yf.Tickers(tickers)
-  close_prices = tickers.download(start=start, end=end)["Close"]  
+  yf.pdr_override()
+  close_prices =  pdr.get_data_yahoo(tickers, start, end)["Close"]
+
 else:   
   close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
                           start=start, end=end, key=st.secrets['eod_api_key'])
