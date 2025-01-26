@@ -93,7 +93,7 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
         for stock in stock_list:
             ticker_list.append(stock+f'.{market}')
         tickers=yf.Tickers(ticker_list)
-        return tickers.dowmload(start=start,end=end)
+        return tickers.download(start=start,end=end)
         #return pdr.get_data_yahoo(ticker_list, start, end)["Close"]
 ######################
 ####################
