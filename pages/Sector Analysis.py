@@ -20,7 +20,7 @@ def get_market_info(market):
     if market == 'america':
         us_stock_data = pd.read_csv('us_stocks_cleaned.csv', index_col=0)
         ticker_GICS = us_stock_data['Sector'] 
-        info = pd.merge(left=market_info, right=ticker_GICS, left_on=market_info.name, right_on=ticker_GICS.index, how='right').drop(['sector', 'key_0'], axis=1)
+        market_info = pd.merge(left=market_info, right=ticker_GICS, left_on=market_info.name, right_on=ticker_GICS.index, how='right').drop(['sector', 'key_0'], axis=1)
     
     if market == 'egypt':
         infot = market_info[['name','exchange','close', 'volume']]
