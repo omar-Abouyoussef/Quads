@@ -121,10 +121,10 @@ if market != "america":
 
 if market == 'america':
     x = st.selectbox(label='Fundamental Ratio on X axis:',
-                       options =info.columns ,
+                       options =info.columns[4:],
                        key='x')
     y = st.selectbox(label='Fundamental Ratio on Y axis:',
-                       options = info.columns,
+                       options = info.columns[4:],
                        key='y')
 
     df, fig = US_fundamentals(country=market, sector=sector,x=x,y=y)
