@@ -35,7 +35,7 @@ def get_market_info(market):
 
 def US_fundamentals(country, sector, x,y):
     market_data = get_market_info(country)
-    roe_pb = market_data[market_data.Sector==sector].dropna(subset='ticker').reset_index()
+    roe_pb = market_data[market_data.Sector==sector].dropna(subset='ticker').reset_index(drop=True)
     
     fig = go.Figure()
     fig.add_trace(
