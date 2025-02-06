@@ -126,7 +126,7 @@ if market == 'america':
                        options = info.columns,
                        key='y')
 
-    df, fig = main(country=market, sector=sector,x=x,y=y)
+    df, fig = US_fundamentals(country=market, sector=sector,x=x,y=y)
     st.plotly_chart(fig)
     st.write(df)
     
