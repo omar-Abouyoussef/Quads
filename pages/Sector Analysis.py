@@ -8,21 +8,40 @@ import datetime as dt
 from tradingview_screener import Query, Column 
 
 def get_market_info(market):
-    market_info = (Query().select('country','name','exchange','market','sector','close','volume','market_cap_basic').
+    market_info = (Query().select('name','exchange','sector','close', 'volume',
+                                      'return_on_equity_fq', 'return_on_invested_capital_fq', 'price_book_fq','return_on_equity', 'return_on_invested_capital',
+                                      'price_earnings_current',,'market_cap_basic').
                    where(Column('volume') > 5000).
                 set_markets(market).
                 limit(20000).
                 get_scanner_data())[1]
+
+    if market == 'america':
+        us_stock_data = pd.read_csv('us_stocks_cleaned.csv', index_col=0)
+        ticker_GICS = us_stock_data['Sector'] 
+        market_info = pd.merge(left=market_info, right=ticker_GICS, left_on=market_info.name, right_on=ticker_GICS.index, how='right').drop(['sector', 'key_0'], axis=1)
+    
     if market == 'egypt':
-        infot = market_info
+        infot = market_info[['name','exchange','close', 'volume']]
         infor = pd.read_csv('egx_companies.csv')
         #info = pd.concat(infot[['name','exchange','close','volume','market_cap_basic']], infor.sector], axis=1, join='inner')
         info = pd.merge(left=infot[['name','exchange','close','volume','market_cap_basic']], right=infor, on='name')
-        info = info[['name','sector','close','volume','market_cap_basic']]
+        info = info[['name','sector','close','volume']]
     else:
         info = market_info
     return info
 
+
+def US_fundamentals(country, sector, x,y):
+    market_data = get_market_info(country)
+    roe_pb = market_data[market_data.Sector==sector].dropna(subset='ticker').reset_index()
+    
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(x=roe_pb[x],y=roe_pb[y], mode='markers', hovertext=roe_pb.name)
+        )
+    fig.update_layout(title=sector,xaxis_title = x, yaxis_title=y)
+    return roe_pb, fig
 
 def scale(x):
     x_scaled = (x - x.mean())/x.std()
@@ -99,38 +118,15 @@ st.plotly_chart(fig)
 if market != "america":
     st.write(info[info.sector==sector][['name','sector','close','volume','market_cap_basic']])
 
+if market == 'america':
+    x = st.selectbox(label='Fundamental Ratio on X axis:',
+                       options =info.columns ,
+                       key='x')
+    y = st.selectbox(label='Fundamental Ratio on Y axis:',
+                       options = info.columns,
+                       key='y')
 
-################
-#################
-# if market == 'america':
-#     us_stocks = pd.read_csv('us_stocks_cleaned.csv',keep_default_na=False)
-#     stock_list = us_stocks[us_stocks.Sector==sector].reset_index(drop=True)['Symbol'].to_list()
-
-
-#     etf = sectors[sectors.symbol==sector_symbol.values[0]]['etf'].values[0]
-#     stock_list.append(etf)
-
-#     if sector != 'Market':
-#         end = dt.date.today()
-#         start = end - dt.timedelta(365)
-#         interval="1wk"
-#         yf.pdr_override()
-        
-#         @st.cache_data
-#         def get_data(stock_list, start, end, interval):
-#             return pdr.get_data_yahoo(stock_list, start, end, interval)
-
-#         data = get_data(stock_list, start, end, interval)
-#         close_prices = data["Close"]
-#         close_prices.dropna(inplace=True, axis=1)
-#         returns = close_prices.diff().dropna()
-
-#         corrcoef = returns.corr()[etf]
-#         beta =  (returns.cov() / returns[etf].var())[etf]
-#         df = pd.concat([beta.round(2), corrcoef.round(2)], axis =1)
-#         df.columns = ['Beta', 'Correlation']
-
-#         df = us_stocks.set_index('Symbol').join(df,how ='right')[['Name', 'Sector', 'Industry','Beta', 'Correlation']].fillna('ETF')
-#         st.write(df)
-#     else:
-#         pass
+    df, fig = main(country=market, sector=sector,x=x,y=y)
+    st.plotly_chart(fig)
+    st.write(df)
+    
