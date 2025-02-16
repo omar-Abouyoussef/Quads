@@ -9,9 +9,9 @@ import datetime as dt
 from tradingview_screener import Query, Column 
 
 def get_market_info(market):
-    market_info = (Query().select('name','exchange','sector','close', 'volume',
+    market_info = (Query().select('name','exchange','sector', 'volume',
                                       'return_on_equity_fq', 'return_on_invested_capital_fq', 'price_book_fq','return_on_equity', 'return_on_invested_capital',
-                                      'price_earnings_current','price_target_low', 'price_target_average','price_target_high', 'market_cap_basic').
+                                      'price_earnings_current','close', 'price_target_low', 'price_target_average','price_target_high', 'market_cap_basic').
                    where(Column('volume') > 5000).
                 set_markets(market).
                 limit(20000).
