@@ -261,6 +261,9 @@ else:
     df_50_100.set_index(longterm.index, inplace=True)
     df_50_100 = df_50_100[['Medium-term','Long-term', 'Sector']]
 
+df_20_50 = df_20_50.apply(denoise,axis =1)
+df_50_100 = df_50_100.apply(denoise,axis =1)
+
 st.session_state.df_20_50 = df_20_50
 st.session_state.df_50_100 = df_50_100
 
