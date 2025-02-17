@@ -100,7 +100,7 @@ if cycle == 'Long-term':
 
 
     else:
-        series = denoise(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle])
+        series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
         fig = px.line(series,line_shape="spline")
 
 
@@ -116,7 +116,7 @@ else:
 
 
     else:
-        series = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle]
+        series = denoise(st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle])
         fig = px.line(series,line_shape="spline")
 
 st.plotly_chart(fig)
