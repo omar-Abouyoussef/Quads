@@ -196,6 +196,7 @@ if market == 'america':
         data['Sector'] = [sector] * n_days
         
         df_20_50 = pd.concat([df_20_50, data],axis = 0)
+        df_20_50.iloc[:,:-1] = df_20_50.iloc[:,:-1].apply(denoise, axis=0)
 
     df_20_50.columns = ['Short-term', 'Medium-term', 'Sector']
     df_20_50.index = pd.to_datetime(df_20_50.index).date
@@ -214,7 +215,6 @@ if market == 'america':
 
 
         data = pd.concat([day_50_ma_response,day_100_ma_response], axis = 1)
-        data = data.apply(denoise, axis=0)
         data['Sector'] = [sector] * n_months
         
         df_50_100 = pd.concat([df_50_100, data],axis = 0)
