@@ -193,9 +193,6 @@ if market == 'america':
 
 
         data = pd.concat([day_20_fastma_response, day_50_fastma_response], axis = 1)
-        st.write(data)
-        data=data.apply(denoise,axis=0)
-        st.write(data)
         data['Sector'] = [sector] * n_days
         
         df_20_50 = pd.concat([df_20_50, data],axis = 0)
