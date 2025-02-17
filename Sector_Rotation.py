@@ -193,6 +193,7 @@ if market == 'america':
 
 
         data = pd.concat([day_20_fastma_response, day_50_fastma_response], axis = 1)
+        data=data.apply(denoise,axis=0)
         data['Sector'] = [sector] * n_days
         
         df_20_50 = pd.concat([df_20_50, data],axis = 0)
@@ -214,6 +215,7 @@ if market == 'america':
 
 
         data = pd.concat([day_50_ma_response,day_100_ma_response], axis = 1)
+        data = data.apply(denoise, axis=0)
         data['Sector'] = [sector] * n_months
         
         df_50_100 = pd.concat([df_50_100, data],axis = 0)
@@ -260,10 +262,7 @@ else:
     df_50_100 = pd.merge(left=mediumterm, right=longterm, how='inner')
     df_50_100.set_index(longterm.index, inplace=True)
     df_50_100 = df_50_100[['Medium-term','Long-term', 'Sector']]
-st.write(df_20_50)
-df_20_50.iloc[:,:-1] = df_20_50.iloc[:,:-1].apply(denoise,axis =0)
-#df_50_100 = df_50_100.apply(denoise,axis =0)
-st.write(df_20_50)
+
 
 st.session_state.df_20_50 = df_20_50
 st.session_state.df_50_100 = df_50_100
