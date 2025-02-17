@@ -7,6 +7,7 @@ import pandas_datareader.data as pdr
 import yfinance as yf
 import datetime as dt
 from tradingview_screener import Query, Column 
+from statsmodels.tsa.seasonal import seasonal_decompose
 
 def get_market_info(market):
     market_info = (Query().select('name','exchange','sector', 'volume',
@@ -49,7 +50,9 @@ def scale(x):
     x_scaled = (x - x.mean())/x.std()
     return x_scaled
 
-
+def denoise(x):
+    result=seasonal_decompose(x,model="multiplicative", period=30)
+    return result.trend
 
 us_sectors = pd.read_excel('sectors.xlsx', sheet_name='Sheet1')
 #######
@@ -97,7 +100,7 @@ if cycle == 'Long-term':
 
 
     else:
-        series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
+        series = denoise(st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle])
         fig = px.line(series,line_shape="spline")
 
 
