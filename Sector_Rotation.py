@@ -196,6 +196,7 @@ if market == 'america':
         data['Sector'] = [sector] * n_days
         
         df_20_50 = pd.concat([df_20_50, data],axis = 0)
+        st.write(df_20_50[:,:-1])
         df_20_50.iloc[:,:-1] = df_20_50.iloc[:,:-1].apply(denoise, axis=0)
 
     df_20_50.columns = ['Short-term', 'Medium-term', 'Sector']
