@@ -23,10 +23,10 @@ def get_market_info(market):
         market_info = pd.merge(left=market_info, right=ticker_GICS, left_on=market_info.name, right_on=ticker_GICS.index, how='right').drop(['sector', 'key_0'], axis=1)
     
     if market == 'egypt':
-        infot = market_info[['name','exchange','close', 'volume']]
+        infot = market_info[['name','exchange','close', 'volume','market_cap_basic']]
         infor = pd.read_csv('egx_companies.csv')
         #info = pd.concat(infot[['name','exchange','close','volume','market_cap_basic']], infor.sector], axis=1, join='inner')
-        info = pd.merge(left=infot[['name','exchange','close','volume']], right=infor, on='name')
+        info = pd.merge(left=infot[['name','exchange','close','volume','market_cap_basic']], right=infor, on='name')
         
         info = info[['name','sector','close','volume']]
     else:
