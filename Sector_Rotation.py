@@ -187,18 +187,16 @@ if market == 'america':
     for idx, sector in enumerate(sectors):    
 
 
-        day_20_fastma_response = get_data_us(sector,day_20_suffix,n_days,frequencies[0],date)
+        day_20_fastma_response = denoise(get_data_us(sector,day_20_suffix,n_days,frequencies[0],date))
 
-        day_50_fastma_response = get_data_us(sector,day_50_suffix,n_days,frequencies[0],date)
+        day_50_fastma_response = denoise(get_data_us(sector,day_50_suffix,n_days,frequencies[0],date))
 
 
         data = pd.concat([day_20_fastma_response, day_50_fastma_response], axis = 1)
         data['Sector'] = [sector] * n_days
         
         df_20_50 = pd.concat([df_20_50, data],axis = 0)
-        st.write(df_20_50)
-        #df_20_50.iloc[:,:-1] = df_20_50.iloc[:,:-1].apply(denoise, axis=0)
-
+        
     df_20_50.columns = ['Short-term', 'Medium-term', 'Sector']
     df_20_50.index = pd.to_datetime(df_20_50.index).date
 
