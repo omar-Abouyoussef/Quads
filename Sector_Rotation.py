@@ -260,9 +260,10 @@ else:
     df_50_100 = pd.merge(left=mediumterm, right=longterm, how='inner')
     df_50_100.set_index(longterm.index, inplace=True)
     df_50_100 = df_50_100[['Medium-term','Long-term', 'Sector']]
-
+st.write(df_20_50)
 df_20_50 = df_20_50.apply(denoise,axis =0)
 df_50_100 = df_50_100.apply(denoise,axis =0)
+st.write(df_20_50)
 
 st.session_state.df_20_50 = df_20_50
 st.session_state.df_50_100 = df_50_100
