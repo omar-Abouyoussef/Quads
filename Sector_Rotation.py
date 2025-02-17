@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+from statsmodels.tsa.seasonal import seasonal_decompose
 from retry import retry
 import streamlit as st
 
@@ -109,7 +110,9 @@ def get_data_us(sector, suffix,n,freq, date):
                     n_bars=n)['close']
     return response
 
-
+def denoise(x):
+    result = seasonal_decompose(x,model="multiplicative", period=30)
+    return result.trend
 
 
 
