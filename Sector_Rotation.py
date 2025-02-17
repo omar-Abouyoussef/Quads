@@ -188,8 +188,8 @@ if market == 'america':
 
 
         day_20_fastma_response = get_data_us(sector,day_20_suffix,n_days,frequencies[0],date)
-        day_20_fastma_response = denoise(day_20_fastma_response)
-        st.write(day_20_fastma_response)
+        
+        
         day_50_fastma_response = get_data_us(sector,day_50_suffix,n_days,frequencies[0],date)
 
 
