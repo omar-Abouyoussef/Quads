@@ -7,7 +7,6 @@ import pandas_datareader.data as pdr
 import yfinance as yf
 import datetime as dt
 from tradingview_screener import Query, Column 
-from statsmodels.tsa.seasonal import seasonal_decompose
 
 def get_market_info(market):
     market_info = (Query().select('name','exchange','sector', 'volume',
@@ -50,9 +49,6 @@ def scale(x):
     x_scaled = (x - x.mean())/x.std()
     return x_scaled
 
-def denoise(x):
-    result=seasonal_decompose(x,model="multiplicative", period=30)
-    return result.trend
 
 us_sectors = pd.read_excel('sectors.xlsx', sheet_name='Sheet1')
 #######
@@ -106,18 +102,35 @@ if cycle == 'Long-term':
 
 else:
     if standardize == 'Yes':
+        series = st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle]
+        smoothed_zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
+
         series = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle]
         zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
         
-        fig = px.line(zscore,line_shape="spline")
+        # fig = px.line(zscore,line_shape="spline")
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(y=smoothed_zscore,
+                         x=st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle].index, name='Smoothed Standardized'))
+
+        fig.add_trace(go.Scatter(y=zscore,
+                         x=zscore.index, name='Actual Standardized'))
+        
 
         fig.add_hline(1.27, line_width=1, line_dash="dash")
         fig.add_hline(-1.27, line_width=1, line_dash="dash")
 
 
     else:
-        series = denoise(st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle])
-        fig = px.line(series,line_shape="spline")
+        series = st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle]
+        
+        # fig = px.line(series,line_shape="spline")
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(y=st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle],
+                         x=st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle].index, name='Smoothed'))
+
+        fig.add_trace(go.Scatter(y=st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle],
+                         x=st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle].index, name='Actual'))
 
 st.plotly_chart(fig)
 if market != "america":
