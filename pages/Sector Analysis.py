@@ -74,7 +74,7 @@ def denoise(x, period):
         decomposition.trend: smoothed trend series
         decomposition.resid: residual 
     """
-    decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=10)
+    decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=1)
     return decomposition.trend
 
 def svg_write(svg, center=True):
