@@ -229,7 +229,7 @@ if market =='america':
                                                                                             #        'market_short_term_sentiment','market_long_term_sentiment', 'rinf']]+100).pct_change(30)
     df_ret[['sector_short_term_sentiment_change',
         'market_short_term_sentiment_change']] = (df[['sector_short_term_sentiment',
-                                                      'market_short_term_sentiment']]).pct_change(fcast_n)
+                                                      'market_short_term_sentiment']]+100).pct_change(fcast_n)
 
 
     df_ret[['sector_long_term_sentiment','sector_short_term_sentiment',
