@@ -64,6 +64,18 @@ def get_stock_data(symbol, exchange,n,freq,date):
                     n_bars=n)['close']
     return response
 
+def denoise(x, period):
+    """smoothes a given time series using a convolution window
+
+    Args:
+        x (pandas series): A given time series
+
+    Returns:
+        decomposition.trend: smoothed trend series
+        decomposition.resid: residual 
+    """
+    decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=10)
+    return decomposition.trend
 
 def svg_write(svg, center=True):
     """
