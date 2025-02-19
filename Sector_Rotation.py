@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+import statsmodels.api as sm
 from retry import retry
 import streamlit as st
 
@@ -109,7 +110,18 @@ def get_data_us(sector, suffix,n,freq, date):
                     n_bars=n)['close']
     return response
 
+def denoise(x, period):
+    """smoothes a given time series using a convolution window
 
+    Args:
+        x (pandas series): A given time series
+
+    Returns:
+        decomposition.trend: smoothed trend series
+        decomposition.resid: residual 
+    """
+    decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=10)
+    return decomposition.trend
 
 
 
@@ -119,9 +131,6 @@ def get_data_us(sector, suffix,n,freq, date):
 
 st.set_page_config(page_title="Sector Rotation", layout='wide')
 st.title('Sector Rotation')
-st.sidebar.page_link("Sector_Rotation.py", label="Sector Rotation")
-st.sidebar.page_link("pages/Sector Analysis.py", label="Sector Analysis")
-st.sidebar.page_link("pages/Market_Interaction.py", label="Market Interaction")
 
 ##############################
 #inputs
@@ -188,7 +197,8 @@ if market == 'america':
 
 
         day_20_fastma_response = get_data_us(sector,day_20_suffix,n_days,frequencies[0],date)
-
+        
+        
         day_50_fastma_response = get_data_us(sector,day_50_suffix,n_days,frequencies[0],date)
 
 
@@ -196,7 +206,7 @@ if market == 'america':
         data['Sector'] = [sector] * n_days
         
         df_20_50 = pd.concat([df_20_50, data],axis = 0)
-
+        
     df_20_50.columns = ['Short-term', 'Medium-term', 'Sector']
     df_20_50.index = pd.to_datetime(df_20_50.index).date
 
@@ -261,13 +271,35 @@ else:
     df_50_100.set_index(longterm.index, inplace=True)
     df_50_100 = df_50_100[['Medium-term','Long-term', 'Sector']]
 
+
 st.session_state.df_20_50 = df_20_50
 st.session_state.df_50_100 = df_50_100
 
 
+df_20_50_smoothed = df_20_50.dropna().copy()
+df_50_100_smoothed = df_50_100.dropna().copy()
+
+smooth_period_cycle_20_50_dict = {'Short-term':10,'Medium-term':10}
+smooth_period_cycle_50_100_dict = {'Medium-term':1,'Long-term':1}
 
 
-plot = [df_20_50, df_50_100]
+for sector in df_20_50_smoothed['Sector'].unique().tolist():
+    for cycle,smooth_period in smooth_period_cycle_20_50_dict.items():
+        df_20_50_smoothed.loc[df_20_50_smoothed['Sector']==sector,cycle] = denoise(df_20_50_smoothed.loc[df_20_50_smoothed['Sector']==sector,cycle],smooth_period)
+
+
+for sector in df_50_100_smoothed['Sector'].unique().tolist():
+    for cycle,smooth_period in smooth_period_cycle_50_100_dict.items():
+        df_50_100_smoothed.loc[df_50_100_smoothed['Sector']==sector,cycle] = denoise(df_50_100_smoothed.loc[df_50_100_smoothed['Sector']==sector,cycle], smooth_period)
+
+
+st.session_state.df_20_50_smoothed = df_20_50_smoothed
+st.session_state.df_50_100_smoothed = df_50_100_smoothed
+
+
+
+
+plot = [df_20_50_smoothed, df_50_100_smoothed]
 if historical == 'No':
     if plot_type == 'Short-term|Medium-term':
         group = plot[0].groupby('Sector').tail(1)
@@ -292,8 +324,8 @@ else:
     if plot_type == 'Short-term|Medium-term':
 
         fig = go.Figure()
-        for sector in sectors.symbol if market=='america' else df_20_50.Sector.unique():
-            data = df_20_50[df_20_50['Sector']==sector]
+        for sector in sectors.symbol if market=='america' else df_20_50_smoothed.Sector.unique():
+            data = df_20_50_smoothed[df_20_50_smoothed['Sector']==sector]
             fig.add_trace(
                                     go.Scatter(
                                         x=data["Medium-term"].tail(last_n),
@@ -306,8 +338,8 @@ else:
                                             symbol="arrow",
                                             size=10,
                                             angleref="previous"
-                                        ),hovertext=df_20_50.tail(last_n).index,
-                                        name=sectors[sectors.symbol==sector]['name'].values[0] if market=='america' else df_20_50[df_20_50.Sector==sector]['Sector'].values[0]
+                                        ),hovertext=df_20_50_smoothed.tail(last_n).index,
+                                        name=sectors[sectors.symbol==sector]['name'].values[0] if market=='america' else df_20_50_smoothed[df_20_50_smoothed.Sector==sector]['Sector'].values[0]
                                     )
                                     
                                 )
@@ -320,8 +352,8 @@ else:
     elif plot_type == 'Medium-term|Long-term':
 
         fig = go.Figure()
-        for sector in sectors.symbol if market == 'america' else df_50_100.Sector.unique():
-            data = df_50_100[df_50_100['Sector']==sector]
+        for sector in sectors.symbol if market == 'america' else df_50_100_smoothed.Sector.unique():
+            data = df_50_100_smoothed[df_50_100_smoothed['Sector']==sector]
             if market != 'america':
                 data = data.resample('M').last()
 
@@ -337,8 +369,8 @@ else:
                                             symbol="arrow",
                                             size=10,
                                             angleref="previous"
-                                        ),hovertext=df_50_100.tail(last_n).index,
-                                        name=sectors[sectors.symbol==sector]['name'].values[0] if market=='america' else df_20_50[df_20_50.Sector==sector]['Sector'].values[0]
+                                        ),hovertext=df_50_100_smoothed.tail(last_n).index,
+                                        name=sectors[sectors.symbol==sector]['name'].values[0] if market=='america' else df_50_100_smoothed[df_50_100_smoothed.Sector==sector]['Sector'].values[0]
                                     )
                                     
                                 )
