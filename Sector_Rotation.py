@@ -174,7 +174,7 @@ fig2 = go.Figure(
                    )]
     )
 fig2. update_layout(showlegend=False)
-fig2.layout.template="plotly_white"
+fig2.layout.template="ggplot2"
 
 if market == 'america':
 
