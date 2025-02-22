@@ -10,6 +10,7 @@ import statsmodels.api as sm
 from retry import retry
 import streamlit as st
 
+
 def get_market_info(market):
     market_info = (Query().select('country','name','exchange','market','sector','close', 'volume').
                    where(Column('volume') > 5000).
@@ -305,7 +306,7 @@ if historical == 'No':
         group = plot[0].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',
                          title=plot_type, color=sectors.name if market == 'america' else group.Sector,
-                         template='plotly_white')
+                         template='ggplot2')
 
 
     elif plot_type == 'Medium-term|Long-term':
