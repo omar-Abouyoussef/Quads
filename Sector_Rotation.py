@@ -345,7 +345,7 @@ else:
                                     
                                 )
 
-        fig.update_layout(template='plotly_white', width=1000, height=800)
+        fig.update_layout(template='simple_white', width=1000, height=800)
         fig.update_legends()
         fig.add_hline(y=50)
         fig.add_vline(x=50)
@@ -376,7 +376,7 @@ else:
                                     
                                 )
 
-fig.update_layout(template='plotly_white', width=1000, height=800)
+fig.update_layout(template='simple_white', width=1000, height=800)
 fig.update_legends()
 fig.add_hline(y=50)
 fig.add_vline(x=50)  
