@@ -173,7 +173,7 @@ fig2 = go.Figure(
         name = 'Market'
                    )]
     )
-fig2. update_layout(showlegend=False)
+fig2.update_layout(showlegend=False)
 fig2.layout.template="none"
 
 if market == 'america':
@@ -384,7 +384,7 @@ fig.add_vline(x=50)
 
 container = st.container()
 with container:
-    plot1, plot2 = st.columns([0.6, 0.4])
+    plot1, plot2 = st.columns([0.8, 0.2])
     
     with plot1:
         st.plotly_chart(fig)
