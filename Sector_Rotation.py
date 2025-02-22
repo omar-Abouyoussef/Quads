@@ -174,7 +174,7 @@ fig2 = go.Figure(
                    )]
     )
 fig2. update_layout(showlegend=False)
-fig2.layout.template="seaborn"
+fig2.layout.template="simple_white"
 
 if market == 'america':
 
