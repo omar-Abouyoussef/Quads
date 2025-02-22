@@ -174,7 +174,7 @@ fig2 = go.Figure(
                    )]
     )
 fig2. update_layout(showlegend=False)
-fig2.layout.template="none"
+fig2.layout.template="ggplot2"
 
 if market == 'america':
 
@@ -306,7 +306,7 @@ if historical == 'No':
         group = plot[0].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',
                          title=plot_type, color=sectors.name if market == 'america' else group.Sector,
-                         template='none')
+                         template='plotly_white')
 
 
     elif plot_type == 'Medium-term|Long-term':
@@ -345,7 +345,7 @@ else:
                                     
                                 )
 
-        fig.update_layout(template='simple_white', width=1000, height=800)
+        fig.update_layout(template='plotly_white', width=1000, height=800)
         fig.update_legends()
         fig.add_hline(y=50)
         fig.add_vline(x=50)
