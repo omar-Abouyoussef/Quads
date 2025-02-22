@@ -149,6 +149,7 @@ if market == 'america':
                        key='y')
 
     df, fig = US_fundamentals(country=market, sector=sector,x=x,y=y)
+    fig.layout.template="none"
     st.plotly_chart(fig)
     st.write(df)
     
