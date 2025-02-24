@@ -174,7 +174,6 @@ fig2 = go.Figure(
                    )]
     )
 fig2.update_layout(showlegend=False)
-fig2.layout.template="none"
 
 if market == 'america':
 
@@ -306,14 +305,14 @@ if historical == 'No':
         group = plot[0].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Medium-term', y='Short-term',
                          title=plot_type, color=sectors.name if market == 'america' else group.Sector,
-                         template='none')
+                         template='plotly')
 
 
     elif plot_type == 'Medium-term|Long-term':
         group = plot[1].groupby('Sector').tail(1)
         fig = px.scatter(data_frame=group, x='Long-term', y='Medium-term',
                          title=plot_type,color=sectors.name if market == 'america' else group.Sector,
-                         template='none')
+                         template='plotly')
 
 
 
@@ -345,7 +344,7 @@ else:
                                     
                                 )
 
-        fig.update_layout(template='none', width=1000, height=800)
+        fig.update_layout(template='plotly', width=1000, height=800)
         fig.update_legends()
         fig.add_hline(y=50)
         fig.add_vline(x=50)
@@ -376,7 +375,7 @@ else:
                                     
                                 )
 
-fig.update_layout(template='none', width=1000, height=800)
+fig.update_layout(template='plotly', width=1000, height=800)
 fig.update_legends()
 fig.add_hline(y=50)
 fig.add_vline(x=50)  
@@ -384,7 +383,7 @@ fig.add_vline(x=50)
 
 container = st.container()
 with container:
-    plot1, plot2 = st.columns([0.8, 0.2])
+    plot1, plot2 = st.columns([0.6, 0.4])
     
     with plot1:
         st.plotly_chart(fig)
