@@ -135,7 +135,7 @@ else:
         spread = st.session_state.df_20_50[st.session_state.df_20_50['Sector']==sector_symbol][cycle] - st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle]
         fig.add_trace(go.Scatter(y=(spread-spread.mean())/spread.std(), x=spread.index, name="Spread Standardized"))
 
-fig.layout.template="none"
+fig.layout.template="plotly"
 st.plotly_chart(fig)
 if market != "america":
     st.write(info[info.sector==sector][['name','sector','close','volume','market_cap_basic']])
@@ -149,7 +149,7 @@ if market == 'america':
                        key='y')
 
     df, fig = US_fundamentals(country=market, sector=sector,x=x,y=y)
-    fig.layout.template="none"
+    fig.layout.template="plotly"
     st.plotly_chart(fig)
     st.write(df)
     
