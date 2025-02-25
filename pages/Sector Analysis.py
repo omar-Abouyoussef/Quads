@@ -7,7 +7,7 @@ import pandas_datareader.data as pdr
 import yfinance as yf
 import datetime as dt
 from tradingview_screener import Query, Column 
-
+import statsmodels.api as sm
 def get_market_info(market):
     market_info = (Query().select('name','exchange','sector', 'volume',
                                       'return_on_equity_fq', 'return_on_invested_capital_fq', 'price_book_fq','return_on_equity', 'return_on_invested_capital',
