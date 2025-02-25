@@ -99,6 +99,7 @@ sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if ma
 if cycle == 'Long-term':
     
     if standardize == 'Yes':
+        
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
         zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
         
