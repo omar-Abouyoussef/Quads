@@ -48,6 +48,7 @@ def US_fundamentals(country, sector, x,y):
 def scale(x):
     x_scaled = (x - x.mean())/x.std()
     return x_scaled
+    
 def denoise(x, period):
     """smoothes a given time series using a convolution window
 
@@ -98,8 +99,7 @@ sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if ma
 
 if cycle == 'Long-term':
     
-    if standardize == 'Yes':
-        
+    if standardize == 'Yes': 
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
         zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
         
@@ -115,6 +115,7 @@ if cycle == 'Long-term':
         #fig = px.line(series,line_shape="spline")
         fig = go.Figure()
         fig.add_trace(go.Scatter(y=smoothed_series, x=smoothed_series.index, name="Smoothed"))
+        
 else:
         fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
         
