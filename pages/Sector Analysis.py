@@ -201,7 +201,7 @@ if market =='america':
     in_weekly = Interval.in_weekly
     in_daily = Interval.in_daily
     frequencies = [in_daily, in_weekly, in_monthly]
-    n=2500
+    n=3000
     fcast_n=forecast
     freq = frequencies[0]
 
@@ -211,10 +211,10 @@ if market =='america':
     data = pd.DataFrame(get_stock_data(symbol=etf,exchange='AMEX',n=n,freq=freq,date=date))
     data.columns = ['etf']
 
-    data['sector_long_term_sentiment'] = denoise(get_index_data(sector=sector_names_us_dic[sector],suffix=day_100_suffix,n=n,freq=freq,date=date),5)
+    data['sector_long_term_sentiment'] = denoise(get_index_data(sector=sector_names_us_dic[sector],suffix=day_200_suffix,n=n,freq=freq,date=date),5)
     data['sector_short_term_sentiment'] = denoise(get_index_data(sector=sector_names_us_dic[sector],suffix=day_20_suffix,n=n,freq=freq,date=date),5)
     data['market_short_term_sentiment'] = denoise(get_index_data(sector='MM',suffix=day_20_suffix,n=n,freq=freq,date=date),5)
-    data['market_long_term_sentiment'] = denoise(get_index_data(sector='MM',suffix=day_100_suffix,n=n,freq=freq,date=date),5)
+    data['market_long_term_sentiment'] = denoise(get_index_data(sector='MM',suffix=day_200_suffix,n=n,freq=freq,date=date),5)
 
     data['rinf'] = get_stock_data(symbol='RINF',exchange='AMEX',n=n,freq=freq,date=date)
     data['uvxy'] = get_stock_data(symbol='UVXY',exchange='AMEX',n=n,freq=freq,date=date)
