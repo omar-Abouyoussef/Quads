@@ -280,7 +280,7 @@ df_20_50_smoothed = df_20_50.dropna().copy()
 df_50_100_smoothed = df_50_100.dropna().copy()
 
 smooth_period_cycle_20_50_dict = {'Short-term':10,'Medium-term':10}
-smooth_period_cycle_50_100_dict = {'Medium-term':2,'Long-term':3}
+smooth_period_cycle_50_100_dict = {'Medium-term':1,'Long-term':1}
 
 
 for sector in df_20_50_smoothed['Sector'].unique().tolist():
