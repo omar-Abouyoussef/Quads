@@ -51,13 +51,13 @@ def get_index_data(market, interval, n_bars):
     symbol_exchange= dict(symbol_exchange.values)
 
 
-    periods = [20,50,100]
+    periods = [20,50,200]
 
     above_20ma ={}
     above_50ma ={}
     above_100ma ={}
 
-    above_mas = {20:above_20ma, 50:above_50ma, 100:above_100ma}
+    above_mas = {20:above_20ma, 50:above_50ma, 200:above_100ma}
     # above_mas = {20:above_20ma}
 
     for period, dic in above_mas.items():
@@ -220,7 +220,7 @@ if market == 'america':
 
         day_50_ma_response = get_data_us(sector,day_50_suffix,n_months,frequencies[2],date)
 
-        day_100_ma_response = get_data_us(sector,day_100_suffix,n_months,frequencies[2],date)
+        day_100_ma_response = get_data_us(sector,day_200_suffix,n_months,frequencies[2],date)
 
 
         data = pd.concat([day_50_ma_response,day_100_ma_response], axis = 1)
