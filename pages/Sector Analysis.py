@@ -109,13 +109,14 @@ if cycle == 'Long-term':
 
     else:
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
-        smoothed_series = denoise(series,3)
+        smoothed_series = denoise(series,5)
         
         #fig = px.line(series,line_shape="spline")
         fig = go.Figure()
-        fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
         fig.add_trace(go.Scatter(y=smoothed_series, x=smoothed_series.index, name="Smoothed"))
 else:
+        fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
+        
     if standardize == 'Yes':
         series = st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle]
         smoothed_zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
