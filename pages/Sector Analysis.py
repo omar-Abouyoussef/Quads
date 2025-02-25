@@ -48,6 +48,18 @@ def US_fundamentals(country, sector, x,y):
 def scale(x):
     x_scaled = (x - x.mean())/x.std()
     return x_scaled
+def denoise(x, period):
+    """smoothes a given time series using a convolution window
+
+    Args:
+        x (pandas series): A given time series
+
+    Returns:
+        decomposition.trend: smoothed trend series
+        decomposition.resid: residual 
+    """
+    decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=1)
+    return decomposition.trend
 
 
 us_sectors = pd.read_excel('sectors.xlsx', sheet_name='Sheet1')
@@ -97,8 +109,8 @@ if cycle == 'Long-term':
 
     else:
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
-        smoothed_series = st.session_state.df_50_100_smoothed[st.session_state.df_50_100_smoothed['Sector']==sector_symbol][cycle]
-
+        smoothed_series = denoise(series,3)
+        
         #fig = px.line(series,line_shape="spline")
         fig = go.Figure()
         fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
