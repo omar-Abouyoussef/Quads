@@ -117,9 +117,10 @@ if cycle == 'Long-term':
         #fig = px.line(series,line_shape="spline")
         fig = go.Figure()
         fig.add_trace(go.Scatter(y=smoothed_series, x=smoothed_series.index, name="Smoothed"))
+        fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
+        
         
 else:
-        fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
         
     if standardize == 'Yes':
         series = st.session_state.df_20_50_smoothed[st.session_state.df_20_50_smoothed['Sector']==sector_symbol][cycle]
