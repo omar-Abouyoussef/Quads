@@ -8,6 +8,8 @@ import yfinance as yf
 import datetime as dt
 from tradingview_screener import Query, Column 
 import statsmodels.api as sm
+
+
 def get_market_info(market):
     market_info = (Query().select('name','exchange','sector', 'volume',
                                       'return_on_equity_fq', 'return_on_invested_capital_fq', 'price_book_fq','return_on_equity', 'return_on_invested_capital',
@@ -98,8 +100,8 @@ if market != 'america':
 sector_symbol = us_sectors[us_sectors['name']==sector]['symbol'].values[0] if market == 'america' else sector    
 
 if cycle == 'Long-term':
-    
-    if standardize == 'Yes': 
+    if standardize == "Yes":
+     
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
         zscore = (series - series.rolling(window=60).mean()) / series.rolling(window=60).std()
         
