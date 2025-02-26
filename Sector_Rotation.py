@@ -383,7 +383,7 @@ fig.add_vline(x=50)
 
 container = st.container()
 with container:
-    plot1, plot2 = st.columns([0.6, 0.4])
+    plot1, plot2 = st.columns([0.75, 0.25])
     
     with plot1:
         st.plotly_chart(fig)
