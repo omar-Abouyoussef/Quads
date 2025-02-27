@@ -228,7 +228,7 @@ if market == 'america':
 
 
 
-    n_months=100
+    n_months=500
 
     df_50_100 = pd.DataFrame()
     for idx, sector in enumerate(sectors):    
@@ -335,7 +335,7 @@ if historical == 'No':
     fig.update_traces(marker=dict(size=7))
 else:
 
-    last_n = st.slider("Last data points", 1, 52, 5)
+    last_n = st.slider("Last data points", 1, 100, 5)
 
     if plot_type == 'Short-term|Medium-term':
 
