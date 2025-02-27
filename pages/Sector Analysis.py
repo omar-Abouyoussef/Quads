@@ -77,7 +77,7 @@ def denoise(df, window=30, order=3):
     """
     # Apply Savitzky-Golay filter
     y_smooth = savgol_filter(df, window_length=window, polyorder=order)
-    y_smooth = savgol_filter(df, window_length=30, polyorder=1)
+    y_smooth = savgol_filter(df, window_length=5, polyorder=1)
 
 
     return y_smooth
