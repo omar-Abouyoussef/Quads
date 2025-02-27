@@ -228,7 +228,7 @@ if market == 'america':
 
 
 
-    n_months=500
+    n_months=200
 
     df_50_100 = pd.DataFrame()
     for idx, sector in enumerate(sectors):    
