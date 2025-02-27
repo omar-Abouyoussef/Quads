@@ -134,7 +134,7 @@ if cycle == 'Long-term':
         
         #fig = px.line(series,line_shape="spline")
         fig = go.Figure()
-        fig.add_trace(go.Scatter(y=smoothed_series, x=smoothed_series.index, name="Smoothed"))
+        fig.add_trace(go.Scatter(y=smoothed_series, x=series.index, name="Smoothed"))
         fig.add_trace(go.Scatter(y=series, x=series.index, name="Actual"))
         
         
