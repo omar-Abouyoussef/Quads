@@ -8,6 +8,8 @@ import yfinance as yf
 import datetime as dt
 from tradingview_screener import Query, Column 
 import statsmodels.api as sm
+from scipy.signal import savgol_filter
+
 
 
 def get_market_info(market):
@@ -51,18 +53,34 @@ def scale(x):
     x_scaled = (x - x.mean())/x.std()
     return x_scaled
     
-def denoise(x, period):
-    """smoothes a given time series using a convolution window
+# def denoise(x, period):
+#     """smoothes a given time series using a convolution window
+
+#     Args:
+#         x (pandas series): A given time series
+
+#     Returns:
+#         decomposition.trend: smoothed trend series
+#         decomposition.resid: residual 
+#     """
+#     decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=1)
+#     return decomposition.trend
+
+def denoise(df, window=30, order=3):
+    """smoothes a given time series using a savgol filter
 
     Args:
         x (pandas series): A given time series
 
     Returns:
-        decomposition.trend: smoothed trend series
-        decomposition.resid: residual 
+            y_smooth (pandas series): The smoothed series 
     """
-    decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=1)
-    return decomposition.trend
+    # Apply Savitzky-Golay filter
+    y_smooth = savgol_filter(df, window_length=window, polyorder=order)
+    y_smooth = savgol_filter(df, window_length=30, polyorder=1)
+
+
+    return y_smooth
 
 
 us_sectors = pd.read_excel('sectors.xlsx', sheet_name='Sheet1')
@@ -112,7 +130,7 @@ if cycle == 'Long-term':
 
     else:
         series = st.session_state.df_50_100[st.session_state.df_50_100['Sector']==sector_symbol][cycle]
-        smoothed_series = denoise(series,5)
+        smoothed_series = denoise(series,window=5,order=3)
         
         #fig = px.line(series,line_shape="spline")
         fig = go.Figure()
