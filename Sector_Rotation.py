@@ -125,7 +125,7 @@ def get_data_us(sector, suffix,n,freq, date):
 #     decomposition=sm.tsa.seasonal_decompose(x,model="additive", period=period,two_sided=True,extrapolate_trend=1)
 #     return decomposition.trend
 
-def denoise(df, window=30, order=3):
+def denoise(df, window=20, order=3):
     """smoothes a given time series using a savgol filter
 
     Args:
@@ -136,7 +136,9 @@ def denoise(df, window=30, order=3):
     """
     # Apply Savitzky-Golay filter
     y_smooth = savgol_filter(df, window_length=window, polyorder=order)
-    y_smooth = savgol_filter(df, window_length=30, polyorder=1)
+    y_smooth = savgol_filter(y_smooth, window_length=5, polyorder=1)
+    y_smooth = savgol_filter(y_smooth, window_length=5, polyorder=1)
+    
 
 
     return y_smooth
@@ -295,7 +297,7 @@ st.session_state.df_50_100 = df_50_100
 df_20_50_smoothed = df_20_50.dropna().copy()
 df_50_100_smoothed = df_50_100.dropna().copy()
 
-smooth_period_cycle_20_50_dict = {'Short-term':30,'Medium-term':30}
+smooth_period_cycle_20_50_dict = {'Short-term':20,'Medium-term':20}
 smooth_period_cycle_50_100_dict = {'Medium-term':5,'Long-term':5}
 
 
