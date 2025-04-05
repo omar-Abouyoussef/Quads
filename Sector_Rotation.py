@@ -20,7 +20,7 @@ def get_market_info(market):
                 get_scanner_data())[1]
     if market == 'egypt':
         infot = market_info
-        infor = pd.read_csv('egx_companies.csv')
+        infor = pd.read_csv('EGX 100.csv')
         info = pd.merge(infot[['name','exchange']], infor, left_on=infot.name, right_on=infor.name).set_index("key_0").reset_index()
         info = info[['name_x','exchange_y','sector']]
         info.columns =  ['name', 'exchange', 'sector']
