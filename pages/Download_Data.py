@@ -6,7 +6,7 @@ from egxpy.download import get_EGXdata, get_EGX_intraday_data, get_OHLCV_data
 from egxpy.download import _get_intraday_close_price_data
 
 
-@st.cache
+@st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
   return get_EGXdata(tickers,interval,start,end)
   
