@@ -8,7 +8,6 @@ from egxpy.download import _get_intraday_close_price_data
 
 # Footer
 st.title('Download Data')
-st.markdown("<p class='footer'> &copy EGXLytics | 100% Free & Open Source</p>", unsafe_allow_html=True)
 
 
 
@@ -63,4 +62,5 @@ else:
 
 
 st.write("Note: Intraday data is delayed by 20 minutes.")
+st.markdown("<p class='footer'> &copy EGXLytics | 100% Free & Open Source</p>", unsafe_allow_html=True)
 
