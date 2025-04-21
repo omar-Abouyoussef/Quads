@@ -92,7 +92,7 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n):
 
 
 def main(type, close, n, risk_free_rate:float,  upper_bound:float):
-    # close, mean_returns, cov = liquid_data(close)
+    close = pd.read_csv(close, index_col=0, header=0)
     mean_returns, cov = stock_performance(close)
 
     #maximum Sharpe Ratio portfolio
