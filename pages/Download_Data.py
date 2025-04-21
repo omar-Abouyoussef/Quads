@@ -41,7 +41,7 @@ date = dt.today().date()
 
 if start < end:
     if interval in ['1 Minute','5 Minute','30 Minute']:
-            df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
+            df = get_EGX_intraday_data(tickers,interval,start,end)
 
     else:
         df = eod_cache_func(tickers.split(" "),interval,start,end,date)
