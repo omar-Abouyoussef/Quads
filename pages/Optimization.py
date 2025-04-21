@@ -155,11 +155,9 @@ benchmark = st.session_state.benchmark
 #############
 
 if close:
-    close = pd.read_csv(close, index_col=0, header=0)
     portfolio_weights = main(type, close,holding_period,
-        risk_free_rate=risk_free_rate,
-        upper_bound=upper_bound
-        )
+                             risk_free_rate=risk_free_rate,
+                             upper_bound=upper_bound)
     
     cols = st.columns([0.7,0.3])
     with cols[0]:
