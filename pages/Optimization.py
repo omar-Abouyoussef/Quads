@@ -171,11 +171,11 @@ if close:
     
 
     portfolio = close.loc[:,portfolio_weights.ticker] @ portfolio_weights.weight.values.reshape((-1,1))
-    portfolio = portfolio.iloc[-70:,:]
+    #portfolio = portfolio.iloc[-70:,:]
 
     if benchmark:
         benchmark = pd.read_csv(benchmark, index_col=0, header=0)
-        benchmark = benchmark.iloc[-70:,:]
+        #benchmark = benchmark.iloc[-70:,:]
         fig = go.Figure()
         fig.add_trace(
             go.Scatter(x=portfolio.index, y=portfolio.sum(axis=1)/portfolio.values[0], name="Portfolio")
