@@ -4,6 +4,5 @@ numpy
 plotly
 factor-analyzer
 streamlit
-streamlit_gsheets
 tradingview-screener
 git+https://github.com/omar-Abouyoussef/egxpy.git
