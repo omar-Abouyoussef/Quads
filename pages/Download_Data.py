@@ -7,8 +7,8 @@ from egxpy.download import _get_intraday_close_price_data
 
 
 # Footer
-st.markdown("<p class='footer'> &copy EGXLytics | 100% Free & Open Source</p>", unsafe_allow_html=True)
 st.title('Download Data')
+st.markdown("<p class='footer'> &copy EGXLytics | 100% Free & Open Source</p>", unsafe_allow_html=True)
 
 
 
