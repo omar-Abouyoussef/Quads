@@ -98,6 +98,8 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date):
 st.set_page_config(page_title="Performance Quadrant", layout="wide")
 st.title('Performance Quadrant')
 st.sidebar.header('Home')
+st.markdown("<p class='footer'> &copy EGXLytics</p>", unsafe_allow_html=True)
+
 
 
 
