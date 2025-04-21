@@ -6,10 +6,12 @@ from egxpy.download import get_EGXdata, get_EGX_intraday_data, get_OHLCV_data
 from egxpy.download import _get_intraday_close_price_data
 
 
+@st.cache
+def eod_cache_func(tickers, interval, start, end, date):
+  return get_EGXdata(tickers.split(" "),interval,start,end)
+  
 # Footer
 st.title('Download Data')
-
-
 
 ##############################
 #inputs
@@ -39,7 +41,7 @@ date = dt.today().date()
 
 if start < end:
     if interval in ['1 Minute','5 Minute','30 Minute']:
-            df = get_EGX_intraday_data(tickers.split(" "),interval,start,end,date)
+            df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
 
     else:
         df = get_EGXdata(tickers.split(" "),interval,start,end,date)
