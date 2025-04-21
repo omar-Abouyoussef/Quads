@@ -1,106 +1,33 @@
-from concurrent.futures import ThreadPoolExecutor
-import datetime as dt
-import time
-import pandas as pd
-import requests
 import streamlit as st
-import io
-import yfinance as yf
-import pandas_datareader.data as pdr
-
-@st.cache_data
-def download(ticker, market, start, end, key):
-    try:
-      url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-      res = requests.get(url)
-      if res.status_code == 200:
-        close = requests.get(url).json()
-    except:
-      pass
-    return ticker, close
-
-@st.cache_data
-def get_data(market:str, stock_list, start:dt.date, end:dt.date, key:str):
-    
-    markets = [market]*len(stock_list)
-    starts = [start]*len(stock_list)
-    ends = [end]*len(stock_list)
-    keys = [key]*len(stock_list)
-
-    close_prices = pd.DataFrame(columns=stock_list)
-
-    s = time.perf_counter()
-    with ThreadPoolExecutor(max_workers=16) as executor:
-        for ticker, close in executor.map(download,stock_list, markets, starts, ends, keys):
-          try:
-            close_prices[ticker] = close
-          except:
-            pass
-
-    url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-    res = requests.get(url)
-    if res.status_code == 200:
-      date = res.json()
-      close_prices['date'] = date
-      close_prices.set_index('date', inplace=True)
-      e = time.perf_counter()
-      st.write(f"Finished in {e-s:.4} s")
-      return close_prices
+from datetime import datetime as dt
+import pandas as pd
+import numpy as np
+from egxpy.download import get_EGXdata, get_EGX_intraday_data, get_OHLCV_data
+from egxpy.download import _get_intraday_close_price_data
 
 
+# Footer
+st.markdown("<p class='footer'> &copy EGXLytics | 100% Free & Open Source</p>", unsafe_allow_html=True)
 
-
-# @st.cache_data
-# def get_data(market:str, stock_list, start:dt.date, end:dt.date, key:str):
-    
-  
-#     close_prices = pd.DataFrame(columns=stock_list)
-#     for idx, ticker in enumerate(stock_list):
-#       try:
-#         url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-#         res = requests.get(url)
-#         if res.status_code == 200:
-#           close = requests.get(url).json()
-#           close_prices[ticker] = close
-#       except:
-#         pass
-#     url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-#     res = requests.get(url)
-#     if res.status_code == 200:
-#       date = res.json()
-#       close_prices['date'] = date
-#       close_prices.set_index('date', inplace=True)
-#       return close_prices
-
-
-
-############
-#streamlit
-
-
-st.set_page_config(page_title="Download Data")
-st.title('Download data')
+st.title('Download Data')
 
 
 ##############################
 #inputs
 ##########################
-
-#inputs
-country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Canada', 'United Kingdom', 'Germany', 'Saudi Arabia', 'FOREX'],
-                       key='country')
-country = st.session_state.country
-
-
 #Tickers
-tickers = st.text_input(label='Ticker(s):',
+tickers = st.text_input(label='Ticker(s): Enter all Caps',
                        key = 'tickers',
                        value='ABUK',
                       )
 tickers = st.session_state.tickers.upper()
 
-#####
+interval = st.selectbox(label='Interval',
+                       options = ['Daily','Weekly','Monthly','1 Minute','5 Minute','30 Minute'],
+                       key='interval',
+                      )
+interval = st.session_state.interval
+
 start = st.date_input(label='Start date:',
               key='start')
 start = st.session_state.start
@@ -109,27 +36,31 @@ end = st.date_input(label='End date:',
               key='end')
 end = st.session_state.end
 
+date = dt.today().date()
 
+if start < end:
+    if interval in ['1 Minute','5 Minute','30 Minute']:
+            df = get_EGX_intraday_data(tickers.split(" "),interval,start,end,date)
 
+    else:
+        df = get_EGXdata(tickers.split(" "),interval,start,end,date)
+        df.index = df.index.date
+    
+    st.write(df)
+    st.write(f"Samples:{df.shape[0]}")
 
-codes = {'Egypt':'EGX', 'United States':'US', 'Canada':'TO', 'United Kingdom' : 'L', 'Germany':'DE', 'Saudi Arabia':'SR', 'FOREX':'FOREX'}
+# Download Button
+    st.download_button(
+        label="Download Data",
+        data=df.to_csv(),
+        file_name="Data.csv",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    
 
-
-if codes[country] in ['US','DE', 'L', 'FOREX']:
-  yf.pdr_override()
-  close_prices =  pdr.get_data_yahoo(tickers, start, end)["Close"]
-
-else:   
-  close_prices = get_data(market = codes[country], stock_list= tickers.split(" "),
-                          start=start, end=end, key=st.secrets['eod_api_key'])
-
-if close_prices is not None:
-  st.dataframe(close_prices)
-
-  st.download_button(
-      label="Download",
-      data=close_prices.dropna(axis=1).to_csv(),
-      file_name='data.csv',
-  )
 else:
-  st.write('Ticker not available')
+    pass
+
+
+st.write("Note: Intraday data is delayed by 20 minutes.")
+
