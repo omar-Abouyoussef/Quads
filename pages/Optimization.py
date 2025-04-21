@@ -92,7 +92,6 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n):
 
 
 def main(type, close, n, risk_free_rate:float,  upper_bound:float):
-    close = pd.read_csv(close, index_col=0, header=0)
     mean_returns, cov = stock_performance(close)
 
     #maximum Sharpe Ratio portfolio
@@ -155,6 +154,7 @@ benchmark = st.session_state.benchmark
 #############
 
 if close:
+    close = pd.read_csv(close, index_col=0, header=0)
     portfolio_weights = main(type, close,holding_period,
                              risk_free_rate=risk_free_rate,
                              upper_bound=upper_bound)
