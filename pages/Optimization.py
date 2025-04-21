@@ -2,6 +2,7 @@ import datetime as dt
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import plotly.graph_objects as go
 import scipy.optimize as sc
 import streamlit as st
 
@@ -91,8 +92,6 @@ def minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n):
 
 
 def main(type, close, n, risk_free_rate:float,  upper_bound:float):
-    close = pd.read_csv(close, index_col=0, header=0)
-
     # close, mean_returns, cov = liquid_data(close)
     mean_returns, cov = stock_performance(close)
 
@@ -148,16 +147,20 @@ holding_period = st.number_input(label='Holding Period:',
 type = st.selectbox(label='Optimization Type',
                    options=['Sharpe Ratio','Minimum Risk'])
 
-
+benchmark = st.file_uploader(label='Upload CSV Of Desired Benchmark (Optional)',
+                 type='csv',
+                 key='benchmark')
+benchmark = st.session_state.benchmark
 ###########
 #############
 
 if close:
+    close = pd.read_csv(close, index_col=0, header=0)
     portfolio_weights = main(type, close,holding_period,
         risk_free_rate=risk_free_rate,
         upper_bound=upper_bound
         )
-
+    
     cols = st.columns([0.7,0.3])
     with cols[0]:
         fig = px.pie(portfolio_weights, values='weight', names='ticker', title='Portfolio Weights')
@@ -165,3 +168,19 @@ if close:
         
     with cols[1]:
         st.dataframe(portfolio_weights)
+    
+
+    portfolio = close.loc[:,portfolio_weights.ticker] @ portfolio_weights.weight.values.reshape((-1,1))
+    portfolio = portfolio.iloc[-70:,:]
+
+    if benchmark:
+        benchmark = pd.read_csv(benchmark, index_col=0, header=0)
+        benchmark = benchmark.iloc[-70:,:]
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(x=portfolio.index, y=portfolio.sum(axis=1)/portfolio.values[0], name="Portfolio")
+        )
+        fig.add_trace(
+            go.Scatter(x=benchmark.index, y=benchmark.sum(axis=1)/benchmark.values[0], name="Benchmark")
+        )          
+        st.plotly_chart(fig)
