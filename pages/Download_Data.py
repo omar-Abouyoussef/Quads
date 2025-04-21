@@ -44,7 +44,7 @@ if start < end:
             df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
 
     else:
-        df = get_EGXdata(tickers.split(" "),interval,start,end,date)
+        df = eod_cache_func(tickers.split(" "),interval,start,end,date)
         df.index = df.index.date
     
     st.write(df)
