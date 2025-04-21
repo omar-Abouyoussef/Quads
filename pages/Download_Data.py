@@ -8,7 +8,7 @@ from egxpy.download import _get_intraday_close_price_data
 
 @st.cache
 def eod_cache_func(tickers, interval, start, end, date):
-  return get_EGXdata(tickers.split(" "),interval,start,end)
+  return get_EGXdata(tickers,interval,start,end)
   
 # Footer
 st.title('Download Data')
