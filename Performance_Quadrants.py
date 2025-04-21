@@ -6,33 +6,50 @@ import pandas_datareader.data as pdr
 import yfinance as yf
 import plotly.express as px
 import plotly.graph_objects as go
-from factor_analyzer import FactorAnalyzer, ConfirmatoryFactorAnalyzer, ModelSpecificationParser
+from factor_analyzer import FactorAnalyzer
 from sklearn.cluster import KMeans
-import investpy
 import streamlit as st
 import time
 from concurrent.futures import ThreadPoolExecutor
 from streamlit_gsheets import GSheetsConnection
+from egxpy.download import  get_EGXdata
+from tradingview_screener import Query, Column 
+
 
 
 def change(data, freq):
     return data.iloc[-1]/data.iloc[-(freq+1)] - 1
 
 
-def download(ticker, market, start, end, key):
-    close = None
-    try:
-      url = f'https://eodhd.com/api/eod/{ticker}.{market}?from={start}&to={end}&filter=close&period=d&api_token={key}&fmt=json'
-      res = requests.get(url)
-      if res.status_code == 200:
-        close = requests.get(url).json()
-    except:
-      pass
-    return ticker, close
 
 def get_us_forex_data(stock, start, end):
     return pdr.get_data_yahoo([stock], start, end)["Close"]
     
+
+def get_market_info(market):
+    market_info = (Query().select('name','exchange','sector', 'volume',
+                                      'return_on_equity_fq', 'return_on_invested_capital_fq', 'price_book_fq','return_on_equity', 'return_on_invested_capital',
+                                      'price_earnings_current','close', 'price_target_low', 'price_target_average','price_target_high', 'market_cap_basic').
+                   where(Column('volume') > 5000).
+                set_markets(market).
+                limit(20000).
+                get_scanner_data())[1]
+
+    if market == 'america':
+        us_stock_data = pd.read_csv('us_stocks_cleaned.csv', index_col=0)
+        ticker_GICS = us_stock_data['Sector'] 
+        market_info = pd.merge(left=market_info, right=ticker_GICS, left_on=market_info.name, right_on=ticker_GICS.index, how='right').drop(['sector', 'key_0'], axis=1)
+    
+    if market == 'egypt':
+        infot = market_info[['name','exchange','close', 'volume','market_cap_basic']]
+        infor = pd.read_csv('egx_companies.csv')
+        #info = pd.concat(infot[['name','exchange','close','volume','market_cap_basic']], infor.sector], axis=1, join='inner')
+        info = pd.merge(left=infot[['name','exchange','close','volume','market_cap_basic']], right=infor, left_on='name',right_on='Ticker')
+        
+        info = info[['name','Sector','close','volume', 'market_cap_basic']]
+    else:
+        info = market_info
+    return info
 
 def save_to_sheet(date:dt.date,factors,country):
     conn = st.connection("gsheets", type=GSheetsConnection,max_entries=1)
@@ -54,7 +71,7 @@ def save_to_sheet(date:dt.date,factors,country):
 
 
 @st.cache_data
-def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
+def get_data(market:str, stock_list:list, start:dt.date, end:dt.date):
     
     
     if market in ["US", 'FOREX']:
@@ -64,29 +81,7 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date, key:str):
     
 
     elif market == "EGX":
-        close_prices = pd.DataFrame(columns=stock_list)
-         
-        markets = [market]*len(stock_list)
-        starts = [start]*len(stock_list)
-        ends = [end]*len(stock_list)
-        keys = [key]*len(stock_list)
-
-        s = time.perf_counter()
-        with ThreadPoolExecutor(max_workers=12) as executor:
-            for ticker, close in executor.map(download,stock_list, markets, starts, ends, keys):
-                try:
-                    close_prices[ticker] = close
-                except:
-                    pass
-        url = f'https://eodhd.com/api/eod/{stock_list[0]}.{market}?from={start}&to={end}&filter=date&period=d&api_token={key}&fmt=json'
-        res = requests.get(url)
-        if res.status_code == 200:
-            date = res.json()
-            close_prices['date'] = date
-            close_prices.set_index('date', inplace=True)
-            e = time.perf_counter()
-            st.write(f"Finished in {e-s:.4} s")
-            return close_prices
+       return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
     
     else:
         ticker_list = []
@@ -132,7 +127,7 @@ fx_list = ['EURUSD=X','JPY=X',
 #inputs
 ############3
 country = st.selectbox(label='Country:',
-                       options = ['Egypt', 'United States', 'Saudi Arabia', 'Forex'],
+                       options = ['Egypt'], #'United States', 'Saudi Arabia', 'Forex'],
                        key='country')
 country = st.session_state.country
 
@@ -156,7 +151,7 @@ historical = st.session_state.historical
 yf.pdr_override()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
-                            start=start, end=today, key=st.secrets["eod_api_key"])
+                            start=start, end=today)
     
 
     
@@ -166,20 +161,19 @@ elif country == 'United States':
     us_companies_info = pd.read_csv('companies.csv')
     etfs = us_companies_info[us_companies_info['ETF']=='Yes']['Ticker'].to_list()
     
-    stock_list = investpy.stocks.get_stocks_list(country = country)
+    # stock_list = investpy.stocks.get_stocks_list(country = country)
     us_stock_data = pd.read_csv('us_stocks_cleaned.csv')
     #sector=st.selectbox(label="Choose Sector",
                         #options=us_stock_data["Sector"].unique().tolist())
     #stock_list = us_stock_data[us_stock_data["Sector"]==sector]["Symbol"].to_list()
     #stock_list = us_stock_data["Symbol"].to_list()
-    close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
-                           start=start, end=today, key=st.secrets["eod_api_key"])
-    #st.write(close_prices)
+    # close_prices = get_data(market = codes[country], stock_list=stock_list+etfs,
+    #                        start=start, end=today)
 
 else:
-    stock_list = investpy.stocks.get_stocks_list(country = country)
-    close_prices = get_data(market = codes[country], stock_list=stock_list,
-                            start=start, end=today, key=st.secrets["eod_api_key"])
+    egx_companies_info = get_market_info(country.lower())
+    stock_list = egx_companies_info.name.to_list()
+    close_prices = get_data(market = codes[country], stock_list=stock_list, start=start, end=today)
     
 ##################################
 
@@ -268,8 +262,7 @@ if country == 'United States':
     factors = us_companies_info[['Ticker', 'Name', 'Sector', 'Industry']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
 
 elif country == 'Egypt':
-    egx_companies_info = pd.read_csv('egx_companies.csv')
-    factors = egx_companies_info[['Ticker', 'Name', 'Sector']].join(factors, on = 'Ticker', how = 'right').set_index('Ticker')
+    factors = egx_companies_info[['name', 'Sector']].join(factors, on = 'name', how = 'right').set_index('name')
 else:
     factors["Sector"] = "NA"
 #####
