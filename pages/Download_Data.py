@@ -8,13 +8,29 @@ import time
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-
-
-
-
-@st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
-  return get_EGXdata(tickers,interval,start,end)
+    results = {}
+    
+    def fetch_data(ticker):
+        try:
+            return ticker, get_EGXdata(ticker, interval, start, end)
+        except Exception as e:
+            print(f"Error fetching data for {ticker}: {e}")
+            return ticker, None
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_ticker = {executor.submit(fetch_data, ticker): ticker for ticker in tickers}
+        for future in as_completed(future_to_ticker):
+            ticker, data = future.result()
+            results[ticker] = data
+
+    return results
+
+
+
+#@st.cache_data
+#def eod_cache_func(tickers, interval, start, end, date):
+#  return get_EGXdata(tickers,interval,start,end)
   
 # Footer
 st.title('Download Data')
