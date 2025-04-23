@@ -175,7 +175,7 @@ historical = st.session_state.historical
 ###########################
 
 # yf.pdr_override()
-start=time.time()
+start_time=time.time()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
                             start=start, end=today)
@@ -201,9 +201,9 @@ else:
     egx_companies_info = get_market_info(country.lower())
     stock_list = egx_companies_info.name.to_list()
     close_prices = get_data(market = codes[country], stock_list=stock_list, start=start, end=today)
-end=time.time()
+end_time=time.time()
 
-st.write(f'{end-start:.2f} seconds')
+st.write(f'{end_time-start_time:.2f} seconds')
 ##################################
 
 if country == "United States":
