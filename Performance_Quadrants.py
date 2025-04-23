@@ -15,6 +15,28 @@ import streamlit as st
 from egxpy.download import  get_EGXdata
 from tradingview_screener import Query, Column 
 
+@st.cache_data
+def eod_cache_func(tickers, interval, start, end, date):
+    def fetch_single_ticker(ticker):
+        df = get_EGXdata([ticker], interval, start, end)
+        if isinstance(df, pd.DataFrame):
+            df.columns = [ticker]  # Rename to match ticker
+        return df
+
+    results = []
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(fetch_single_ticker, ticker) for ticker in tickers]
+        for future in as_completed(futures):
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as e:
+                print(f"Error fetching ticker: {e}")
+
+    if results:
+        return pd.concat(results, axis=1)
+    else:
+        return pd.DataFrame()  # fallback if no data
 
 
 def change(data, freq):
@@ -82,7 +104,8 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date):
     
 
     elif market == "EGX":
-       return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
+        return eod_cache_func(stock_list=stock_list,interval='Daily',start=start,end=end)
+        #return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
     
     else:
         ticker_list = []
