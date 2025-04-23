@@ -7,7 +7,7 @@ from egxpy.download import _get_intraday_close_price_data
 import time
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
+@st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
     results = {}
     
