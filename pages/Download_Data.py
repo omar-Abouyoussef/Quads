@@ -55,7 +55,7 @@ if start < end:
         df.index = df.index.date
     end = time.time()
     st.write(df)
-    st.write(f'{end-start}:.2f seconds')
+    st.write(f'{end-start} seconds')
     st.write(f"Samples:{df.shape[0]}")
 
 # Download Button
