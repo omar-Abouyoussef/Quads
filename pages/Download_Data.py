@@ -46,7 +46,9 @@ end = st.session_state.end
 date = dt.today().date()
 
 if start < end:
+  
   start = time.time()
+  
   if interval in ['1 Minute','5 Minute','30 Minute']:
     df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
 
@@ -55,19 +57,18 @@ if start < end:
     df.index = df.index.date
   end = time.time()
     
-    st.write(df)
-    st.write(f'{end-start:.2f} seconds')
-    st.write(f"Samples:{df.shape[0]}")
+st.write(df)
+st.write(f'{end-start:.2f} seconds')
+st.write(f"Samples:{df.shape[0]}")
 
 # Download Button
-    st.download_button(
+st.download_button(
         label="Download Data",
         data=df.to_csv(),
         file_name="Data.csv",
         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     
-
 else:
     pass
 
