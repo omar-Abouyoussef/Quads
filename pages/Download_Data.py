@@ -9,10 +9,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
-@st.cache_data
-def eod_cache_func(tickers, interval, start, end, date):
- return get_EGXdata(tickers,interval,start,end)
-
 
 @st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
@@ -37,6 +33,9 @@ def eod_cache_func(tickers, interval, start, end, date):
     else:
         return pd.DataFrame()  # fallback if no data
     
+@st.cache_data
+def eod_cache_func(tickers, interval, start, end, date):
+ return get_EGXdata(tickers,interval,start,end)
 
   
 # Footer
