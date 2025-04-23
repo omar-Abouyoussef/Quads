@@ -4,11 +4,33 @@ import pandas as pd
 import numpy as np
 from egxpy.download import get_EGXdata, get_EGX_intraday_data, get_OHLCV_data
 from egxpy.download import _get_intraday_close_price_data
+import time
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-@st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
-  return get_EGXdata(tickers,interval,start,end)
+    results = {}
+    
+    def fetch_data(ticker):
+        try:
+            return ticker, get_EGXdata(ticker, interval, start, end)
+        except Exception as e:
+            print(f"Error fetching data for {ticker}: {e}")
+            return ticker, None
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        future_to_ticker = {executor.submit(fetch_data, ticker): ticker for ticker in tickers}
+        for future in as_completed(future_to_ticker):
+            ticker, data = future.result()
+            results[ticker] = data
+
+    return results
+
+
+
+#@st.cache_data
+#def eod_cache_func(tickers, interval, start, end, date):
+#  return get_EGXdata(tickers,interval,start,end)
   
 # Footer
 st.title('Download Data')
@@ -40,14 +62,18 @@ end = st.session_state.end
 date = dt.today().date()
 
 if start < end:
+  start = time.time()
     if interval in ['1 Minute','5 Minute','30 Minute']:
             df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
 
     else:
-        df = eod_cache_func(tickers.split(" "),interval,start,end,date)
-        df.index = df.index.date
+      
+      df = eod_cache_func(tickers.split(" "),interval,start,end,date)
+      df.index = df.index.date
+    end = time.time()
     
     st.write(df)
+    st.write(f'{end-start:.2f} seconds')
     st.write(f"Samples:{df.shape[0]}")
 
 # Download Button
