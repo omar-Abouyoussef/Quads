@@ -7,4 +7,3 @@ streamlit
 tradingview-screener
 scipy
 git+https://github.com/omar-Abouyoussef/egxpy.git
-time
