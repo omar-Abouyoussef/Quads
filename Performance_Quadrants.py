@@ -104,7 +104,7 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date):
     
 
     elif market == "EGX":
-        return eod_cache_func(stock_list=stock_list,interval='Daily',start=start,end=end)
+        return eod_cache_func(stock_list=stock_list,interval='Daily',start=start,end=end, date=date)
         #return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
     
     else:
