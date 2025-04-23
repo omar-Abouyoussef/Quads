@@ -19,7 +19,7 @@ def eod_cache_func(tickers, interval, start, end, date):
         return df
 
     results = []
-    with ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor(max_workers=15) as executor:
         futures = [executor.submit(fetch_single_ticker, ticker) for ticker in tickers]
         for future in as_completed(futures):
             try:
