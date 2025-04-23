@@ -10,7 +10,7 @@ from factor_analyzer import FactorAnalyzer
 # from sklearn.cluster import KMeans
 import streamlit as st
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 # from streamlit_gsheets import GSheetsConnection
 from egxpy.download import  get_EGXdata
 from tradingview_screener import Query, Column 
