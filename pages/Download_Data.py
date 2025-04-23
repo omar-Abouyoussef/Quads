@@ -12,6 +12,32 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 @st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
  return get_EGXdata(tickers,interval,start,end)
+
+
+@st.cache_data
+def eod_cache_func(tickers, interval, start, end, date):
+    def fetch_single_ticker(ticker):
+        df = get_EGXdata([ticker], interval, start, end)
+        if isinstance(df, pd.DataFrame):
+            df.columns = [ticker]  # Rename to match ticker
+        return df
+
+    results = []
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(fetch_single_ticker, ticker) for ticker in tickers]
+        for future in as_completed(futures):
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as e:
+                print(f"Error fetching ticker: {e}")
+
+    if results:
+        return pd.concat(results, axis=1)
+    else:
+        return pd.DataFrame()  # fallback if no data
+    
+
   
 # Footer
 st.title('Download Data')
