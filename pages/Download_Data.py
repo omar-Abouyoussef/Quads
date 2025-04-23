@@ -8,11 +8,33 @@ import time
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-
-
 @st.cache_data
 def eod_cache_func(tickers, interval, start, end, date):
-  return get_EGXdata(tickers,interval,start,end)
+    def fetch_single_ticker(ticker):
+        df = get_EGXdata([ticker], interval, start, end)
+        if isinstance(df, pd.DataFrame):
+            df.columns = [ticker]  # Rename to match ticker
+        return df
+
+    results = []
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(fetch_single_ticker, ticker) for ticker in tickers]
+        for future in as_completed(futures):
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as e:
+                print(f"Error fetching ticker: {e}")
+
+    if results:
+        return pd.concat(results, axis=1)
+    else:
+        return pd.DataFrame()  # fallback if no data
+
+
+#@st.cache_data
+#def eod_cache_func(tickers, interval, start, end, date):
+#  return get_EGXdata(tickers,interval,start,end)
   
 # Footer
 st.title('Download Data')
@@ -44,17 +66,15 @@ end = st.session_state.end
 date = dt.today().date()
 
 if start < end:
-    start_time= time.time()
     if interval in ['1 Minute','5 Minute','30 Minute']:
             df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
 
     else:
+        start_time = time.time()
         df = eod_cache_func(tickers.split(" "),interval,start,end,date)
         df.index = df.index.date
-    end_time= time.time()
-    st.write(df)
-    st.write(f'{end_time-start_time:.2f} seconds')
-    st.write(f"Samples:{df.shape[0]}")
+        end_time = time.time()
+        st.write(f"Fetched in: {end_time - start_time:.2f} seconds")
 
 # Download Button
     st.download_button(
