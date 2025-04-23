@@ -24,7 +24,7 @@ def eod_cache_func(tickers, interval, start, end, date):
             ticker, data = future.result()
             results[ticker] = data
 
-    return results
+    return pd.DataFrame(results)
 
 
 
