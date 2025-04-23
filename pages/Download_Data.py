@@ -51,22 +51,21 @@ if start < end:
   
   if interval in ['1 Minute','5 Minute','30 Minute']:
     df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
-
   else:
     df = eod_cache_func(tickers.split(" "),interval,start,end,date)
     df.index = df.index.date
-  end = time.time()
     
-st.write(df)
-st.write(f'{end-start:.2f} seconds')
-st.write(f"Samples:{df.shape[0]}")
+  end = time.time()  
+  st.write(df)
+  st.write(f'{end-start:.2f} seconds')
+  st.write(f"Samples:{df.shape[0]}")
 
 # Download Button
-st.download_button(
-        label="Download Data",
-        data=df.to_csv(),
-        file_name="Data.csv",
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  st.download_button(
+    label="Download Data",
+    data=df.to_csv(),
+    file_name="Data.csv",
+    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
 st.write("Note: Intraday data is delayed by 20 minutes.")
