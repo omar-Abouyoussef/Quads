@@ -77,7 +77,7 @@ if start < end:
         df.index = df.index.date
         end_time = time.time()
         st.write(f"Fetched in: {end_time - start_time:.2f} seconds")
-        st.write(df)
+    st.write(df)
 # Download Button
     st.download_button(
         label="Download Data",
