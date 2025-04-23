@@ -15,8 +15,8 @@ from concurrent.futures import ThreadPoolExecutor
 from egxpy.download import  get_EGXdata
 from tradingview_screener import Query, Column 
 
-@st.cache_data
-def eod_cache_func(tickers, interval, start, end, date):
+
+def eod_cache_func(tickers, interval, start, end):
     def fetch_single_ticker(ticker):
         df = get_EGXdata([ticker], interval, start, end)
         if isinstance(df, pd.DataFrame):
@@ -104,7 +104,7 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date):
     
 
     elif market == "EGX":
-        return eod_cache_func(stock_list=stock_list,interval='Daily',start=start,end=end, date=date)
+        return eod_cache_func(tickers=stock_list,interval='Daily',start=start,end=end)
         #return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
     
     else:
