@@ -9,8 +9,8 @@ import plotly.graph_objects as go
 from factor_analyzer import FactorAnalyzer
 # from sklearn.cluster import KMeans
 import streamlit as st
-# import time
-# from concurrent.futures import ThreadPoolExecutor
+import time
+from concurrent.futures import ThreadPoolExecutor
 # from streamlit_gsheets import GSheetsConnection
 from egxpy.download import  get_EGXdata
 from tradingview_screener import Query, Column 
@@ -104,8 +104,8 @@ def get_data(market:str, stock_list:list, start:dt.date, end:dt.date):
     
 
     elif market == "EGX":
-        return eod_cache_func(stock_list=stock_list,interval='Daily',start=start,end=end)
-        #return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
+        #return eod_cache_func(stock_list=stock_list,interval='Daily',start=start,end=end)
+        return get_EGXdata(stock_list=stock_list,interval='Daily',start=start,end=end)
     
     else:
         ticker_list = []
@@ -175,6 +175,7 @@ historical = st.session_state.historical
 ###########################
 
 # yf.pdr_override()
+start=time.time()
 if country == 'Forex':
     close_prices = get_data(market = codes[country], stock_list=fx_list,
                             start=start, end=today)
@@ -200,7 +201,9 @@ else:
     egx_companies_info = get_market_info(country.lower())
     stock_list = egx_companies_info.name.to_list()
     close_prices = get_data(market = codes[country], stock_list=stock_list, start=start, end=today)
-    
+end=time.time()
+
+st.write(f'{end-start:.2f} seconds')
 ##################################
 
 if country == "United States":
