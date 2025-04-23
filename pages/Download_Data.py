@@ -68,15 +68,15 @@ end = st.session_state.end
 date = dt.today().date()
 
 if start < end:
+    start_time = time.time()
     if interval in ['1 Minute','5 Minute','30 Minute']:
             df = get_EGX_intraday_data(tickers.split(" "),interval,start,end)
 
     else:
-        start_time = time.time()
         df = eod_cache_func(tickers.split(" "),interval,start,end,date)
         df.index = df.index.date
-        end_time = time.time()
-        st.write(f"Fetched in: {end_time - start_time:.2f} seconds")
+    end_time = time.time()
+    st.write(f"Fetched in: {end_time - start_time:.2f} seconds")
     st.write(df)
 # Download Button
     st.download_button(
