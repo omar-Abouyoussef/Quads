@@ -6,8 +6,89 @@ import plotly.graph_objects as go
 import scipy.optimize as sc
 import streamlit as st
 
+def to_excel(df, weights_df):
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        
+        
+        sheet1_name = "Portfolio Weights"
+        weights_df.to_excel(writer, sheet_name=sheet1_name, startrow=1, index=False)
+        workbook = writer.book
+        worksheet = writer.sheets[sheet1_name]
+
+        percent_format = workbook.add_format({'num_format': '0.00%'})
+        worksheet.set_column(1, 1, 15, percent_format)
+        chart = workbook.add_chart({'type': 'pie'})
+
+        chart.add_series({
+            'name':       'Portfolio Allocation',
+            'categories': [sheet1_name, 2, 0, 1 + len(weights_df), 0],  # Ticker names (index)
+            'values':     [sheet1_name, 2, 1, 1 + len(weights_df), 1],  # Weights column
+            'data_labels': {'percentage': True, 'category': True},     # Show category and % in chart
+        })
+
+        chart.set_title({'name': 'Portfolio Allocation'})
+        worksheet.insert_chart('D2', chart)
+        
+        
+        df.reset_index().to_excel(writer, index=False, sheet_name='Portfolio Vs Benchmark')  # Reset index to include 'Date'
+        
+        sheet2_name = "Portfolio Vs Benchmark"
+        workbook = writer.book
+        worksheet = writer.sheets[sheet2_name]
+        worksheet.set_column('A:A', 20)
+        chart = workbook.add_chart({'type': 'line'})
+        max_row = len(df) + 1
+        for i, ticker in enumerate(df.columns.to_list()):
+            col = i + 1  # Assuming first column (0) is Date
+            chart.add_series({
+                'name':[sheet2_name, 0, col],
+                'categories':[sheet2_name, 2, 0, max_row, 0],
+                'values':[sheet2_name, 2, col, max_row, col],
+                'line':{'width': 1.00},
+            })
+        chart.set_x_axis({'name': 'Date', 'date_axis': True})
+        chart.set_y_axis({'name': 'Price', 'major_gridlines': {'visible': False}})
+        chart.set_legend({'position': 'top'})
+        worksheet.insert_chart('D2', chart)
 
 
+        sheet3_name = "Returns Distribution"
+        returns = df.pct_change().dropna()
+        
+        hist, bin_edges = np.histogram(returns, bins=20)
+        # Create a DataFrame for plotting
+        bin_midpoints = (bin_edges[:-1] + bin_edges[1:]) / 2  # use midpoints for better representation
+
+        # DataFrame with numeric bin midpoints
+        hist_df = pd.DataFrame({'Return Bin': bin_midpoints,
+                                'Frequency': hist
+                               })
+        hist_df.to_excel(writer, sheet_name=sheet3_name, startrow=1, index=False)
+        # Access workbook and worksheet
+        workbook = writer.book
+        worksheet = writer.sheets[sheet3_name]
+        
+        percent_format = workbook.add_format({'num_format': '0.00%'})
+        worksheet.set_column(0, 0, 15, percent_format)
+        
+        # Create a column chart
+        chart = workbook.add_chart({'type': 'column'})
+
+        # Add histogram series
+        chart.add_series({
+            'name':       'Return Distribution',
+            'categories': [sheet3_name, 2, 0, 1 + len(hist), 0],  # Bins
+            'values':     [sheet3_name, 2, 1, 1 + len(hist), 1],  # Frequencies
+            'gap':        1
+        })
+        chart.set_title({'name': 'Portfolio Returns Distribution'})
+        chart.set_x_axis({'name': 'Return Range'})
+        chart.set_y_axis({'name': 'Frequency'})
+        worksheet.insert_chart('D2', chart)
+
+    processed_data = output.getvalue()
+    return processed_data
 
 def stock_performance(close):
     returns = close.pct_change()
