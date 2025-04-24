@@ -251,9 +251,6 @@ if close:
     
 
     portfolio = close.loc[:,portfolio_weights.ticker] @ portfolio_weights.weight.values.reshape((-1,1))
-    portfolio.columns = "Portfolio"
-    #portfolio = portfolio.iloc[-70:,:]
-
     portfolio.columns=["Portfolio"]
     #portfolio = portfolio.iloc[-70:,:]
 
