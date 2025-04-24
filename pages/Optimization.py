@@ -251,22 +251,27 @@ if close:
     
 
     portfolio = close.loc[:,portfolio_weights.ticker] @ portfolio_weights.weight.values.reshape((-1,1))
+    portfolio.columns = "Portfolio"
+    #portfolio = portfolio.iloc[-70:,:]
+
+    portfolio.columns=["Portfolio"]
     #portfolio = portfolio.iloc[-70:,:]
 
     if benchmark:
         benchmark = pd.read_csv(benchmark, index_col=0, header=0)
         #benchmark = benchmark.iloc[-70:,:]
+        portfolio["Benchmark"] = benchmark
+        comparison = portfolio/portfolio.values[0]
         fig = go.Figure()
         fig.add_trace(
-            go.Scatter(x=portfolio.index, y=portfolio.sum(axis=1)/portfolio.values[0], name="Portfolio")
+            go.Scatter(x=comparison.index, y=comparison["Portfolio"], name="Portfolio")
         )
         fig.add_trace(
-            go.Scatter(x=benchmark.index, y=benchmark.sum(axis=1)/benchmark.values[0], name="Benchmark")
-        )          
+            go.Scatter(x=comparison.index, y=comparison["Benchmark"], name="Benchmark")
+        )
         st.plotly_chart(fig)
     else:
         comparison=portfolio
-
         
     st.download_button(
         label="Download Report",
