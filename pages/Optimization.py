@@ -263,3 +263,13 @@ if close:
             go.Scatter(x=benchmark.index, y=benchmark.sum(axis=1)/benchmark.values[0], name="Benchmark")
         )          
         st.plotly_chart(fig)
+    else:
+        comparison=portfolio
+
+        
+    st.download_button(
+        label="Download Report",
+        data=to_excel(comparison, portfolio_weights),
+        file_name="Comparison.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
