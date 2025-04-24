@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import scipy.optimize as sc
 import streamlit as st
+import io
 
 def to_excel(df, weights_df):
     output = io.BytesIO()
