@@ -57,7 +57,7 @@ def to_excel(df, weights_df):
         sheet3_name = "Returns Distribution"
         returns = df.pct_change().dropna()
         
-        hist, bin_edges = np.histogram(returns, bins=50)
+        hist, bin_edges = np.histogram(returns, bins=100)
         # Create a DataFrame for plotting
         bin_midpoints = (bin_edges[:-1] + bin_edges[1:]) / 2  # use midpoints for better representation
 
