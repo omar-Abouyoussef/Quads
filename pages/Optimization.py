@@ -183,7 +183,7 @@ def main(type, close, n, risk_free_rate:float,  upper_bound:float):
         metric, optimal_weights = minimum_risk_portfolio(mean_returns, cov, upper_bound, risk_free_rate,n)
                                
     portfolio_returns, portfolio_risk = portfolio_performance(optimal_weights, mean_returns, cov,n)
-    st.write(f'Expected return: {portfolio_returns:.2%}, Risk: {portfolio_risk.round(3)} with {type}:{metric.round(3)}\n')
+    st.write(f'Expected return: {portfolio_returns:.2%}, Risk: {portfolio_risk:.2%} with {type}:{metric.round(3)}\n')
  
     df = pd.DataFrame({"ticker":close.columns.to_list(), "weight": optimal_weights})
     best_weights = df.loc[df['weight']>0,:].reset_index(drop=True)
