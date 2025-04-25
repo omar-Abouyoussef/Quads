@@ -243,7 +243,7 @@ if close:
     
     cols = st.columns([0.3,0.7])
     with cols[0]:
-        portfolio_weights = st.data_editor(portfolio_weights,disabled=("weight"))        
+        portfolio_weights = st.data_editor(portfolio_weights,disabled=["weight"])        
         if portfolio_weights.weight.sum().round(2) < 1.0:
             st.warning(
                 '''Warning: Portfolio allocation must sum to 1.0.
