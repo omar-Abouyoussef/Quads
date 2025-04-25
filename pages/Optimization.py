@@ -241,13 +241,25 @@ if close:
                              risk_free_rate=risk_free_rate,
                              upper_bound=upper_bound)
     
-    cols = st.columns([0.7,0.3])
+    cols = st.columns([0.3,0.7])
     with cols[0]:
+        portfolio_weights = st.data_editor(portfolio_weights)        
+        if portfolio_weights.weight.sum().round(2) < 1.0:
+            st.warning(
+                '''Warning: Portfolio allocation must sum to 1.0.
+                Relax diversification threshold, use Pie Chart proportionate allocation for Unused Cash, or modify manually from table.
+                **Current Unused Cash {:.2f}**'''.format(1-portfolio_weights.weight.sum())
+                      )
+        
+        elif portfolio_weights.weight.sum().round(2) > 1.0:
+            st.warning(
+                '''Warning: Portfolio allocation must sum to 1.0. Use Pie Chart proportionate allocation, or modify manually from the table.
+                **Current Leverage {:.2f}**'''.format(portfolio_weights.weight.sum())
+                      )
+            
+    with cols[1]:
         fig = px.pie(portfolio_weights, values='weight', names='ticker', title='Portfolio Weights')
         st.plotly_chart(fig)
-        
-    with cols[1]:
-        st.dataframe(portfolio_weights)
     
 
     portfolio = close.loc[:,portfolio_weights.ticker] @ portfolio_weights.weight.values.reshape((-1,1))
