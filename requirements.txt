@@ -6,4 +6,4 @@ factor-analyzer
 streamlit
 tradingview-screener
 scipy
-git+https://github.com/omar-Abouyoussef/egxpy.git
+git+https://github.com/egxlytics/egxpy.git
