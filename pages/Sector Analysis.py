@@ -178,7 +178,7 @@ else:
 fig.layout.template="plotly"
 st.plotly_chart(fig)
 if market != "america":
-    s.write(info)
+    st.write(info)
     st.write(info[info.sector==sector][['name','sector','close','volume','market_cap_basic']])
 
 if market == 'america':
