@@ -16,7 +16,7 @@ def get_market_info(market):
     market_info = (Query().select('name','exchange','sector', 'volume',
                                       'return_on_equity_fq', 'return_on_invested_capital_fq', 'price_book_fq','return_on_equity', 'return_on_invested_capital',
                                       'price_earnings_current','close', 'price_target_low', 'price_target_average','price_target_high', 'market_cap_basic').
-                   where(Column('volume') > 5000).
+                   where(Column('volume') > 10).
                 set_markets(market).
                 limit(20000).
                 get_scanner_data())[1]
