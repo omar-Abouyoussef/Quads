@@ -32,7 +32,7 @@ def get_market_info(market):
         #info = pd.concat(infot[['name','exchange','close','volume','market_cap_basic']], infor.sector], axis=1, join='inner')
         info = pd.merge(left=infot[['name','exchange','close','volume','market_cap_basic']], right=infor, on='name')
         
-        info = info[['name','sector','close','volume', 'market_cap_basic']]
+        info = info[['name','sector','close']]
     else:
         info = market_info
     return info
