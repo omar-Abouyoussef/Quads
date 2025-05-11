@@ -36,7 +36,7 @@ def get_market_info(market):
     else:
         info = market_info
     return info
-st.write(info)
+st.write(get_market_info(market='egypt'))
 
 def US_fundamentals(country, sector, x,y):
     market_data = get_market_info(country)
