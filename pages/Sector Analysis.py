@@ -36,7 +36,6 @@ def get_market_info(market):
     else:
         info = market_info
     return info
-st.write(get_market_info(market='egypt'))
 
 def US_fundamentals(country, sector, x,y):
     market_data = get_market_info(country)
@@ -179,6 +178,7 @@ else:
 fig.layout.template="plotly"
 st.plotly_chart(fig)
 if market != "america":
+    s.write(info)
     st.write(info[info.sector==sector][['name','sector','close','volume','market_cap_basic']])
 
 if market == 'america':
