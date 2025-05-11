@@ -14,7 +14,7 @@ import streamlit as st
 
 def get_market_info(market):
     market_info = (Query().select('country','name','exchange','market','sector','close', 'volume').
-                   where(Column('volume') > 5000).
+                   where(Column('volume') > 10).
                 set_markets(market).
                 limit(20000).
                 get_scanner_data())[1]
